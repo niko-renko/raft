@@ -15,20 +15,6 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.TimerScheduler
 
-def save[T <: Serializable](obj: T, filename: String): Unit = {
-  val stream = new ObjectOutputStream(new FileOutputStream(filename))
-  stream.writeObject(obj)
-  stream.close()
-  ()
-}
-
-def load[T <: Serializable](filename: String): T = {
-  val stream = new ObjectInputStream(new FileInputStream(filename))
-  val obj = stream.readObject().asInstanceOf[T]
-  stream.close()
-  obj
-}
-
 final class ProcessID(val id: Int)
 
 final class Processes(val refs: Map[ProcessID, ActorRef[Process.Message]])
