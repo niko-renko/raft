@@ -1,22 +1,56 @@
+import java.util.concurrent.TimeUnit
+import scala.concurrent.duration.FiniteDuration
+
 import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl.TimerScheduler
 
 object Process {
-  final case class State(
+  final private case class State(
+      timers: TimerScheduler[Message],
+      refs: List[ActorRef[Message]]
   )
 
   sealed trait Message
-  final case class MessageA() extends Message
+  final case class Refs(refs: List[ActorRef[Message]]) extends Message
+  private case object Timeout extends Message
+
+  private case object Timer
 
   def apply(): Behavior[Message] =
     Behaviors.receive { (context, message) =>
       message match {
+        case Refs(refs) => {
+          context.log.info("Received refs: {}", refs)
+          Behaviors.withTimers(timers => {
+            val state = State(timers, refs)
+            this.startTimeout(state)
+            this.main(state)
+          })
+        }
         case _ => Behaviors.stopped
       }
     }
+
+  private def main(state: State): Behavior[Message] =
+    Behaviors.receive { (context, message) =>
+      {
+        context.log.info("Timeout")
+        this.startTimeout(state)
+        this.main(state)
+      }
+    }
+
+  private def startTimeout(state: State) = {
+    state.timers.startSingleTimer(
+      Timer,
+      Timeout,
+      FiniteDuration(1000, TimeUnit.MILLISECONDS)
+    )
+  }
 }
 
 object Guardian {
@@ -24,7 +58,11 @@ object Guardian {
 
   def apply(): Behavior[Start] = Behaviors.receive { (context, message) =>
     context.log.info("Starting {} processes", message.processes)
-    Behaviors.stopped
+    val refs = (0 until message.processes)
+      .map(i => context.spawn(Process(), s"process-$i"))
+      .toList
+    refs.foreach(ref => ref ! Process.Refs(refs))
+    Behaviors.ignore
   }
 }
 
