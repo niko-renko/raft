@@ -8,25 +8,49 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.TimerScheduler
 
+final class ProcessID(val id: Int)
+
+final class Processes(val refs: Map[ProcessID, ActorRef[Process.Message]])
+    extends Iterable[(ProcessID, ActorRef[Process.Message])] {
+  def get_ref(id: ProcessID): ActorRef[Process.Message] = this.refs(id)
+
+  def peers(of: ProcessID): Iterator[(ProcessID, ActorRef[Process.Message])] =
+    this.refs.filter(_._1 != of).iterator
+
+  override def iterator: Iterator[(ProcessID, ActorRef[Process.Message])] =
+    this.refs.iterator
+}
+
 object Process {
+  sealed trait Message
+  final case class Refs(self: ProcessID, refs: Processes) extends Message
+}
+
+final class Process[T] {
   final private case class State(
-      timers: TimerScheduler[Message],
-      refs: List[ActorRef[Message]]
+      self: ProcessID,
+      refs: Processes,
+      timers: TimerScheduler[Process.Message],
+      currentTerm: Int,
+      votedFor: Option[ProcessID],
+      log: List[T],
+      commitIndex: Int,
+      lastApplied: Int,
+      nextIndex: Map[ProcessID, Int],
+      matchIndex: Map[ProcessID, Int]
   )
 
-  sealed trait Message
-  final case class Refs(refs: List[ActorRef[Message]]) extends Message
-  private case object Timeout extends Message
-
+  private case object Timeout extends Process.Message
   private case object Timer
 
-  def apply(): Behavior[Message] =
+  def apply(): Behavior[Process.Message] =
     Behaviors.receive { (context, message) =>
       message match {
-        case Refs(refs) => {
+        case Process.Refs(self, refs) => {
           context.log.info("Received refs: {}", refs)
           Behaviors.withTimers(timers => {
-            val state = State(timers, refs)
+            val state =
+              State(self, refs, timers, 0, None, List(), 0, 0, Map(), Map())
             this.startTimeout(state)
             this.main(state)
           })
@@ -35,7 +59,7 @@ object Process {
       }
     }
 
-  private def main(state: State): Behavior[Message] =
+  private def main(state: State): Behavior[Process.Message] =
     Behaviors.receive { (context, message) =>
       {
         context.log.info("Timeout")
@@ -58,10 +82,13 @@ object Guardian {
 
   def apply(): Behavior[Start] = Behaviors.receive { (context, message) =>
     context.log.info("Starting {} processes", message.processes)
-    val refs = (0 until message.processes)
-      .map(i => context.spawn(Process(), s"process-$i"))
-      .toList
-    refs.foreach(ref => ref ! Process.Refs(refs))
+    val refs_map = (0 until message.processes)
+      .map(i =>
+        (ProcessID(i), context.spawn(Process[String]()(), s"process-$i"))
+      )
+      .toMap
+    val refs = Processes(refs_map)
+    refs.foreach((id, ref) => ref ! Process.Refs(id, refs))
     Behaviors.ignore
   }
 }
