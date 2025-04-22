@@ -1,4 +1,11 @@
 import java.util.concurrent.TimeUnit
+import java.io.{
+  ObjectOutputStream,
+  FileOutputStream,
+  ObjectInputStream,
+  FileInputStream
+}
+import java.nio.file.{Files, Paths}
 import scala.concurrent.duration.FiniteDuration
 
 import akka.actor.typed.ActorRef
@@ -8,11 +15,25 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.TimerScheduler
 
+def save[T <: Serializable](obj: T, filename: String): Unit = {
+  val stream = new ObjectOutputStream(new FileOutputStream(filename))
+  stream.writeObject(obj)
+  stream.close()
+  ()
+}
+
+def load[T <: Serializable](filename: String): T = {
+  val stream = new ObjectInputStream(new FileInputStream(filename))
+  val obj = stream.readObject().asInstanceOf[T]
+  stream.close()
+  obj
+}
+
 final class ProcessID(val id: Int)
 
 final class Processes(val refs: Map[ProcessID, ActorRef[Process.Message]])
     extends Iterable[(ProcessID, ActorRef[Process.Message])] {
-  def get_ref(id: ProcessID): ActorRef[Process.Message] = this.refs(id)
+  def getRef(id: ProcessID): ActorRef[Process.Message] = this.refs(id)
 
   def peers(of: ProcessID): Iterator[(ProcessID, ActorRef[Process.Message])] =
     this.refs.filter(_._1 != of).iterator
@@ -27,13 +48,17 @@ object Process {
 }
 
 final class Process[T] {
+  final private case class PersistentState(
+      currentTerm: Int,
+      votedFor: Option[ProcessID],
+      log: List[T]
+  ) extends Serializable
+
   final private case class State(
       self: ProcessID,
       refs: Processes,
       timers: TimerScheduler[Process.Message],
-      currentTerm: Int,
-      votedFor: Option[ProcessID],
-      log: List[T],
+      persistentState: PersistentState,
       commitIndex: Int,
       lastApplied: Int,
       nextIndex: Map[ProcessID, Int],
@@ -50,7 +75,7 @@ final class Process[T] {
           context.log.info("Received refs: {}", refs)
           Behaviors.withTimers(timers => {
             val state =
-              State(self, refs, timers, 0, None, List(), 0, 0, Map(), Map())
+              State(self, refs, timers, load(self.id), 0, 0, Map(), Map())
             this.startTimeout(state)
             this.main(state)
           })
@@ -75,6 +100,25 @@ final class Process[T] {
       FiniteDuration(1000, TimeUnit.MILLISECONDS)
     )
   }
+
+  private def save(state: State): Unit = {
+    val filename = s"persistent-state/${state.self.id}.state"
+    val stream = new ObjectOutputStream(new FileOutputStream(filename))
+    stream.writeObject(state.persistentState)
+    stream.close()
+    ()
+  }
+
+  private def load(id: Int): PersistentState = {
+    val filename = s"persistent-state/${id}.state"
+    if (!Files.exists(Paths.get(filename))) {
+      return PersistentState(0, None, List())
+    }
+    val stream = new ObjectInputStream(new FileInputStream(filename))
+    val persistentState = stream.readObject().asInstanceOf[PersistentState]
+    stream.close()
+    persistentState
+  }
 }
 
 object Guardian {
@@ -82,12 +126,12 @@ object Guardian {
 
   def apply(): Behavior[Start] = Behaviors.receive { (context, message) =>
     context.log.info("Starting {} processes", message.processes)
-    val refs_map = (0 until message.processes)
+    val refsMap = (0 until message.processes)
       .map(i =>
         (ProcessID(i), context.spawn(Process[String]()(), s"process-$i"))
       )
       .toMap
-    val refs = Processes(refs_map)
+    val refs = Processes(refsMap)
     refs.foreach((id, ref) => ref ! Process.Refs(id, refs))
     Behaviors.ignore
   }
