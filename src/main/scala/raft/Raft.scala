@@ -83,6 +83,11 @@ final class Process[T <: Serializable] {
     Behaviors.receive { (context, message) =>
       {
         message match {
+          case Append(entries) => {
+            context.log.info("Received Append from {}", entries)
+            this.main(state, persistent)
+          }
+
           case Timeout() => {
             context.log.info(
               "Timeout -- converting to candidate {}",

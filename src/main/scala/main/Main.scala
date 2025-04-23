@@ -4,7 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 
-import raft.{Processes, Process, ProcessID, Refs}
+import raft.{Processes, Process, ProcessID, Refs, Append}
 
 object Guardian {
   final case class Start(processes: Int)
@@ -18,6 +18,7 @@ object Guardian {
       .toMap
     val refs = Processes(refsMap)
     refs.foreach((id, ref) => ref ! Refs(id, refs))
+    refs.foreach((id, ref) => ref ! Append(List("Hello, world!")))
     Behaviors.ignore
   }
 }
