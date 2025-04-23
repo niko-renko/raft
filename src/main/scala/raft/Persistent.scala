@@ -1,3 +1,5 @@
+package raft
+
 import java.io.{
   ObjectOutputStream,
   FileOutputStream,

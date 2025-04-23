@@ -1,3 +1,5 @@
+package raft
+
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
 import java.util.concurrent.TimeUnit
@@ -6,50 +8,62 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.TimerScheduler
 
-object Process {
-  sealed trait Message
-  final case class Refs(self: ProcessID, refs: Processes) extends Message
-}
+final private case class State[T <: Serializable](
+    self: ProcessID,
+    refs: Processes[T],
+    timers: TimerScheduler[Message[T]],
+    commitIndex: Int,
+    lastApplied: Int,
+    nextIndex: Map[ProcessID, Int],
+    matchIndex: Map[ProcessID, Int]
+)
+
+private sealed trait Message[T <: Serializable]
+
+// Public
+final case class Refs[T <: Serializable](
+    self: ProcessID,
+    refs: Processes[T]
+) extends Message[T]
+final case class Append[T <: Serializable](
+    entries: List[T]
+) extends Message[T]
+
+// Private
+final private case class Timeout[T <: Serializable](
+) extends Message[T]
+final private case class AppendEntries[T <: Serializable](
+    term: Int,
+    leaderId: ProcessID,
+    prevLogIndex: Int,
+    prevLogTerm: Int,
+    entries: List[T],
+    leaderCommit: Int
+) extends Message[T]
+final private case class AppendEntriesResponse[T <: Serializable](
+    term: Int,
+    success: Boolean
+) extends Message[T]
+final private case class RequestVote[T <: Serializable](
+    term: Int,
+    candidateId: ProcessID,
+    lastLogIndex: Int,
+    lastLogTerm: Int
+) extends Message[T]
+final private case class RequestVoteResponse[T <: Serializable](
+    term: Int,
+    voteGranted: Boolean
+) extends Message[T]
+
+private case object Election
 
 final class Process[T <: Serializable] {
-  final private case class State(
-      self: ProcessID,
-      refs: Processes,
-      timers: TimerScheduler[Process.Message],
-      commitIndex: Int,
-      lastApplied: Int,
-      nextIndex: Map[ProcessID, Int],
-      matchIndex: Map[ProcessID, Int]
-  )
-
-  private case object Timeout extends Process.Message
-  private case class AppendEntries(
-      term: Int,
-      leaderId: ProcessID,
-      prevLogIndex: Int,
-      prevLogTerm: Int,
-      entries: List[T],
-      leaderCommit: Int
-  ) extends Process.Message
-  private case class AppendEntriesResponse(term: Int, success: Boolean)
-      extends Process.Message
-  private case class RequestVote(
-      term: Int,
-      candidateId: ProcessID,
-      lastLogIndex: Int,
-      lastLogTerm: Int
-  ) extends Process.Message
-  private case class RequestVoteResponse(term: Int, voteGranted: Boolean)
-      extends Process.Message
-
-  private case object Election
-
-  def apply(): Behavior[Process.Message] =
+  def apply(): Behavior[Message[T]] =
     Behaviors.receive { (context, message) =>
       message match {
-        case Process.Refs(_, refs) if refs.size % 2 == 0 =>
+        case Refs(_, refs) if refs.size % 2 == 0 =>
           Behaviors.stopped
-        case Process.Refs(self, refs) =>
+        case Refs(self, refs) =>
           Behaviors.withTimers(timers => {
             context.log.info("Starting process {}", self.id)
             val state =
@@ -63,13 +77,13 @@ final class Process[T <: Serializable] {
     }
 
   private def main(
-      state: State,
+      state: State[T],
       persistent: PersistentState[T]
-  ): Behavior[Process.Message] =
+  ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) =>
       {
         message match {
-          case Timeout => {
+          case Timeout() => {
             context.log.info(
               "Timeout -- converting to candidate {}",
               state.self
@@ -146,12 +160,12 @@ final class Process[T <: Serializable] {
       }
     }
 
-  private def resetTimer(state: State) = {
+  private def resetTimer(state: State[T]) = {
     val timeout = 150 + Random.nextInt(151)
     state.timers.cancel(Election)
     state.timers.startSingleTimer(
       Election,
-      Timeout,
+      Timeout(),
       FiniteDuration(timeout, TimeUnit.MILLISECONDS)
     )
   }
