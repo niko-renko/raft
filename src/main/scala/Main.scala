@@ -7,6 +7,7 @@ import java.io.{
 }
 import java.nio.file.{Files, Paths}
 import scala.concurrent.duration.FiniteDuration
+import scala.util.Random
 
 import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
@@ -52,20 +53,40 @@ final class Process[T] {
   )
 
   private case object Timeout extends Process.Message
-  private case object Timer
+  private case class AppendEntries(
+      term: Int,
+      leaderId: ProcessID,
+      prevLogIndex: Int,
+      prevLogTerm: Int,
+      entries: List[T],
+      leaderCommit: Int
+  ) extends Process.Message
+  private case class AppendEntriesResponse(term: Int, success: Boolean)
+      extends Process.Message
+  private case class RequestVote(
+      term: Int,
+      candidateId: ProcessID,
+      lastLogIndex: Int,
+      lastLogTerm: Int
+  ) extends Process.Message
+  private case class RequestVoteResponse(term: Int, voteGranted: Boolean)
+      extends Process.Message
+
+  private case object Election
 
   def apply(): Behavior[Process.Message] =
     Behaviors.receive { (context, message) =>
       message match {
-        case Process.Refs(self, refs) => {
-          context.log.info("Received refs: {}", refs)
+        case Process.Refs(_, refs) if refs.size % 2 == 0 =>
+          Behaviors.stopped
+        case Process.Refs(self, refs) =>
           Behaviors.withTimers(timers => {
+            context.log.info("Starting process {}", self.id)
             val state =
               State(self, refs, timers, load(self.id), 0, 0, Map(), Map())
-            this.startTimeout(state)
+            this.startTimer(state)
             this.main(state)
           })
-        }
         case _ => Behaviors.stopped
       }
     }
@@ -73,17 +94,45 @@ final class Process[T] {
   private def main(state: State): Behavior[Process.Message] =
     Behaviors.receive { (context, message) =>
       {
-        context.log.info("Timeout")
-        this.startTimeout(state)
-        this.main(state)
+        message match {
+          case Timeout => {
+            context.log.info("Timeout")
+            this.main(state)
+          }
+          case AppendEntries(
+                term,
+                leaderId,
+                prevLogIndex,
+                prevLogTerm,
+                entries,
+                leaderCommit
+              ) => {
+            context.log.info("Received AppendEntries from {}", leaderId)
+            this.main(state)
+          }
+          case AppendEntriesResponse(term, success) => {
+            context.log.info("Received AppendEntriesResponse from {}", term)
+            this.main(state)
+          }
+          case RequestVote(term, candidateId, lastLogIndex, lastLogTerm) => {
+            context.log.info("Received RequestVote from {}", candidateId)
+            this.main(state)
+          }
+          case RequestVoteResponse(term, voteGranted) => {
+            context.log.info("Received RequestVoteResponse from {}", term)
+            this.main(state)
+          }
+          case _ => Behaviors.stopped
+        }
       }
     }
 
-  private def startTimeout(state: State) = {
+  private def startTimer(state: State) = {
+    val timeout = 150 + Random.nextInt(151)
     state.timers.startSingleTimer(
-      Timer,
+      Election,
       Timeout,
-      FiniteDuration(1000, TimeUnit.MILLISECONDS)
+      FiniteDuration(timeout, TimeUnit.MILLISECONDS)
     )
   }
 
