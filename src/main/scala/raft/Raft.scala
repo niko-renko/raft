@@ -10,7 +10,7 @@ import akka.actor.typed.scaladsl.TimerScheduler
 
 final private case class State[T <: Serializable](
     self: ProcessID,
-    refs: Processes[T],
+    refs: Processes[Message[T]],
     timers: TimerScheduler[Message[T]],
     commitIndex: Int,
     lastApplied: Int,
@@ -23,7 +23,7 @@ private sealed trait Message[T <: Serializable]
 // Public
 final case class Refs[T <: Serializable](
     self: ProcessID,
-    refs: Processes[T]
+    refs: Processes[Message[T]]
 ) extends Message[T]
 final case class Append[T <: Serializable](
     entries: List[T]
