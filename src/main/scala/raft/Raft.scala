@@ -123,7 +123,6 @@ final class Process[T <: Serializable] {
           }
           case HeartbeatTimeout() => {
             context.log.info("HeartbeatTimeout")
-            this.resetHeartbeat(state)
             state.refs
               .peers(state.self)
               .foreach((id, ref) =>
@@ -136,8 +135,10 @@ final class Process[T <: Serializable] {
                   state.commitIndex
                 )
               )
+            this.resetHeartbeat(state)
             this.main(state, persistent)
           }
+
           case AppendEntries(
                 term,
                 leaderId,
@@ -158,7 +159,7 @@ final class Process[T <: Serializable] {
             context.log.info("Received RequestVote from {}", candidateId)
             val (thisLastLogIndex, thisLastLogTerm) = this.lastEntry(persistent)
             val voteGranted =
-              term > persistent.term && (lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex))
+              term >= persistent.term && (persistent.votedFor.isEmpty || persistent.votedFor.get == candidateId) && (lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex))
 
             if (voteGranted) {
               context.log.info("Granted vote to {}", candidateId)
