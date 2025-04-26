@@ -155,38 +155,31 @@ final class Process[T <: Serializable] {
             context.log.info("Received AppendEntriesResponse from {}", term)
             this.main(state, persistent)
           }
-          case RequestVote(term, candidateId, lastLogIndex, lastLogTerm) => {
-            context.log.info("Received RequestVote from {}", candidateId)
 
-            val (thisLastLogIndex, thisLastLogTerm) = this.lastEntry(persistent)
-            val voteGranted = if (term > persistent.term) {
-              lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
-            } else if (term == persistent.term) {
-              persistent.votedFor.get == candidateId
-            } else {
-              false
-            }
-
-            if (voteGranted) {
-              context.log.info("Granted vote to {}", candidateId)
-              val npersistent =
-                persistent.copy(term = term, votedFor = Some(candidateId))
-              npersistent.save(state.self.id)
-              state.refs.getRef(candidateId) ! RequestVoteResponse(
-                npersistent.term,
-                true
-              )
-              this.resetElection(state)
-              this.main(state, npersistent)
-            } else {
-              context.log.info("Denied vote to {}", candidateId)
-              state.refs.getRef(candidateId) ! RequestVoteResponse(
-                persistent.term,
-                false
-              )
-              this.main(state, persistent)
-            }
+          case requestVote: RequestVote[T]
+              if this.voteGranted(requestVote, persistent) => {
+            val RequestVote(term, candidateId, _, _) = requestVote
+            context.log.info("Granted vote to {}", candidateId)
+            val npersistent =
+              persistent.copy(term = term, votedFor = Some(candidateId))
+            npersistent.save(state.self.id)
+            state.refs.getRef(candidateId) ! RequestVoteResponse(
+              npersistent.term,
+              true
+            )
+            this.resetElection(state)
+            this.main(state, npersistent)
           }
+          case requestVote: RequestVote[T] => {
+            val RequestVote(term, candidateId, _, _) = requestVote
+            context.log.info("Denied vote to {}", candidateId)
+            state.refs.getRef(candidateId) ! RequestVoteResponse(
+              persistent.term,
+              false
+            )
+            this.main(state, persistent)
+          }
+
           case RequestVoteResponse(term, _) if term > persistent.term => {
             val npersistent = persistent.copy(term = term)
             npersistent.save(state.self.id)
@@ -225,6 +218,20 @@ final class Process[T <: Serializable] {
       lastLogTerm
     }
     (lastLogIndex, lastLogTerm)
+  }
+  private def voteGranted(
+      requestVote: RequestVote[T],
+      persistent: PersistentState[T]
+  ): Boolean = {
+    val RequestVote(term, candidateId, lastLogIndex, lastLogTerm) = requestVote
+    val (thisLastLogIndex, thisLastLogTerm) = this.lastEntry(persistent)
+    if (term > persistent.term) {
+      lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
+    } else if (term == persistent.term) {
+      persistent.votedFor.get == candidateId
+    } else {
+      false
+    }
   }
 
   private def resetElection(state: State[T]) = {
