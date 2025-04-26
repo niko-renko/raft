@@ -16,7 +16,8 @@ final private case class State[T <: Serializable](
     lastApplied: Int,
     nextIndex: Map[ProcessID, Int],
     matchIndex: Map[ProcessID, Int],
-    votes: Int
+    votes: Int,
+    isLeader: Boolean
 )
 
 private sealed trait Message[T <: Serializable]
@@ -71,9 +72,11 @@ final class Process[T <: Serializable] {
           Behaviors.withTimers(timers => {
             context.log.info("Starting process {}", self.id)
             val state =
-              State(self, refs, timers, 0, 0, Map(), Map(), 0)
+              State(self, refs, timers, 0, 0, Map(), Map(), 0, false)
             val persistent = PersistentState.load[T](self.id)
+            // Switch loop -- follower
             this.resetElection(state)
+            this.stopHeartbeat(state)
             this.main(state, persistent)
           })
         case _ => Behaviors.stopped
@@ -93,10 +96,7 @@ final class Process[T <: Serializable] {
           }
 
           case ElectionTimeout() => {
-            context.log.info(
-              "ElectionTimeout -- converting to candidate {}",
-              state.self
-            )
+            context.log.info("converting to candidate {}", state.self)
 
             val npersistent = persistent.copy(
               term = persistent.term + 1,
@@ -157,9 +157,15 @@ final class Process[T <: Serializable] {
           }
           case RequestVote(term, candidateId, lastLogIndex, lastLogTerm) => {
             context.log.info("Received RequestVote from {}", candidateId)
+
             val (thisLastLogIndex, thisLastLogTerm) = this.lastEntry(persistent)
-            val voteGranted =
-              term >= persistent.term && (persistent.votedFor.isEmpty || persistent.votedFor.get == candidateId) && (lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex))
+            val voteGranted = if (term > persistent.term) {
+              lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
+            } else if (term == persistent.term) {
+              persistent.votedFor.get == candidateId
+            } else {
+              false
+            }
 
             if (voteGranted) {
               context.log.info("Granted vote to {}", candidateId)
@@ -181,32 +187,29 @@ final class Process[T <: Serializable] {
               this.main(state, persistent)
             }
           }
+          case RequestVoteResponse(term, _) if term > persistent.term => {
+            val npersistent = persistent.copy(term = term)
+            npersistent.save(state.self.id)
+            this.main(state, npersistent)
+          }
+          case RequestVoteResponse(term, voteGranted)
+              if term < persistent.term || state.isLeader || !voteGranted =>
+            this.main(state, persistent)
           case RequestVoteResponse(term, voteGranted) => {
-            context.log.info("Received RequestVoteResponse from {}", term)
-            if (term < persistent.term) {
-              this.main(state, persistent)
-            } else if (term > persistent.term) {
-              val npersistent = persistent.copy(term = term)
-              npersistent.save(state.self.id)
-              this.main(state, npersistent)
-            } else if (state.votes > state.refs.size / 2) {
-              this.main(state, persistent)
-            } else {
-              val nstate = state.copy(
-                votes = state.votes + 1
-              )
+            context.log.info("Received a vote")
+            val nstate = state.copy(
+              votes = state.votes + 1,
+              isLeader = (state.votes + 1) > state.refs.size / 2
+            )
 
-              if (nstate.votes > nstate.refs.size / 2) {
-                context.log.info(
-                  "{} has received majority of votes, becoming leader",
-                  nstate.self
-                )
-                state.timers.cancel(Election)
-                this.resetHeartbeat(nstate)
-              }
-
-              this.main(nstate, persistent)
+            if (nstate.isLeader) {
+              context.log.info("{} becoming leader", nstate.self)
+              // Switch loop -- leader
+              this.stopElection(nstate)
+              this.resetHeartbeat(nstate)
             }
+
+            this.main(nstate, persistent)
           }
           case _ => Behaviors.stopped
         }
@@ -233,6 +236,7 @@ final class Process[T <: Serializable] {
       FiniteDuration(timeout, TimeUnit.MILLISECONDS)
     )
   }
+  private def stopElection(state: State[T]) = state.timers.cancel(Election)
 
   private def resetHeartbeat(state: State[T]) = {
     state.timers.cancel(Heartbeat)
@@ -242,4 +246,5 @@ final class Process[T <: Serializable] {
       FiniteDuration(25, TimeUnit.MILLISECONDS)
     )
   }
+  private def stopHeartbeat(state: State[T]) = state.timers.cancel(Heartbeat)
 }
