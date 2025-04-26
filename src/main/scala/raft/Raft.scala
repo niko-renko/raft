@@ -195,7 +195,7 @@ final class Process[T <: Serializable] {
                 votes = state.votes + 1
               )
 
-              if (nstate.votes >= nstate.refs.size / 2) {
+              if (nstate.votes > nstate.refs.size / 2) {
                 context.log.info(
                   "{} has received majority of votes, becoming leader",
                   nstate.self
