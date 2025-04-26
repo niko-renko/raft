@@ -188,13 +188,14 @@ final class Process[T <: Serializable] {
               val npersistent = persistent.copy(term = term)
               npersistent.save(state.self.id)
               this.main(state, npersistent)
+            } else if (state.votes > state.refs.size / 2) {
+              this.main(state, persistent)
             } else {
               val nstate = state.copy(
                 votes = state.votes + 1
               )
 
               if (nstate.votes >= nstate.refs.size / 2) {
-                // TODO: Make sure leader is elected once -- right now 2/3 and 3/3 triggers this
                 context.log.info(
                   "{} has received majority of votes, becoming leader",
                   nstate.self
