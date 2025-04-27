@@ -1,5 +1,6 @@
 package main
 
+import scala.io.StdIn.readLine
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
@@ -38,5 +39,9 @@ object Main {
 
     val system = ActorSystem(Guardian(), "guardian")
     system ! Guardian.Start(processes)
+    while (true) {
+      val command = readLine()
+      system.log.trace(command)
+    }
   }
 }

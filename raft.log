@@ -1,0 +1,1740 @@
+21:17:39.896 [] INFO - Slf4jLogger started
+21:17:39.913 [akka.actor.ActorSystemImpl(guardian)] WARN - Dev use only. Free keys at https://akka.io/key
+21:17:39.964 [akka://guardian/user] INFO - Starting 3 processes
+21:17:39.973 [akka://guardian/user/process-1] INFO - Starting process 1
+21:17:39.973 [akka://guardian/user/process-0] INFO - Starting process 0
+21:17:39.973 [akka://guardian/user/process-2] INFO - Starting process 2
+21:17:40.006 [akka://guardian/user/process-0] INFO - Received Append from List(Hello, world!)
+21:17:40.006 [akka://guardian/user/process-2] INFO - Received Append from List(Hello, world!)
+21:17:40.006 [akka://guardian/user/process-1] INFO - Received Append from List(Hello, world!)
+21:17:40.236 [akka://guardian/user/process-0] INFO - Converting to candidate raft.ProcessID@13c1a283
+21:17:40.244 [akka://guardian/user/process-1] INFO - Granted vote to raft.ProcessID@13c1a283
+21:17:40.244 [akka://guardian/user/process-2] INFO - Granted vote to raft.ProcessID@13c1a283
+21:17:40.246 [akka://guardian/user/process-0] INFO - Received a vote
+21:17:40.246 [akka://guardian/user/process-0] INFO - raft.ProcessID@13c1a283 becoming leader
+21:17:40.296 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.297 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.297 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.346 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.346 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.397 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.398 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.399 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.496 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.545 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.595 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.596 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.596 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.646 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.646 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.646 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.662 [] TRACE- hello
+21:17:40.695 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.695 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.695 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.745 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.745 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.795 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.796 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.796 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.846 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.846 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.896 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.896 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.946 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.946 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.946 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:40.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:40.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.095 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.095 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.095 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.145 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.145 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.145 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.196 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.196 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.196 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.245 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.245 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.245 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.295 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.296 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.296 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.345 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.345 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.396 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.397 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.397 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.496 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.546 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.596 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.596 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.596 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.645 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.645 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.645 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.695 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.746 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.746 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.796 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.796 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.796 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.845 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.845 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.896 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.896 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.946 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.946 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.996 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:41.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:41.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.096 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.096 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.097 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.145 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.146 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.146 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.196 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.196 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.246 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.246 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.246 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.295 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.295 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.295 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.345 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.345 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.396 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.396 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.495 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.545 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.596 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.596 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.596 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.645 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.646 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.646 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.695 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.746 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.746 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.795 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.795 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.795 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.846 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.846 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.846 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.895 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.895 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.945 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.945 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:42.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:42.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.096 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.096 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.096 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.145 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.145 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.145 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.196 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.196 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.246 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.246 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.246 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.295 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.295 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.295 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.345 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.345 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.396 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.396 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.496 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.545 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.545 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.545 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.595 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.596 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.596 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.645 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.646 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.646 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.696 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.746 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.746 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.796 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.796 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.796 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.845 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.845 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.896 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.896 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.945 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.945 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:43.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:43.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.095 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.096 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.096 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.146 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.146 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.146 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.196 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.196 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.245 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.246 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.246 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.296 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.296 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.297 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.346 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.346 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.396 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.396 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.495 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.546 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.595 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.595 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.595 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.645 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.646 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.646 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.696 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.745 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.745 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.795 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.796 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.796 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.846 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.846 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.895 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.895 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.945 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.945 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:44.995 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:44.995 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.096 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.096 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.096 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.145 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.145 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.145 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.196 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.196 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.245 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.245 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.245 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.295 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.295 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.295 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.346 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.346 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.396 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.396 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.445 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.445 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.495 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.496 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.546 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.595 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.596 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.596 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.646 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.646 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.646 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.695 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.746 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.746 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.795 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.795 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.795 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.846 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.846 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.896 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.896 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.896 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.945 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.945 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:45.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:45.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.046 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.046 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.046 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.095 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.095 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.095 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.146 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.146 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.146 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.195 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.195 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.245 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.246 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.246 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.296 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.296 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.296 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.345 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.345 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.396 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.396 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.445 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.445 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.495 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.496 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.495 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.546 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.546 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.546 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.595 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.595 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.595 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.645 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.645 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.645 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.695 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.696 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.696 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.745 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.745 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.745 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.795 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.796 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.796 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.845 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.846 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.846 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.895 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.895 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.895 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.945 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.945 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.945 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.995 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:46.996 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:46.996 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.045 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.045 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.045 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.095 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.095 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.095 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.145 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.146 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.146 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.195 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.195 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.195 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.245 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.245 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.245 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.295 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.296 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.296 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.345 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.345 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.345 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.395 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.395 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.395 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.445 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.446 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.446 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.495 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.495 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.495 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.545 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.545 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.545 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.233 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.233 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.333 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.333 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.483 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.483 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.683 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.683 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.731 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.981 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:47.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:47.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.083 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.133 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.133 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.333 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.333 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.533 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.533 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.733 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:48.983 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:48.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.131 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.333 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.333 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.483 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.483 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.981 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:49.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:49.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.283 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.283 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.433 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.683 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.683 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:50.983 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:50.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.031 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.183 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.381 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.731 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:51.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:51.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.381 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.681 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:52.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:52.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.133 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.283 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.283 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.533 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.533 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.681 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.681 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.933 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.933 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:53.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:53.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.031 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.183 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.333 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.333 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.531 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.531 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.881 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:54.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:54.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.381 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:55.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:55.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.031 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.181 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.181 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.431 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.431 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.631 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:56.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:56.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.033 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.033 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.181 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:57.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:57.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.081 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.081 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.381 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.581 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.581 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.881 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:58.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:58.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.331 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.533 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.533 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.831 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.831 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.831 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.881 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:17:59.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:17:59.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.031 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.183 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.531 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.731 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.883 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.883 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.931 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:00.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:00.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.631 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.681 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.731 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.981 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:01.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:01.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.181 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.381 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.533 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.533 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.581 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:02.983 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:02.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.231 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:03.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:03.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.481 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.683 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.683 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.883 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.883 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:04.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:04.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.081 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.233 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.233 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.281 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.531 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.583 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.583 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.631 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.631 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.631 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.683 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:05.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:05.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.183 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.433 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.682 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.733 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.733 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.781 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.982 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:06.983 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:06.983 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.032 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.232 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.532 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.582 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.582 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.582 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.632 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.632 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.632 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.682 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.682 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.683 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.732 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.732 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.732 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.782 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.782 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.782 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.832 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.832 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.832 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.882 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.882 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.882 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.932 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.932 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.932 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.981 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:07.982 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:07.982 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.031 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.032 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.032 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.082 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.082 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.082 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.132 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.132 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.132 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.182 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.182 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.182 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.231 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.232 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.232 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.282 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.282 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.282 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.332 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.332 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.332 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.382 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.382 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.382 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.432 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.432 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.432 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.482 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.482 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.482 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.531 [akka://guardian/user/process-0] INFO - HeartbeatTimeout
+21:18:08.532 [akka://guardian/user/process-1] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283
+21:18:08.532 [akka://guardian/user/process-2] INFO - Received AppendEntries as follower from raft.ProcessID@13c1a283

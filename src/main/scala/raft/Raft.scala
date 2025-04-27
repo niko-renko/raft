@@ -101,7 +101,7 @@ final class Process[T <: Serializable] {
           }
 
           case ElectionTimeout() => {
-            context.log.info("converting to candidate {}", state.self)
+            context.log.info("Converting to candidate {}", state.self)
 
             val npersistent = persistent.copy(
               term = persistent.term + 1,
