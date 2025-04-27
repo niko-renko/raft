@@ -2,7 +2,13 @@ package raft
 
 import akka.actor.typed.ActorRef
 
-final class ProcessID(val id: Int) extends Serializable
+final class ProcessID(val id: Int) extends Serializable {
+  override def hashCode(): Int = this.id
+  override def equals(obj: Any): Boolean = obj match {
+    case that: ProcessID => this.id == that.id
+    case _               => false
+  }
+}
 
 final class Processes[T](
     val refs: Map[ProcessID, ActorRef[T]]
