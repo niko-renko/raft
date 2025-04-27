@@ -8,6 +8,11 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.TimerScheduler
 
+enum Role:
+  case Follower
+  case Candidate
+  case Leader
+
 final private case class State[T <: Serializable](
     self: ProcessID,
     refs: Processes[Message[T]],
@@ -17,7 +22,7 @@ final private case class State[T <: Serializable](
     nextIndex: Map[ProcessID, Int],
     matchIndex: Map[ProcessID, Int],
     votes: Int,
-    isLeader: Boolean
+    role: Role
 )
 
 private sealed trait Message[T <: Serializable]
@@ -72,7 +77,7 @@ final class Process[T <: Serializable] {
           Behaviors.withTimers(timers => {
             context.log.info("Starting process {}", self.id)
             val state =
-              State(self, refs, timers, 0, 0, Map(), Map(), 0, false)
+              State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower)
             val persistent = PersistentState.load[T](self.id)
             // Switch loop -- follower
             this.resetElection(state)
@@ -103,6 +108,7 @@ final class Process[T <: Serializable] {
               votedFor = Some(state.self)
             )
             val nstate = state.copy(
+              role = Role.Candidate,
               votes = 1
             )
             npersistent.save(nstate.self.id)
@@ -139,20 +145,36 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
 
-          case AppendEntries(
-                term,
-                leaderId,
-                prevLogIndex,
-                prevLogTerm,
-                entries,
-                leaderCommit
-              ) => {
-            context.log.info("Received AppendEntries from {}", leaderId)
+          case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
+            state.refs.getRef(leaderId) ! AppendEntriesResponse(
+              persistent.term,
+              false
+            )
+            this.main(state, persistent)
+          }
+          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Leader => {
+            context.log.info("Received AppendEntries as leader from {}", leaderId)
+            assert(term > persistent.term)
+            val nstate = state.copy(role = Role.Follower)
+            // Switch loop -- follower
+            this.resetElection(nstate)
+            this.stopHeartbeat(nstate)
+            this.main(nstate, persistent)
+          }
+          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Candidate => {
+            context.log.info("Received AppendEntries as candidate from {}", leaderId)
+            val nstate = state.copy(role = Role.Follower)
+            this.resetElection(state)
+            this.main(nstate, persistent)
+          }
+          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Follower => {
+            context.log.info("Received AppendEntries as follower from {}", leaderId)
             this.resetElection(state)
             this.main(state, persistent)
           }
+
           case AppendEntriesResponse(term, success) => {
-            context.log.info("Received AppendEntriesResponse from {}", term)
+            context.log.info("Received AppendEntriesResponse")
             this.main(state, persistent)
           }
 
@@ -186,16 +208,16 @@ final class Process[T <: Serializable] {
             this.main(state, npersistent)
           }
           case RequestVoteResponse(term, voteGranted)
-              if term < persistent.term || state.isLeader || !voteGranted =>
+              if term < persistent.term || state.role != Role.Candidate || !voteGranted =>
             this.main(state, persistent)
           case RequestVoteResponse(term, voteGranted) => {
             context.log.info("Received a vote")
             val nstate = state.copy(
               votes = state.votes + 1,
-              isLeader = (state.votes + 1) > state.refs.size / 2
+              role = if ((state.votes + 1) > state.refs.size / 2) Role.Leader else Role.Candidate
             )
 
-            if (nstate.isLeader) {
+            if (nstate.role == Role.Leader) {
               context.log.info("{} becoming leader", nstate.self)
               // Switch loop -- leader
               this.stopElection(nstate)
@@ -204,6 +226,7 @@ final class Process[T <: Serializable] {
 
             this.main(nstate, persistent)
           }
+
           case _ => Behaviors.stopped
         }
       }
