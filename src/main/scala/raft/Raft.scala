@@ -17,7 +17,7 @@ enum Role:
 
 final private case class State[T <: Serializable](
     self: ProcessID,
-    refs: Processes[Message[T]],
+    refs: Processes[T],
     timers: TimerScheduler[Message[T]],
     commitIndex: Int,
     lastApplied: Int,
@@ -31,7 +31,7 @@ sealed trait Message[T <: Serializable]
 
 // Public
 final case class Refs[T <: Serializable](
-    refs: Processes[Message[T]]
+    refs: Processes[T]
 ) extends Message[T]
 final case class Append[T <: Serializable](
     entries: List[T]

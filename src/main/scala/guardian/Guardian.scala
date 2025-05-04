@@ -42,7 +42,7 @@ object Guardian {
   }
 
   private def main(
-      refs: Processes[raft.Message[String]]
+      refs: Processes[String]
   ): Behavior[Message] =
     Behaviors.receive { (context, message) =>
       message match {

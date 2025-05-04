@@ -1,0 +1,161 @@
+14:28:08.073 [] INFO - Slf4jLogger started
+14:28:08.092 [akka.actor.ActorSystemImpl(guardian)] WARN - Dev use only. Free keys at https://akka.io/key
+14:28:08.154 [akka://guardian/user] INFO - Starting 3 processes
+14:28:08.159 [akka://guardian/user/process-0] INFO - Starting process 0
+14:28:08.160 [akka://guardian/user/process-1] INFO - Starting process 1
+14:28:08.160 [akka://guardian/user/process-2] INFO - Starting process 2
+14:28:08.162 [akka://guardian/user] INFO - Received GetRefs for raft.ProcessID@0
+14:28:08.164 [akka://guardian/user] INFO - Received GetRefs for raft.ProcessID@1
+14:28:08.165 [akka://guardian/user] INFO - Received GetRefs for raft.ProcessID@2
+14:28:08.377 [akka://guardian/user/process-1] TRACE- Converting to candidate raft.ProcessID@1
+14:28:08.385 [akka://guardian/user/process-2] TRACE- Granted vote to raft.ProcessID@1
+14:28:08.385 [akka://guardian/user/process-0] TRACE- Granted vote to raft.ProcessID@1
+14:28:08.387 [akka://guardian/user/process-1] TRACE- Received a vote
+14:28:08.388 [akka://guardian/user/process-1] TRACE- raft.ProcessID@1 becoming leader
+14:28:08.436 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.437 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.437 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.485 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.486 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.486 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.536 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.537 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.537 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.585 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.586 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.586 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.636 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.636 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.637 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.685 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.686 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.686 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.736 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.736 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.736 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.785 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.786 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.786 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.836 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.836 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.836 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.885 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.885 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.885 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.935 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.936 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.936 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.986 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.986 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.986 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.540 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.541 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.541 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.591 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.591 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.591 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.641 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.642 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.642 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.691 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.691 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.692 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.740 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.741 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.741 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.791 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.791 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.791 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.841 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.841 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.841 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.890 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.891 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.891 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.941 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.941 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.941 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.991 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:08.991 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:08.991 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.041 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.042 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.042 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.090 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.091 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.091 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.141 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.141 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.141 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.190 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.191 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.191 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.241 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.241 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.241 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.291 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.291 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.291 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.340 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.341 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.341 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.391 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.391 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.391 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.440 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.441 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.441 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.491 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.491 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.491 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.540 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.541 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.541 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.591 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.592 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.592 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.640 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.641 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.641 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.691 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.691 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.691 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.740 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.741 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.741 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.791 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.791 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.791 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.840 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.841 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.841 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.891 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.891 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.891 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.940 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.941 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.941 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.991 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:09.991 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:09.991 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.040 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.041 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.041 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.091 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.091 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.091 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.140 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.141 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.141 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.191 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.191 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.191 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.240 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.241 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.241 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.291 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.291 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.291 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.341 [akka://guardian/user/process-1] TRACE- HeartbeatTimeout
+14:28:10.342 [akka://guardian/user/process-2] TRACE- Received AppendEntries as follower from raft.ProcessID@1
+14:28:10.342 [akka://guardian/user/process-0] TRACE- Received AppendEntries as follower from raft.ProcessID@1
