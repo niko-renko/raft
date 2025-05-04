@@ -51,7 +51,7 @@ final private case class AppendEntries[T <: Serializable](
     leaderId: ProcessID,
     prevLogIndex: Int,
     prevLogTerm: Int,
-    entries: List[T],
+    entries: List[(Int, T)],
     leaderCommit: Int
 ) extends Message[T]
 final private case class AppendEntriesResponse[T <: Serializable](
@@ -80,8 +80,8 @@ final class Process[T <: Serializable] {
           case Refs(refs) =>
             Behaviors.withTimers(_timers => {
               val timers = new Timers[T](_timers)
-              timers.register(Election, ElectionTimeout(), (150, 300))
-              timers.register(Heartbeat, HeartbeatTimeout(), (25, 50))
+              timers.register(Election, ElectionTimeout(), (150, 301))
+              timers.register(Heartbeat, HeartbeatTimeout(), (25, 51))
               timers.register(Pause, PauseTimeout(), (-1, -1))
 
               val state =
@@ -167,19 +167,23 @@ final class Process[T <: Serializable] {
             this.main(nstate, persistent)
           }
 
-          case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
+          case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, _, _) if term < persistent.term || !this.hasEntry(persistent, (prevLogIndex, prevLogTerm)) => {
             context.log.trace("Received AppendEntries")
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               false
             )
+            state.timers.set(Election)
             this.main(state, persistent)
           }
-          case AppendEntries(term, leaderId, _, _, _, _) => {
+          case AppendEntries(term, leaderId, prevLogIndex, _, entries, leaderCommit) => {
             context.log.trace("Received AppendEntries")
 
-            val npersistent = if (term > persistent.term) {
-              val npersistent = persistent.copy(term = term)
+            val npersistent = if (!entries.isEmpty || term > persistent.term) {
+              val npersistent = persistent.copy(
+                term = term,
+                log = persistent.log.take(prevLogIndex + 1) ++ entries
+              )
               npersistent.save(state.self.id)
               npersistent
             } else {
@@ -200,6 +204,11 @@ final class Process[T <: Serializable] {
                 state
               }
             }
+
+            state.refs.getRef(leaderId) ! AppendEntriesResponse(
+              persistent.term,
+              true
+            )
 
             state.timers.set(Election)
             this.main(nstate, npersistent)
@@ -265,6 +274,15 @@ final class Process[T <: Serializable] {
         }
     }
 
+  private def hasEntry(persistent: PersistentState[T], entry: (Int, Int)): Boolean = {
+    val (logIndex, logTerm) = entry
+    if (logIndex < 0 || logIndex >= persistent.log.length) {
+      false
+    } else {
+      val (thisLogTerm, _) = persistent.log(logIndex)
+      thisLogTerm == logTerm
+    }
+  }
   private def lastEntry(persistent: PersistentState[T]): (Int, Int) = {
     val lastLogIndex = persistent.log.length - 1
     val lastLogTerm = if (lastLogIndex < 0) {
