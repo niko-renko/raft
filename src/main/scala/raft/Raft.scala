@@ -85,7 +85,7 @@ final class Process[T <: Serializable] {
               timers.register(Pause, PauseTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower, false)
+                State(self, refs, timers, -1, -1, Map(), Map(), 0, Role.Follower, false)
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(Election)
@@ -263,7 +263,7 @@ final class Process[T <: Serializable] {
             val nstate = state.copy(
               role = Role.Leader,
               nextIndex = state.refs.peers(state.self).map((id, ref) => (id, persistent.log.length)).toMap,
-              matchIndex = state.refs.peers(state.self).map((id, ref) => (id, 0)).toMap,
+              matchIndex = state.refs.peers(state.self).map((id, ref) => (id, -1)).toMap,
             )
 
             state.timers.set(Heartbeat)
