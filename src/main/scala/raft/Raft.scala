@@ -133,7 +133,7 @@ final class Process[T <: Serializable] {
               votes = 1
             )
             npersistent.save(nstate.self.id)
-            context.log.info("({}) Converting to candidate", npersistent.term)
+            context.log.info("({}) Becoming candidate", npersistent.term)
 
             val (lastLogIndex, lastLogTerm) = this.lastEntry(npersistent)
             nstate.refs
@@ -168,31 +168,47 @@ final class Process[T <: Serializable] {
           }
 
           case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
+            context.log.trace("Received AppendEntries")
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               false
             )
             this.main(state, persistent)
           }
-          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Leader => {
-            context.log.trace("Received AppendEntries as leader from {}", leaderId)
-            assert(term > persistent.term)
-            val nstate = state.copy(role = Role.Follower)
-            // Switch loop -- follower
-            this.resetElection(nstate)
-            this.stopHeartbeat(nstate)
-            this.main(nstate, persistent)
-          }
-          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Candidate => {
-            context.log.trace("Received AppendEntries as candidate from {}", leaderId)
-            val nstate = state.copy(role = Role.Follower)
-            this.resetElection(state)
-            this.main(nstate, persistent)
-          }
-          case AppendEntries(term, leaderId, _, _, _, _) if state.role == Role.Follower => {
-            context.log.trace("Received AppendEntries as follower from {}", leaderId)
-            this.resetElection(state)
-            this.main(state, persistent)
+          case AppendEntries(term, leaderId, _, _, _, _) => {
+            context.log.trace("Received AppendEntries")
+
+            val npersistent = if (term > persistent.term) {
+              val npersistent = persistent.copy(term = term)
+              npersistent.save(state.self.id)
+              npersistent
+            } else {
+              persistent
+            }
+
+            val nstate = state.role match {
+              case Role.Leader => {
+                assert(term > persistent.term)
+                context.log.info("({}) Becoming follower", npersistent.term)
+                val nstate = state.copy(role = Role.Follower)
+                // Switch loop -- follower
+                this.resetElection(nstate)
+                this.stopHeartbeat(nstate)
+                nstate
+              }
+              case Role.Candidate => {
+                context.log.info("({}) Becoming follower", npersistent.term)
+                val nstate = state.copy(role = Role.Follower)
+                this.resetElection(nstate)
+                nstate
+              }
+              case Role.Follower => {
+                this.resetElection(state)
+                state
+              }
+            }
+
+            this.main(nstate, npersistent)
           }
 
           case AppendEntriesResponse(term, success) => {
