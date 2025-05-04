@@ -3,10 +3,12 @@ package raft
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
 import java.util.concurrent.TimeUnit
-
 import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.TimerScheduler
+
+import guardian.GetRefs
 
 enum Role:
   case Follower
@@ -29,7 +31,6 @@ sealed trait Message[T <: Serializable]
 
 // Public
 final case class Refs[T <: Serializable](
-    self: ProcessID,
     refs: Processes[Message[T]]
 ) extends Message[T]
 final case class Append[T <: Serializable](
@@ -70,23 +71,25 @@ private case object Election
 private case object Heartbeat
 
 final class Process[T <: Serializable] {
-  def apply(): Behavior[Message[T]] =
-    Behaviors.receive { (context, message) =>
-      message match {
-        case Refs(_, refs) if refs.size % 2 == 0 =>
-          Behaviors.stopped
-        case Refs(self, refs) =>
-          Behaviors.withTimers(timers => {
-            context.log.info("Starting process {}", self.id)
-            val state =
-              State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower)
-            val persistent = PersistentState.load[T](self.id)
-            // Switch loop -- follower
-            this.resetElection(state)
-            this.stopHeartbeat(state)
-            this.main(state, persistent)
-          })
-        case _ => Behaviors.stopped
+  def apply(self: ProcessID, parent: ActorRef[guardian.Message]): Behavior[Message[T]] =
+    Behaviors.setup { context => 
+      context.log.info("Starting process {}", self.id)
+      parent ! GetRefs(self)
+      Behaviors.receive { (context, message) => message match {
+          case Refs(refs) if refs.size % 2 == 0 =>
+            Behaviors.stopped
+          case Refs(refs) =>
+            Behaviors.withTimers(timers => {
+              val state =
+                State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower)
+              val persistent = PersistentState.load[T](self.id)
+              // Switch loop -- follower
+              this.resetElection(state)
+              this.stopHeartbeat(state)
+              this.main(state, persistent)
+            })
+          case _ => Behaviors.stopped
+        }
       }
     }
 
