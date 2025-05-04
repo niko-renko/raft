@@ -248,19 +248,24 @@ final class Process[T <: Serializable] {
           case RequestVoteResponse(term, voteGranted)
               if term < persistent.term || state.role != Role.Candidate || !voteGranted =>
             this.main(state, persistent)
+          case RequestVoteResponse(term, voteGranted) if state.votes + 1 <= state.refs.size / 2 => {
+            context.log.info("({}) Received a vote", persistent.term)
+            val nstate = state.copy(votes = state.votes + 1)
+            this.main(nstate, persistent)
+          }
           case RequestVoteResponse(term, voteGranted) => {
             context.log.info("({}) Received a vote", persistent.term)
+            context.log.info("({}) Becoming leader", persistent.term)
+
             val nstate = state.copy(
-              votes = state.votes + 1,
-              role = if ((state.votes + 1) > state.refs.size / 2) Role.Leader else Role.Candidate
+              role = Role.Leader,
+              nextIndex = state.refs.peers(state.self).map((id, ref) => (id, persistent.log.length)).toMap,
+              matchIndex = state.refs.peers(state.self).map((id, ref) => (id, 0)).toMap,
             )
 
-            if (nstate.role == Role.Leader) {
-              context.log.info("({}) Becoming leader", persistent.term)
-              // Switch loop -- leader
-              this.stopElection(nstate)
-              this.resetHeartbeat(nstate)
-            }
+            // Switch loop -- leader
+            this.stopElection(nstate)
+            this.resetHeartbeat(nstate)
 
             this.main(nstate, persistent)
           }
