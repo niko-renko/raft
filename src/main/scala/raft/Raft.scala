@@ -38,11 +38,16 @@ final case class Append[T <: Serializable](
 ) extends Message[T]
 final case class Crash[T <: Serializable](
 ) extends Message[T]
+final case class Pause[T <: Serializable](
+    seconds: Int
+) extends Message[T]
 
 // Private
 final private case class ElectionTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class HeartbeatTimeout[T <: Serializable](
+) extends Message[T]
+final private case class PauseTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class AppendEntries[T <: Serializable](
     term: Int,
@@ -67,8 +72,9 @@ final private case class RequestVoteResponse[T <: Serializable](
     voteGranted: Boolean
 ) extends Message[T]
 
-private case object Election
-private case object Heartbeat
+private case object ElectionTimer
+private case object HeartbeatTimer
+private case object PauseTimer
 
 final class Process[T <: Serializable] {
   def apply(self: ProcessID, parent: ActorRef[guardian.Message]): Behavior[Message[T]] =
@@ -107,10 +113,17 @@ final class Process[T <: Serializable] {
             context.log.info("Crashing process {}", state.self)
             throw new Exception("Crashing process")
           }
+          case Pause(seconds) => {
+            context.log.info("Pausing process {} for {} seconds", state.self, seconds)
+            state.timers.startSingleTimer(
+              Pause,
+              PauseTimeout(),
+              FiniteDuration(seconds * 1000, TimeUnit.MILLISECONDS)
+            )
+            this.pause(state, persistent)
+          }
 
           case ElectionTimeout() => {
-            context.log.trace("Converting to candidate {}", state.self)
-
             val npersistent = persistent.copy(
               term = persistent.term + 1,
               votedFor = Some(state.self)
@@ -120,6 +133,7 @@ final class Process[T <: Serializable] {
               votes = 1
             )
             npersistent.save(nstate.self.id)
+            context.log.info("({}) Converting to candidate", npersistent.term)
 
             val (lastLogIndex, lastLogTerm) = this.lastEntry(npersistent)
             nstate.refs
@@ -189,10 +203,10 @@ final class Process[T <: Serializable] {
           case requestVote: RequestVote[T]
               if this.voteGranted(requestVote, persistent) => {
             val RequestVote(term, candidateId, _, _) = requestVote
-            context.log.trace("Granted vote to {}", candidateId)
             val npersistent =
               persistent.copy(term = term, votedFor = Some(candidateId))
             npersistent.save(state.self.id)
+            context.log.info("({}) Granted vote to {}", npersistent.term, candidateId)
             state.refs.getRef(candidateId) ! RequestVoteResponse(
               npersistent.term,
               true
@@ -202,7 +216,7 @@ final class Process[T <: Serializable] {
           }
           case requestVote: RequestVote[T] => {
             val RequestVote(term, candidateId, _, _) = requestVote
-            context.log.trace("Denied vote to {}", candidateId)
+            context.log.info("({}) Denied vote to {}", persistent.term, candidateId)
             state.refs.getRef(candidateId) ! RequestVoteResponse(
               persistent.term,
               false
@@ -219,14 +233,14 @@ final class Process[T <: Serializable] {
               if term < persistent.term || state.role != Role.Candidate || !voteGranted =>
             this.main(state, persistent)
           case RequestVoteResponse(term, voteGranted) => {
-            context.log.trace("Received a vote")
+            context.log.info("({}) Received a vote", persistent.term)
             val nstate = state.copy(
               votes = state.votes + 1,
               role = if ((state.votes + 1) > state.refs.size / 2) Role.Leader else Role.Candidate
             )
 
             if (nstate.role == Role.Leader) {
-              context.log.trace("{} becoming leader", nstate.self)
+              context.log.info("({}) Becoming leader", persistent.term)
               // Switch loop -- leader
               this.stopElection(nstate)
               this.resetHeartbeat(nstate)
@@ -237,6 +251,16 @@ final class Process[T <: Serializable] {
 
           case _ => Behaviors.stopped
         }
+    }
+
+  private def pause(state: State[T], persistent: PersistentState[T]): Behavior[Message[T]] = 
+    Behaviors.receive { (context, message) => message match {
+        case PauseTimeout() => {
+          context.log.info("Resuming process {}", state.self)
+          this.main(state, persistent)
+        }
+        case message => Behaviors.unhandled
+      }
     }
 
   private def lastEntry(persistent: PersistentState[T]): (Int, Int) = {
@@ -266,22 +290,22 @@ final class Process[T <: Serializable] {
 
   private def resetElection(state: State[T]) = {
     val timeout = 150 + Random.nextInt(151)
-    state.timers.cancel(Election)
+    state.timers.cancel(ElectionTimer)
     state.timers.startSingleTimer(
-      Election,
+      ElectionTimer,
       ElectionTimeout(),
       FiniteDuration(timeout, TimeUnit.MILLISECONDS)
     )
   }
-  private def stopElection(state: State[T]) = state.timers.cancel(Election)
+  private def stopElection(state: State[T]) = state.timers.cancel(ElectionTimer)
 
   private def resetHeartbeat(state: State[T]) = {
-    state.timers.cancel(Heartbeat)
+    state.timers.cancel(HeartbeatTimer)
     state.timers.startSingleTimer(
-      Heartbeat,
+      HeartbeatTimer,
       HeartbeatTimeout(),
       FiniteDuration(25, TimeUnit.MILLISECONDS)
     )
   }
-  private def stopHeartbeat(state: State[T]) = state.timers.cancel(Heartbeat)
+  private def stopHeartbeat(state: State[T]) = state.timers.cancel(HeartbeatTimer)
 }

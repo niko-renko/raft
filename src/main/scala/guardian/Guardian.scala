@@ -6,7 +6,7 @@ import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import raft.{Processes, Process, ProcessID}
-import raft.{Refs, Append, Crash}
+import raft.{Refs, Append, Crash, Pause}
 
 sealed trait Message
 
@@ -47,7 +47,7 @@ object Guardian {
     Behaviors.receive { (context, message) =>
       message match {
         case GetRefs(process) => {
-          context.log.info("Received GetRefs for {}", process)
+          context.log.info("Received GetRefs from {}", process)
           refs.getRef(process) ! Refs(refs)
           this.main(refs)
         }
@@ -57,17 +57,13 @@ object Guardian {
           val parts = command.split(" ")
           val action = parts(0)
           val processId = ProcessID(parts(1).toInt)
-          val process = refs.find(_._1 == processId)
+          val ref = refs.getRef(processId)
 
-          if (!process.isEmpty) {
-            val ref = process.get._2
-            action match {
-              case "crash"  => ref ! Crash()
-              case "append" => ref ! Append(List(parts(2)))
-              case _        => context.log.info("Invalid command: {}", command)
-            }
-          } else {
-            context.log.info("Process {} not found", processId)
+          action match {
+            case "crash"  => ref ! Crash()
+            case "append" => ref ! Append(List(parts(2)))
+            case "pause"  => ref ! Pause(parts(2).toInt)
+            case _        => context.log.info("Invalid command: {}", command)
           }
 
           this.main(refs)

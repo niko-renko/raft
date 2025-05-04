@@ -1,0 +1,9 @@
+15:13:42.653 [akka://guardian/user] INFO - Received command: pause 0 1
+15:13:42.653 [akka://guardian/user/process-0] INFO - Pausing process raft.ProcessID@0 for 1 seconds
+15:13:42.875 [akka://guardian/user/process-2] INFO - (22) Converting to candidate
+15:13:42.875 [akka://guardian/user/process-1] INFO - (23) Converting to candidate
+15:13:42.876 [akka://guardian/user/process-1] INFO - (23) Denied vote to raft.ProcessID@2
+15:13:42.877 [akka://guardian/user/process-2] INFO - (23) Granted vote to raft.ProcessID@1
+15:13:42.877 [akka://guardian/user/process-1] INFO - (23) Received a vote
+15:13:42.877 [akka://guardian/user/process-1] INFO - (23) Becoming leader
+15:13:43.664 [akka://guardian/user/process-0] INFO - Resuming process raft.ProcessID@0
