@@ -12,7 +12,8 @@ object PersistentState {
   def load[T <: Serializable](id: Int): PersistentState[T] = {
     val filename = s"persistent-state/${id}.state"
     if (!Files.exists(Paths.get(filename))) {
-      return PersistentState(0, None, List())
+      // Will never dereference null!
+      return PersistentState(0, None, List((0, null.asInstanceOf[T])))
     }
     val stream = new ObjectInputStream(new FileInputStream(filename))
     val persistentState = stream.readObject().asInstanceOf[PersistentState[T]]
@@ -33,5 +34,20 @@ final case class PersistentState[T <: Serializable](
     stream.writeObject(this)
     stream.close()
     ()
+  }
+
+  def has(logIndex: Int, logTerm: Int): Boolean = {
+    if (logIndex < 0 || logIndex >= this.log.length) {
+      false
+    } else {
+      val (thisLogTerm, _) = this.log(logIndex)
+      thisLogTerm == logTerm
+    }
+  }
+
+  def last(): (Int, Int) = {
+    val lastLogIndex = this.log.length - 1
+    val (lastLogTerm, _) = this.log(lastLogIndex)
+    (lastLogIndex, lastLogTerm)
   }
 }

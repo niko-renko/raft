@@ -85,7 +85,7 @@ final class Process[T <: Serializable] {
               timers.register(Pause, PauseTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, timers, -1, -1, Map(), Map(), 0, Role.Follower, false)
+                State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower, false)
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(Election)
@@ -120,7 +120,7 @@ final class Process[T <: Serializable] {
             npersistent.save(nstate.self.id)
             context.log.info("({}) Becoming candidate", npersistent.term)
 
-            val (lastLogIndex, lastLogTerm) = this.lastEntry(npersistent)
+            val (lastLogIndex, lastLogTerm) = npersistent.last()
             nstate.refs
               .peers(nstate.self)
               .foreach((id, ref) =>
@@ -135,15 +135,16 @@ final class Process[T <: Serializable] {
             this.main(nstate, npersistent)
           }
           case HeartbeatTimeout() => {
-            context.log.trace("HeartbeatTimeout")
+            val (lastLogIndex, lastLogTerm) = persistent.last()
+            context.log.trace("HeartbeatTimeout ({}, {})", lastLogIndex, lastLogTerm)
             state.refs
               .peers(state.self)
               .foreach((id, ref) =>
                 ref ! AppendEntries(
                   persistent.term,
                   state.self,
-                  state.commitIndex,
-                  state.lastApplied,
+                  lastLogIndex,
+                  lastLogTerm,
                   List(),
                   state.commitIndex
                 )
@@ -167,7 +168,7 @@ final class Process[T <: Serializable] {
             this.main(nstate, persistent)
           }
 
-          case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, _, _) if term < persistent.term || !this.hasEntry(persistent, (prevLogIndex, prevLogTerm)) => {
+          case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, _, _) if term < persistent.term || !persistent.has(prevLogIndex, prevLogTerm) => {
             context.log.trace("Received AppendEntries")
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
@@ -209,13 +210,18 @@ final class Process[T <: Serializable] {
               persistent.term,
               true
             )
-
             state.timers.set(Election)
             this.main(nstate, npersistent)
           }
 
+          // Do we need to become a follower here?
+          case AppendEntriesResponse(term, _) if term > persistent.term => {
+            val npersistent = persistent.copy(term = term)
+            npersistent.save(state.self.id)
+            this.main(state, npersistent)
+          }
           case AppendEntriesResponse(term, success) => {
-            context.log.trace("Received AppendEntriesResponse")
+            context.log.trace("Received AppendEntriesResponse {}", success)
             this.main(state, persistent)
           }
 
@@ -243,6 +249,7 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
 
+          // Do we need to become a follower here?
           case RequestVoteResponse(term, _) if term > persistent.term => {
             val npersistent = persistent.copy(term = term)
             npersistent.save(state.self.id)
@@ -263,7 +270,7 @@ final class Process[T <: Serializable] {
             val nstate = state.copy(
               role = Role.Leader,
               nextIndex = state.refs.peers(state.self).map((id, ref) => (id, persistent.log.length)).toMap,
-              matchIndex = state.refs.peers(state.self).map((id, ref) => (id, -1)).toMap,
+              matchIndex = state.refs.peers(state.self).map((id, ref) => (id, 0)).toMap,
             )
 
             state.timers.set(Heartbeat)
@@ -274,31 +281,12 @@ final class Process[T <: Serializable] {
         }
     }
 
-  private def hasEntry(persistent: PersistentState[T], entry: (Int, Int)): Boolean = {
-    val (logIndex, logTerm) = entry
-    if (logIndex < 0 || logIndex >= persistent.log.length) {
-      false
-    } else {
-      val (thisLogTerm, _) = persistent.log(logIndex)
-      thisLogTerm == logTerm
-    }
-  }
-  private def lastEntry(persistent: PersistentState[T]): (Int, Int) = {
-    val lastLogIndex = persistent.log.length - 1
-    val lastLogTerm = if (lastLogIndex < 0) {
-      -1
-    } else {
-      val (lastLogTerm, _) = persistent.log(lastLogIndex)
-      lastLogTerm
-    }
-    (lastLogIndex, lastLogTerm)
-  }
   private def voteGranted(
       requestVote: RequestVote[T],
       persistent: PersistentState[T]
   ): Boolean = {
     val RequestVote(term, candidateId, lastLogIndex, lastLogTerm) = requestVote
-    val (thisLastLogIndex, thisLastLogTerm) = this.lastEntry(persistent)
+    val (thisLastLogIndex, thisLastLogTerm) = persistent.last()
     if (term > persistent.term) {
       lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
     } else if (term == persistent.term) {
