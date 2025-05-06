@@ -4,7 +4,7 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import guardian.GetRefs
+import guardian.{Refs, AppendResponse}
 
 enum Role:
   case Follower
@@ -14,6 +14,7 @@ enum Role:
 final private case class State[T <: Serializable](
     self: ProcessID,
     refs: Processes[T],
+    parent: ActorRef[guardian.Message],
     timers: Timers[T],
     commitIndex: Int,
     lastApplied: Int,
@@ -27,7 +28,7 @@ final private case class State[T <: Serializable](
 sealed trait Message[T <: Serializable]
 
 // Public
-final case class Refs[T <: Serializable](
+final case class RefsResponse[T <: Serializable](
     refs: Processes[T]
 ) extends Message[T]
 final case class Append[T <: Serializable](
@@ -73,11 +74,11 @@ final class Process[T <: Serializable] {
   def apply(self: ProcessID, parent: ActorRef[guardian.Message]): Behavior[Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting process {}", self.id)
-      parent ! GetRefs(self)
+      parent ! Refs(self)
       Behaviors.receive { (context, message) => message match {
-          case Refs(refs) if refs.size % 2 == 0 =>
+          case RefsResponse(refs) if refs.size % 2 == 0 =>
             Behaviors.stopped
-          case Refs(refs) =>
+          case RefsResponse(refs) =>
             Behaviors.withTimers(_timers => {
               val timers = new Timers[T](_timers)
               timers.register(Election, ElectionTimeout(), (150, 301))
@@ -85,7 +86,7 @@ final class Process[T <: Serializable] {
               timers.register(Pause, PauseTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, timers, 0, 0, Map(), Map(), 0, Role.Follower, false)
+                State(self, refs, parent, timers, 0, 0, Map(), Map(), 0, Role.Follower, false)
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(Election)
@@ -155,6 +156,7 @@ final class Process[T <: Serializable] {
 
           case Append(entries) => {
             context.log.info("Received Append for {}", entries)
+            state.parent ! AppendResponse(false)
             this.main(state, persistent)
           }
           case Crash() => {
