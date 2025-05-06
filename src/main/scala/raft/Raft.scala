@@ -169,7 +169,7 @@ final class Process[T <: Serializable] {
           }
 
           case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
-            context.log.trace("Received AppendEntries")
+            context.log.trace("({}) Received AppendEntries", term)
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               false
@@ -177,18 +177,19 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
           case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, entries, leaderCommit) => {
-            context.log.trace("Received AppendEntries")
-
+            context.log.trace("({}) Received AppendEntries", term)
             val hasPrev = persistent.has(prevLogIndex, prevLogTerm)
+
             val npersistent = if (!entries.isEmpty && hasPrev) {
               val npersistent = persistent.copy(
                 term = term,
+                votedFor = if (term > persistent.term) None else persistent.votedFor,
                 log = persistent.log.take(prevLogIndex + 1) ++ entries
               )
               npersistent.save(state.self.id)
               npersistent
             } else if (term > persistent.term) {
-              val npersistent = persistent.copy(term = term)
+              val npersistent = persistent.copy(term = term, votedFor = None)
               npersistent.save(state.self.id)
               npersistent
             } else {
@@ -203,28 +204,34 @@ final class Process[T <: Serializable] {
               state
             }
 
+            nstate.timers.set(Election)
+
             nstate.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               hasPrev
             )
-            nstate.timers.set(Election)
             this.main(nstate, npersistent)
           }
 
-          case AppendEntriesResponse(term, _) if term < persistent.term || state.role != Role.Leader => this.main(state, persistent)
-          case AppendEntriesResponse(term, _) if term > persistent.term => {
-            val npersistent = persistent.copy(term = term)
+          case AppendEntriesResponse(term, success) if term < persistent.term || state.role != Role.Leader => {
+            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
+            this.main(state, persistent)
+          }
+          case AppendEntriesResponse(term, success) if term > persistent.term => {
+            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
+            val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
             nstate.timers.set(Election)
             this.main(nstate, npersistent)
           }
-          case AppendEntriesResponse(term, success) if term == persistent.term => {
-            context.log.trace("Received AppendEntriesResponse {}", success)
+          case AppendEntriesResponse(term, success) => {
+            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             this.main(state, persistent)
           }
 
-          case RequestVote(term, candidateId, _, _) if term < persistent.term || state.role != Role.Follower => {
+          case RequestVote(term, candidateId, _, _) if term < persistent.term => {
+            context.log.trace("({}) Received RequestVote", term)
             context.log.info("({}) Denied vote to {}", persistent.term, candidateId)
             state.refs.getRef(candidateId) ! RequestVoteResponse(
               persistent.term,
@@ -233,6 +240,7 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
           case RequestVote(term, candidateId, lastLogIndex, lastLogTerm) => {
+            context.log.trace("({}) Received RequestVote", term)
             val (thisLastLogIndex, thisLastLogTerm) = persistent.last()
             val upToDate = lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
             val decision = (term > persistent.term || (term == persistent.term && candidateId == persistent.votedFor.get)) && upToDate
@@ -242,44 +250,53 @@ final class Process[T <: Serializable] {
               npersistent.save(state.self.id)
               npersistent
             } else if (term > persistent.term) {
-              val npersistent = persistent.copy(term = term)
+              val npersistent = persistent.copy(term = term, votedFor = None)
               npersistent.save(state.self.id)
               npersistent
             } else {
               persistent
             }
             
+            val nstate = if (term > persistent.term && (state.role == Role.Leader || state.role == Role.Candidate)) {
+              state.copy(role = Role.Follower)
+            } else {
+              state
+            }
+
             if (decision) {
               context.log.info("({}) Granted vote to {}", npersistent.term, candidateId)
-              state.timers.set(Election)
+              nstate.timers.set(Election)
             } else {
               context.log.info("({}) Denied vote to {}", npersistent.term, candidateId)
             }
-            
-            state.refs.getRef(candidateId) ! RequestVoteResponse(
+
+            nstate.refs.getRef(candidateId) ! RequestVoteResponse(
               npersistent.term,
               decision
             )
-
-            this.main(state, npersistent)
+            this.main(nstate, npersistent)
           }
 
           case RequestVoteResponse(term, voteGranted)
-              if term < persistent.term || state.role != Role.Candidate || !voteGranted =>
+              if term < persistent.term || state.role != Role.Candidate || !voteGranted => {
+            context.log.trace("({}) Received RequestVoteResponse", term)
             this.main(state, persistent)
+          }
           case RequestVoteResponse(term, _) if term > persistent.term => {
-            val npersistent = persistent.copy(term = term)
+            context.log.trace("({}) Received RequestVoteResponse", term)
+            val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
-            // nstate.timers.set(Election) -- TODO: Don't think I need to reset the timer here??
             this.main(nstate, npersistent)
           }
           case RequestVoteResponse(term, _) if state.votes + 1 <= state.refs.size / 2 => {
+            context.log.trace("({}) Received RequestVoteResponse", term)
             context.log.info("({}) Received a vote", persistent.term)
             val nstate = state.copy(votes = state.votes + 1)
             this.main(nstate, persistent)
           }
           case RequestVoteResponse(term, _) => {
+            context.log.trace("({}) Received RequestVoteResponse", term)
             context.log.info("({}) Received a vote", persistent.term)
             context.log.info("({}) Becoming leader", persistent.term)
 
