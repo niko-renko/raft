@@ -23,7 +23,8 @@ final private case class State[T <: Serializable](
     votes: Int,
     role: Role,
     leaderId: Option[ProcessID],
-    paused: Boolean
+    asleep: Boolean,
+    delayed: List[Message[T]]
 )
 
 sealed trait Message[T <: Serializable]
@@ -89,7 +90,7 @@ final class Process[T <: Serializable] {
               timers.register(timers.Sleep, SleepTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false)
+                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List())
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(timers.Election)
@@ -108,10 +109,15 @@ final class Process[T <: Serializable] {
         message match {
           case SleepTimeout() => {
             context.log.info("SleepTimeout")
-            val nstate = state.copy(paused = false)
+            state.delayed.foreach(message => context.self ! message)
+            val nstate = state.copy(asleep = false, delayed = List())
             this.main(nstate, persistent)
           }
-          case _ if state.paused => Behaviors.unhandled
+          case message: Message[T] if state.asleep => {
+            context.log.trace("Delayed message: {}", message)
+            val nstate = state.copy(delayed = state.delayed :+ message)
+            this.main(nstate, persistent)
+          }
           case ElectionTimeout() => {
             context.log.trace("ElectionTimeout")
             val npersistent = persistent.copy(
@@ -176,7 +182,7 @@ final class Process[T <: Serializable] {
           case Sleep(seconds) => {
             context.log.info("Sleeping for {} seconds", seconds)
             state.timers.set(state.timers.Sleep, seconds * 1000)
-            val nstate = state.copy(paused = true)
+            val nstate = state.copy(asleep = true, delayed = List())
             this.main(nstate, persistent)
           }
 
@@ -201,7 +207,7 @@ final class Process[T <: Serializable] {
                 votedFor = if (term > persistent.term) None else persistent.votedFor,
                 log = persistent.log.take(prevLogIndex + 1) ++ entries
               )
-              context.log.info("({}) Updated log {}", npersistent.term, npersistent.log)
+              context.log.info("({}) Replicated log {}", npersistent.term, npersistent.log)
               npersistent.save(state.self.id)
               npersistent
             } else if (term > persistent.term) {
