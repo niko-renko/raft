@@ -59,7 +59,8 @@ final private case class AppendEntries[T <: Serializable](
 ) extends Message[T]
 final private case class AppendEntriesResponse[T <: Serializable](
     term: Int,
-    success: Boolean
+    success: Boolean,
+    process: ProcessID
 ) extends Message[T]
 final private case class RequestVote[T <: Serializable](
     term: Int,
@@ -198,7 +199,8 @@ final class Process[T <: Serializable] {
             context.log.trace("({}) Received AppendEntries", term)
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
-              false
+              false,
+              state.self
             )
             this.main(state, persistent)
           }
@@ -236,16 +238,13 @@ final class Process[T <: Serializable] {
 
             nstate.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
-              hasPrev
+              hasPrev,
+              state.self
             )
             this.main(nstate, npersistent)
           }
 
-          case AppendEntriesResponse(term, success) if term < persistent.term || state.role != Role.Leader => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-            this.main(state, persistent)
-          }
-          case AppendEntriesResponse(term, success) if term > persistent.term => {
+          case AppendEntriesResponse(term, success, _) if term > persistent.term => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
@@ -253,7 +252,11 @@ final class Process[T <: Serializable] {
             nstate.timers.set(Election)
             this.main(nstate, npersistent)
           }
-          case AppendEntriesResponse(term, success) => {
+          case AppendEntriesResponse(term, success, _) if term < persistent.term || state.role != Role.Leader || success => {
+            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
+            this.main(state, persistent)
+          }
+          case AppendEntriesResponse(term, success, process) => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             this.main(state, persistent)
           }
@@ -305,17 +308,17 @@ final class Process[T <: Serializable] {
             this.main(nstate, npersistent)
           }
 
-          case RequestVoteResponse(term, voteGranted)
-              if term < persistent.term || state.role != Role.Candidate || !voteGranted => {
-            context.log.trace("({}) Received RequestVoteResponse", term)
-            this.main(state, persistent)
-          }
           case RequestVoteResponse(term, _) if term > persistent.term => {
             context.log.trace("({}) Received RequestVoteResponse", term)
             val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
             this.main(nstate, npersistent)
+          }
+          case RequestVoteResponse(term, voteGranted)
+              if term < persistent.term || state.role != Role.Candidate || !voteGranted => {
+            context.log.trace("({}) Received RequestVoteResponse", term)
+            this.main(state, persistent)
           }
           case RequestVoteResponse(term, _) if state.votes + 1 <= state.refs.size / 2 => {
             context.log.trace("({}) Received RequestVoteResponse", term)
