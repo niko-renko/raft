@@ -142,20 +142,12 @@ final class Process[T <: Serializable] {
           case HeartbeatTimeout() => {
             context.log.trace("HeartbeatTimeout")
 
-            val needHeartbeat = state.lastEntriesTime
-              .filter((_, lastEntryTime) => System.currentTimeMillis() - lastEntryTime >= 50)
+            val needHeartbeat = state.refs
+              .peers(state.self)
+              .filter((id, _) => System.currentTimeMillis() - state.lastEntriesTime(id) >= 50)
+              .toList
 
-            val nstate = if (needHeartbeat.size > 0) {
-              val now = System.currentTimeMillis()
-              val newTime = needHeartbeat.map((id, _) => (id, now))
-              val nstate = state.copy(lastEntriesTime = state.lastEntriesTime ++ newTime)
-
-              needHeartbeat.foreach((id, _) => nstate.refs.getRef(id) ! this.appendEntriesMessage(nstate, persistent, id))
-              nstate
-            } else {
-              state
-            }
-
+            val nstate = this.replicate(state, persistent, needHeartbeat)
             state.timers.set(Heartbeat)
             this.main(nstate, persistent)
           }
@@ -170,9 +162,11 @@ final class Process[T <: Serializable] {
             val termEntries = entries.map(entry => (persistent.term, entry))
             val npersistent = persistent.copy(log = persistent.log ++ termEntries)
             npersistent.save(state.self.id)
+            val nstate = this.replicate(state, npersistent, state.refs.peers(state.self).toList)
+
             // TODO: reply when committed
             // state.parent ! AppendResponse(true, Some(state.self))
-            this.main(state, npersistent)
+            this.main(nstate, npersistent)
           }
 
           case Crash() => {
@@ -251,21 +245,22 @@ final class Process[T <: Serializable] {
           case AppendEntriesResponse(term, success, process) if success => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             val (lastLogIndex, lastLogTerm) = persistent.last()
+
             val nstate = if (state.nextIndex(process) < lastLogIndex + 1) {
               context.log.info("({}) Replicated", persistent.term)
               state.copy(nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)))
             } else {
               state
             }
+
             this.main(nstate, persistent)
           }
           case AppendEntriesResponse(term, success, process) => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             context.log.info("({}) Inconsistency", persistent.term)
-            val newNextIndex = state.nextIndex(process) - 1
-            val now = System.currentTimeMillis()
-            val nstate = state.copy(nextIndex = state.nextIndex + (process -> newNextIndex), lastEntriesTime = state.lastEntriesTime + (process -> now))
-            nstate.refs.getRef(process) ! this.appendEntriesMessage(nstate, persistent, process)
+            val refs = state.refs.peers(state.self).filter((id, _) => id == process).toList
+            val nextIndex = state.nextIndex + (process -> (state.nextIndex(process) - 1))
+            val nstate = this.replicate(state.copy(nextIndex = nextIndex), persistent, refs)
             this.main(nstate, persistent)
           }
 
@@ -354,17 +349,23 @@ final class Process[T <: Serializable] {
         }
     }
 
-  private def appendEntriesMessage(state: State[T], persistent: PersistentState[T], id: ProcessID): AppendEntries[T] = {
-    val nextIndex = state.nextIndex(id)
-    val prevLogIndex = nextIndex - 1
-    val (prevLogTerm, _) = persistent(prevLogIndex)
-    AppendEntries(
-      persistent.term,
-      state.self,
-      prevLogIndex,
-      prevLogTerm,
-      persistent.from(nextIndex),
-      state.commitIndex
-    )
+  private def replicate(state: State[T], persistent: PersistentState[T], processes: Iterable[(ProcessID, ActorRef[Message[T]])]): State[T] = {
+    processes.foreach((id, ref) => {
+      val nextIndex = state.nextIndex(id)
+      val prevLogIndex = nextIndex - 1
+      val (prevLogTerm, _) = persistent(prevLogIndex)
+      ref ! AppendEntries(
+        persistent.term,
+        state.self,
+        prevLogIndex,
+        prevLogTerm,
+        persistent.from(nextIndex),
+        state.commitIndex
+      )
+    })
+
+    val now = System.currentTimeMillis()
+    val newTime = processes.map((id, _) => (id, now)).toMap
+    state.copy(lastEntriesTime = state.lastEntriesTime ++ newTime)
   }
 }
