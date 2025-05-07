@@ -77,7 +77,7 @@ final private case class RequestVoteResponse[T <: Serializable](
 final class Process[T <: Serializable] {
   def apply(self: ProcessID, parent: ActorRef[guardian.Message]): Behavior[Message[T]] =
     Behaviors.setup { context => 
-      context.log.info("Starting process {}", self.id)
+      context.log.info("Starting")
       parent ! Refs(self)
       Behaviors.receive { (context, message) => message match {
           case RefsResponse(refs) if refs.size % 2 == 0 =>
@@ -105,21 +105,23 @@ final class Process[T <: Serializable] {
       state: State[T],
       persistent: PersistentState[T]
   ): Behavior[Message[T]] =
-    Behaviors.receive { (context, message) =>
-        message match {
-          case SleepTimeout() => {
-            context.log.info("SleepTimeout")
+    Behaviors.receive { (context, message) => 
+      message match {
+        case _: Append[T] | _: Crash[T] | _: Sleep[T] => context.log.info("{}", message)
+        case _ => context.log.trace("{}", message)
+      }
+
+      message match {
+        case SleepTimeout() => {
             state.delayed.foreach(message => context.self ! message)
             val nstate = state.copy(asleep = false, delayed = List())
             this.main(nstate, persistent)
           }
           case message: Message[T] if state.asleep => {
-            context.log.trace("Delayed message: {}", message)
             val nstate = state.copy(delayed = state.delayed :+ message)
             this.main(nstate, persistent)
           }
           case ElectionTimeout() => {
-            context.log.trace("ElectionTimeout")
             val npersistent = persistent.copy(
               term = persistent.term + 1,
               votedFor = Some(state.self)
@@ -146,8 +148,6 @@ final class Process[T <: Serializable] {
             this.main(nstate, npersistent)
           }
           case HeartbeatTimeout() => {
-            context.log.trace("HeartbeatTimeout")
-
             val needHeartbeat = state.refs
               .peers(state.self)
               .filter((id, _) => System.currentTimeMillis() - state.lastEntriesTime(id) >= 50)
@@ -159,15 +159,14 @@ final class Process[T <: Serializable] {
           }
 
           case Append(entries) if state.role != Role.Leader => {
-            context.log.info("Appending {}", entries)
             state.parent ! AppendResponse(false, state.leaderId)
             this.main(state, persistent)
           }
           case Append(entries) => {
-            context.log.info("Appending {}", entries)
             val termEntries = entries.map(entry => (persistent.term, entry))
             val npersistent = persistent.copy(log = persistent.log ++ termEntries)
             npersistent.save(state.self.id)
+            context.log.info("Leader Log: {}", npersistent.log)
             val nstate = this.replicate(state, npersistent, state.refs.peers(state.self).toList)
 
             // TODO: reply when committed
@@ -175,19 +174,14 @@ final class Process[T <: Serializable] {
             this.main(nstate, npersistent)
           }
 
-          case Crash() => {
-            context.log.info("Crashing")
-            throw new Exception("DEADBEEF")
-          }
+          case Crash() => throw new Exception("DEADBEEF")
           case Sleep(seconds) => {
-            context.log.info("Sleeping for {} seconds", seconds)
             state.timers.set(state.timers.Sleep, seconds * 1000)
             val nstate = state.copy(asleep = true, delayed = List())
             this.main(nstate, persistent)
           }
 
           case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
-            context.log.trace("({}) Received AppendEntries", term)
             val (lastLogIndex, _) = persistent.last()
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
@@ -198,7 +192,6 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
           case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, entries, leaderCommit) => {
-            context.log.trace("({}) Received AppendEntries", term)
             val hasPrev = persistent.has(prevLogIndex, prevLogTerm)
 
             val npersistent = if (!entries.isEmpty && hasPrev) {
@@ -207,7 +200,7 @@ final class Process[T <: Serializable] {
                 votedFor = if (term > persistent.term) None else persistent.votedFor,
                 log = persistent.log.take(prevLogIndex + 1) ++ entries
               )
-              context.log.info("({}) Replicated log {}", npersistent.term, npersistent.log)
+              context.log.info("Follower Log: {}", npersistent.log)
               npersistent.save(state.self.id)
               npersistent
             } else if (term > persistent.term) {
@@ -223,7 +216,7 @@ final class Process[T <: Serializable] {
 
             assert(state.commitIndex <= commitIndex) // Increases monotonically
             if (state.commitIndex < commitIndex) {
-              context.log.info("({}) CommitIndex propagated to {}", persistent.term, commitIndex)
+              context.log.info("Follower CommitIndex: {}", commitIndex)
             }
 
             val nstate = if (state.role == Role.Leader || state.role == Role.Candidate) {
@@ -249,46 +242,43 @@ final class Process[T <: Serializable] {
           }
 
           case AppendEntriesResponse(term, success, _, _) if term > persistent.term => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
             nstate.timers.set(state.timers.Election)
             this.main(nstate, npersistent)
           }
-          case AppendEntriesResponse(term, success, _, _) if term < persistent.term || state.role != Role.Leader => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-            this.main(state, persistent)
-          }
+          case AppendEntriesResponse(term, success, _, _) if term < persistent.term || state.role != Role.Leader => this.main(state, persistent)
           case AppendEntriesResponse(term, success, _, process) if !success => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-            context.log.info("({}) Inconsistency", persistent.term)
+            val nextIndex = (process -> (state.nextIndex(process) - 1))
+            context.log.info("NextIndex: {}", nextIndex)
+
             val ref = state.refs.peers(state.self).filter((id, _) => id == process).toList
-            val nextIndex = state.nextIndex + (process -> (state.nextIndex(process) - 1))
-            val nstate = this.replicate(state.copy(nextIndex = nextIndex), persistent, ref)
+            val nstate = this.replicate(state.copy(nextIndex = state.nextIndex + nextIndex), persistent, ref)
             this.main(nstate, persistent)
           }
           case AppendEntriesResponse(term, success, lastLogIndex, process) => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-
             assert(state.matchIndex(process) <= lastLogIndex) // Increases monotonically
             val nstate = if (state.nextIndex(process) < lastLogIndex + 1) {
-              context.log.info("({}) {} replicated up to {}", persistent.term, process, lastLogIndex)
-              val matchIndex = state.matchIndex + (process -> lastLogIndex)
-              // TODO: compute commitIndex
+              val nextIndex = (process -> (lastLogIndex + 1))
+              context.log.info("NextIndex: {}", nextIndex)
+
               state.copy(
-                nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
-                matchIndex = matchIndex
+                nextIndex = state.nextIndex + nextIndex,
+                matchIndex = state.matchIndex + (process -> lastLogIndex)
               )
             } else {
               state
+            }
+
+            if (state.commitIndex < nstate.commitIndex) {
+              context.log.info("Leader CommitIndex: {}", nstate.commitIndex)
             }
 
             this.main(nstate, persistent)
           }
 
           case RequestVote(term, candidateId, _, _) if term < persistent.term => {
-            context.log.trace("({}) Received RequestVote", term)
             context.log.info("({}) Denied vote to {}", persistent.term, candidateId)
             state.refs.getRef(candidateId) ! RequestVoteResponse(
               persistent.term,
@@ -297,7 +287,6 @@ final class Process[T <: Serializable] {
             this.main(state, persistent)
           }
           case RequestVote(term, candidateId, lastLogIndex, lastLogTerm) => {
-            context.log.trace("({}) Received RequestVote", term)
             val (thisLastLogIndex, thisLastLogTerm) = persistent.last()
             val upToDate = lastLogTerm > thisLastLogTerm || (lastLogTerm == thisLastLogTerm && lastLogIndex >= thisLastLogIndex)
             val decision = (term > persistent.term || (term == persistent.term && candidateId == persistent.votedFor.get)) && upToDate
@@ -335,26 +324,18 @@ final class Process[T <: Serializable] {
           }
 
           case RequestVoteResponse(term, _) if term > persistent.term => {
-            context.log.trace("({}) Received RequestVoteResponse", term)
             val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
             this.main(nstate, npersistent)
           }
           case RequestVoteResponse(term, voteGranted)
-              if term < persistent.term || state.role != Role.Candidate || !voteGranted => {
-            context.log.trace("({}) Received RequestVoteResponse", term)
-            this.main(state, persistent)
-          }
+              if term < persistent.term || state.role != Role.Candidate || !voteGranted => this.main(state, persistent)
           case RequestVoteResponse(term, _) if state.votes + 1 <= state.refs.size / 2 => {
-            context.log.trace("({}) Received RequestVoteResponse", term)
-            context.log.info("({}) Received a vote", persistent.term)
             val nstate = state.copy(votes = state.votes + 1)
             this.main(nstate, persistent)
           }
           case RequestVoteResponse(term, _) => {
-            context.log.trace("({}) Received RequestVoteResponse", term)
-            context.log.info("({}) Received a vote", persistent.term)
             context.log.info("({}) Becoming leader", persistent.term)
 
             val nstate = state.copy(
