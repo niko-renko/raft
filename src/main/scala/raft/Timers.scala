@@ -7,13 +7,13 @@ import akka.actor.typed.scaladsl.TimerScheduler
 
 private sealed trait TimerKey
 
-private object Election extends TimerKey
-private object Heartbeat extends TimerKey
-private object Pause extends TimerKey
-
 final private class Timers[T <: Serializable](
     timers: TimerScheduler[Message[T]]
 ) {
+  object Election extends TimerKey
+  object Heartbeat extends TimerKey
+  object Sleep extends TimerKey
+
   private var registry: Map[TimerKey, (Message[T], Int, Int)] = Map()
 
   def set(key: TimerKey) = {

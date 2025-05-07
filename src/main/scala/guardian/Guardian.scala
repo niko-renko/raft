@@ -7,7 +7,7 @@ import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import raft.{Processes, Process, ProcessID}
 import raft.{RefsResponse, Append}
-import raft.{Crash, Slow}
+import raft.{Crash, Sleep}
 
 sealed trait Message
 
@@ -73,7 +73,7 @@ object Guardian {
           action match {
             case "append" => ref ! Append(List(parts(2)))
             case "crash"  => ref ! Crash()
-            case "slow"   => ref ! Slow(parts(2).toInt)
+            case "sleep"  => ref ! Sleep(parts(2).toInt)
             case _        => context.log.info("Invalid command: {}", command)
           }
 

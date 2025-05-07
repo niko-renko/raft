@@ -37,7 +37,7 @@ final case class Append[T <: Serializable](
 ) extends Message[T]
 final case class Crash[T <: Serializable](
 ) extends Message[T]
-final case class Slow[T <: Serializable](
+final case class Sleep[T <: Serializable](
     seconds: Int
 ) extends Message[T]
 
@@ -46,7 +46,7 @@ final private case class ElectionTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class HeartbeatTimeout[T <: Serializable](
 ) extends Message[T]
-final private case class PauseTimeout[T <: Serializable](
+final private case class SleepTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class AppendEntries[T <: Serializable](
     term: Int,
@@ -59,6 +59,7 @@ final private case class AppendEntries[T <: Serializable](
 final private case class AppendEntriesResponse[T <: Serializable](
     term: Int,
     success: Boolean,
+    lastLogIndex: Int,
     process: ProcessID
 ) extends Message[T]
 final private case class RequestVote[T <: Serializable](
@@ -83,15 +84,15 @@ final class Process[T <: Serializable] {
           case RefsResponse(refs) =>
             Behaviors.withTimers(_timers => {
               val timers = new Timers[T](_timers)
-              timers.register(Election, ElectionTimeout(), (150, 301))
-              timers.register(Heartbeat, HeartbeatTimeout(), (25, 51))
-              timers.register(Pause, PauseTimeout(), (-1, -1))
+              timers.register(timers.Election, ElectionTimeout(), (150, 301))
+              timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
+              timers.register(timers.Sleep, SleepTimeout(), (-1, -1))
 
               val state =
                 State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false)
               val persistent = PersistentState.load[T](self.id)
 
-              state.timers.set(Election)
+              state.timers.set(timers.Election)
               this.main(state, persistent)
             })
           case _ => Behaviors.stopped
@@ -105,8 +106,8 @@ final class Process[T <: Serializable] {
   ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) =>
         message match {
-          case PauseTimeout() => {
-            context.log.info("PauseTimeout")
+          case SleepTimeout() => {
+            context.log.info("SleepTimeout")
             val nstate = state.copy(paused = false)
             this.main(nstate, persistent)
           }
@@ -135,7 +136,7 @@ final class Process[T <: Serializable] {
                   lastLogTerm
                 )
               )
-            state.timers.set(Election)
+            state.timers.set(state.timers.Election)
             this.main(nstate, npersistent)
           }
           case HeartbeatTimeout() => {
@@ -147,17 +148,17 @@ final class Process[T <: Serializable] {
               .toList
 
             val nstate = this.replicate(state, persistent, needHeartbeat)
-            state.timers.set(Heartbeat)
+            state.timers.set(state.timers.Heartbeat)
             this.main(nstate, persistent)
           }
 
           case Append(entries) if state.role != Role.Leader => {
-            context.log.trace("Received Append for {}", entries)
+            context.log.info("Appending {}", entries)
             state.parent ! AppendResponse(false, state.leaderId)
             this.main(state, persistent)
           }
           case Append(entries) => {
-            context.log.trace("Received Append for {}", entries)
+            context.log.info("Appending {}", entries)
             val termEntries = entries.map(entry => (persistent.term, entry))
             val npersistent = persistent.copy(log = persistent.log ++ termEntries)
             npersistent.save(state.self.id)
@@ -169,21 +170,23 @@ final class Process[T <: Serializable] {
           }
 
           case Crash() => {
-            context.log.info("Crashing process {}", state.self)
-            throw new Exception("Crashing process")
+            context.log.info("Crashing")
+            throw new Exception("DEADBEEF")
           }
-          case Slow(seconds) => {
-            context.log.info("Pausing process {} for {} seconds", state.self, seconds)
-            state.timers.set(Pause, seconds * 1000)
+          case Sleep(seconds) => {
+            context.log.info("Sleeping for {} seconds", seconds)
+            state.timers.set(state.timers.Sleep, seconds * 1000)
             val nstate = state.copy(paused = true)
             this.main(nstate, persistent)
           }
 
           case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
             context.log.trace("({}) Received AppendEntries", term)
+            val (lastLogIndex, _) = persistent.last()
             state.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               false,
+              lastLogIndex,
               state.self
             )
             this.main(state, persistent)
@@ -193,12 +196,12 @@ final class Process[T <: Serializable] {
             val hasPrev = persistent.has(prevLogIndex, prevLogTerm)
 
             val npersistent = if (!entries.isEmpty && hasPrev) {
-              context.log.info("Appending entries {}", entries)
               val npersistent = persistent.copy(
                 term = term,
                 votedFor = if (term > persistent.term) None else persistent.votedFor,
                 log = persistent.log.take(prevLogIndex + 1) ++ entries
               )
+              context.log.info("({}) Updated log {}", npersistent.term, npersistent.log)
               npersistent.save(state.self.id)
               npersistent
             } else if (term > persistent.term) {
@@ -209,8 +212,14 @@ final class Process[T <: Serializable] {
               persistent
             }
 
-            val commitIndex = math.min(leaderCommit, npersistent.log.length - 1)
-            assert(state.commitIndex <= commitIndex)
+            val (lastLogIndex, _) = npersistent.last()
+            val commitIndex = math.min(leaderCommit, lastLogIndex)
+
+            assert(state.commitIndex <= commitIndex) // Increases monotonically
+            if (state.commitIndex < commitIndex) {
+              context.log.info("({}) CommitIndex propagated to {}", persistent.term, commitIndex)
+            }
+
             val nstate = if (state.role == Role.Leader || state.role == Role.Candidate) {
               assert(state.role == Role.Candidate || state.role == Role.Leader && term > persistent.term)
               state.copy(role = Role.Follower, leaderId = Some(leaderId), commitIndex = commitIndex)
@@ -222,47 +231,53 @@ final class Process[T <: Serializable] {
               state
             }
 
-            nstate.timers.set(Election)
+            nstate.timers.set(state.timers.Election)
 
             nstate.refs.getRef(leaderId) ! AppendEntriesResponse(
               persistent.term,
               hasPrev,
+              lastLogIndex,
               state.self
             )
             this.main(nstate, npersistent)
           }
 
-          case AppendEntriesResponse(term, success, _) if term > persistent.term => {
+          case AppendEntriesResponse(term, success, _, _) if term > persistent.term => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             val npersistent = persistent.copy(term = term, votedFor = None)
             npersistent.save(state.self.id)
             val nstate = state.copy(role = Role.Follower)
-            nstate.timers.set(Election)
+            nstate.timers.set(state.timers.Election)
             this.main(nstate, npersistent)
           }
-          case AppendEntriesResponse(term, success, _) if term < persistent.term || state.role != Role.Leader => {
+          case AppendEntriesResponse(term, success, _, _) if term < persistent.term || state.role != Role.Leader => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
             this.main(state, persistent)
           }
-          case AppendEntriesResponse(term, success, process) if success => {
+          case AppendEntriesResponse(term, success, _, process) if !success => {
             context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-            val (lastLogIndex, lastLogTerm) = persistent.last()
+            context.log.info("({}) Inconsistency", persistent.term)
+            val ref = state.refs.peers(state.self).filter((id, _) => id == process).toList
+            val nextIndex = state.nextIndex + (process -> (state.nextIndex(process) - 1))
+            val nstate = this.replicate(state.copy(nextIndex = nextIndex), persistent, ref)
+            this.main(nstate, persistent)
+          }
+          case AppendEntriesResponse(term, success, lastLogIndex, process) => {
+            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
 
+            assert(state.matchIndex(process) <= lastLogIndex) // Increases monotonically
             val nstate = if (state.nextIndex(process) < lastLogIndex + 1) {
-              context.log.info("({}) Replicated", persistent.term)
-              state.copy(nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)))
+              context.log.info("({}) {} replicated up to {}", persistent.term, process, lastLogIndex)
+              val matchIndex = state.matchIndex + (process -> lastLogIndex)
+              // TODO: compute commitIndex
+              state.copy(
+                nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
+                matchIndex = matchIndex
+              )
             } else {
               state
             }
 
-            this.main(nstate, persistent)
-          }
-          case AppendEntriesResponse(term, success, process) => {
-            context.log.trace("({}) Received AppendEntriesResponse {}", term, success)
-            context.log.info("({}) Inconsistency", persistent.term)
-            val refs = state.refs.peers(state.self).filter((id, _) => id == process).toList
-            val nextIndex = state.nextIndex + (process -> (state.nextIndex(process) - 1))
-            val nstate = this.replicate(state.copy(nextIndex = nextIndex), persistent, refs)
             this.main(nstate, persistent)
           }
 
@@ -301,7 +316,7 @@ final class Process[T <: Serializable] {
 
             if (decision) {
               context.log.info("({}) Granted vote to {}", npersistent.term, candidateId)
-              nstate.timers.set(Election)
+              nstate.timers.set(state.timers.Election)
             } else {
               context.log.info("({}) Denied vote to {}", npersistent.term, candidateId)
             }
@@ -343,7 +358,7 @@ final class Process[T <: Serializable] {
               lastEntriesTime = state.refs.peers(state.self).map((id, ref) => (id, 0L)).toMap
             )
 
-            nstate.timers.set(Heartbeat, 0)
+            nstate.timers.set(state.timers.Heartbeat, 0)
             this.main(nstate, persistent)
           }
 
