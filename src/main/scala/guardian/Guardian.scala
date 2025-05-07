@@ -13,7 +13,8 @@ sealed trait Message
 
 // Public
 final case class Refs(process: ProcessID) extends Message
-final case class AppendResponse(success: Boolean) extends Message
+final case class AppendResponse(success: Boolean, leaderId: Option[ProcessID])
+    extends Message
 
 // Private
 final private case class Start(processes: Int) extends Message
@@ -53,8 +54,12 @@ object Guardian {
           refs.getRef(process) ! RefsResponse(refs)
           this.main(refs)
         }
-        case AppendResponse(success) => {
-          context.log.info("Received AppendResponse: {}", success)
+        case AppendResponse(success, leaderId) => {
+          context.log.info(
+            "Received AppendResponse: {}, leader: {}",
+            success,
+            leaderId
+          )
           this.main(refs)
         }
         case Control(command) if command.split(" ").size >= 2 => {
