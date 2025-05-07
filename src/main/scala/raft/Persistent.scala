@@ -50,4 +50,9 @@ final case class PersistentState[T <: Serializable](
     val (lastLogTerm, _) = this.log(lastLogIndex)
     (lastLogIndex, lastLogTerm)
   }
+
+  def apply(index: Int): (Int, T) = this.log(index)
+
+  def from(index: Int): List[(Int, T)] =
+    this.log.slice(index, this.log.length)
 }
