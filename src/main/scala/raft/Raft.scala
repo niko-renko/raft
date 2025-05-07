@@ -17,7 +17,6 @@ final private case class State[T <: Serializable](
     parent: ActorRef[guardian.Message],
     timers: Timers[T],
     commitIndex: Int,
-    lastApplied: Int,
     nextIndex: Map[ProcessID, Int],
     matchIndex: Map[ProcessID, Int],
     lastEntriesTime: Map[ProcessID, Long],
@@ -89,7 +88,7 @@ final class Process[T <: Serializable] {
               timers.register(Pause, PauseTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, parent, timers, 0, 0, Map(), Map(), Map(), 0, Role.Follower, None, false)
+                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false)
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(Election)
@@ -210,12 +209,15 @@ final class Process[T <: Serializable] {
               persistent
             }
 
-            // TODO: Commit index
+            val commitIndex = math.min(leaderCommit, npersistent.log.length - 1)
+            assert(state.commitIndex <= commitIndex)
             val nstate = if (state.role == Role.Leader || state.role == Role.Candidate) {
               assert(state.role == Role.Candidate || state.role == Role.Leader && term > persistent.term)
-              state.copy(role = Role.Follower, leaderId = Some(leaderId))
+              state.copy(role = Role.Follower, leaderId = Some(leaderId), commitIndex = commitIndex)
             } else if (state.leaderId.isEmpty || state.leaderId.get != leaderId) {
-              state.copy(leaderId = Some(leaderId))
+              state.copy(leaderId = Some(leaderId), commitIndex = commitIndex)
+            } else if (state.commitIndex < commitIndex) {
+              state.copy(commitIndex = commitIndex)
             } else {
               state
             }
