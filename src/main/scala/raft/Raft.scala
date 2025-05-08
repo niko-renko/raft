@@ -197,7 +197,7 @@ final class Process[T <: Serializable] {
           case AppendEntries(term, leaderId, prevLogIndex, prevLogTerm, entries, leaderCommit) => {
             val hasPrev = persistent.has(prevLogIndex, prevLogTerm)
 
-            val npersistent = if (!entries.isEmpty && hasPrev) {
+            val npersistent = if (!entries.isEmpty && hasPrev && persistent.log.drop(prevLogIndex + 1) != entries) {
               val npersistent = persistent.copy(
                 term = term,
                 votedFor = if (term > persistent.term) None else persistent.votedFor,
