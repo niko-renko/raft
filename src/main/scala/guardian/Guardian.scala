@@ -1,6 +1,5 @@
 package guardian
 
-import java.util.Base64
 import scala.util.Random
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
@@ -72,7 +71,7 @@ object Guardian {
 
           action match {
             case "read"   => ref ! Read()
-            case "append" => ref ! Append(Random.nextInt(), parts(2))
+            case "append" => ref ! Append(if (parts.size == 4) parts(3).toInt else Random.nextInt(), parts(2))
             case "crash"  => ref ! Crash()
             case "sleep"  => ref ! Sleep(parts(2).toInt)
             case _        => context.log.info("Invalid command: {}", command)
@@ -84,13 +83,7 @@ object Guardian {
           refs.getRef(process) ! RefsResponse(refs)
           this.main(refs)
         }
-        case ReadResponse(value) => {
-          context.log.info(
-            "Decoded: {}",
-            new String(Base64.getDecoder.decode(value), "UTF-8")
-          )
-          this.main(refs)
-        }
+        case ReadResponse(_) => this.main(refs)
         case AppendResponse(_, _, _) => this.main(refs)
         case _                       => Behaviors.stopped
       }

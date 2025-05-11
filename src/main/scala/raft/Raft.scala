@@ -1,7 +1,5 @@
 package raft
 
-import java.io.{ObjectOutputStream, ByteArrayOutputStream}
-import java.util.Base64
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
@@ -29,7 +27,8 @@ final private case class State[T <: Serializable](
     asleep: Boolean,
     delayed: List[Message[T]],
     pending: List[(Int, Int)],
-    machine: StateMachine[T, T]
+    machine: StateMachine[T, T],
+    requests: Set[Int]
 )
 
 sealed trait Message[T <: Serializable]
@@ -97,9 +96,10 @@ final class Process[T <: Serializable] {
               timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
               timers.register(timers.Sleep, SleepTimeout(), (-1, -1))
 
-              val state =
-                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List(), List(), machine)
               val persistent = PersistentState.load[T](self.id)
+              val requests = Set() ++ persistent.log.map(_._2)
+              val state =
+                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List(), List(), machine, requests)
 
               state.timers.set(timers.Election)
               this.main(state, persistent)
@@ -188,16 +188,12 @@ final class Process[T <: Serializable] {
 
         case Read() => {
           // Effects
-          val baos = new ByteArrayOutputStream()
-          val oos = new ObjectOutputStream(baos)
-          oos.writeObject(state.machine.state())
-          oos.close()
-          state.parent ! ReadResponse(Base64.getEncoder.encodeToString(baos.toByteArray))
+          state.parent ! ReadResponse(state.machine.state().toString)
 
           this.main(state, persistent)
         }
 
-        case Append(id, entry) if state.role != Role.Leader => {
+        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
           // Effects
           state.parent ! AppendResponse(id, false, state.leaderId)
 
@@ -213,7 +209,8 @@ final class Process[T <: Serializable] {
           val nstate = this
             .replicate(state, npersistent, state.refs.peers(state.self).toList)
             .copy(
-              pending = state.pending :+ (lastLogIndex, id)
+              pending = state.pending :+ (lastLogIndex, id),
+              requests = state.requests + id
             )
 
           this.info(context, state, nstate, persistent, npersistent)
@@ -259,10 +256,13 @@ final class Process[T <: Serializable] {
 
           val (lastLogIndex, _) = npersistent.last()
           val commitIndex = math.min(leaderCommit, lastLogIndex)
+          val removed = persistent.log.drop(lastLogIndex + 1).map(_._2)
+          val added = entries.map(_._2)
           val nstate = state.copy(
             role = Role.Follower,
             leaderId = Some(leaderId),
-            commitIndex = commitIndex
+            commitIndex = commitIndex,
+            requests = if (hasPrev) state.requests -- removed ++ added else state.requests
           )
 
           // Effects
@@ -478,7 +478,7 @@ final class Process[T <: Serializable] {
     if (nstate.commitIndex > state.commitIndex)
       context.log.info("({}) [{}] CommitIndex: {}", npersistent.term, nstate.role, nstate.commitIndex)
 
-    if (npersistent.votedFor != persistent.votedFor)
+    if (persistent.term != npersistent.term || npersistent.votedFor != persistent.votedFor)
       context.log.info("({}) [{}] VotedFor: {}", npersistent.term, nstate.role, npersistent.votedFor)
 
     if (npersistent.log != persistent.log)
