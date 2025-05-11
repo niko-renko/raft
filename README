@@ -6,3 +6,7 @@ You can use these commands through stdin:
 - sleep <process_id> <seconds> -- process does not react to any messages for <seconds> seconds, but does not drop them either
 - append <process_id> <value> -- attempt to append value to the log
 - read <process_id> -- read the current state machine state (default machine returns the last written value)
+
+You can run it with `sbt "run <process_number>"`
+You can reset the persistent storage with `rm -rf persistent-state`
+In addition to stdout, more logs appear in `raft.log`
