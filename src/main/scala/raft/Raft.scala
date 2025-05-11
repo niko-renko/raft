@@ -473,9 +473,15 @@ final class Process[T <: Serializable] {
     npersistent: PersistentState[T]
   ): Unit = {
     if (nstate.role != state.role)
-      context.log.info("({}) Becoming {}", npersistent.term, nstate.role)
+      context.log.info("({}) Role: {}", npersistent.term, nstate.role)
 
     if (nstate.commitIndex > state.commitIndex)
       context.log.info("({}) [{}] CommitIndex: {}", npersistent.term, nstate.role, nstate.commitIndex)
+
+    if (npersistent.votedFor != persistent.votedFor)
+      context.log.info("({}) [{}] VotedFor: {}", npersistent.term, nstate.role, npersistent.votedFor)
+
+    if (npersistent.log != persistent.log)
+      context.log.info("({}) [{}] Log: {}", npersistent.term, nstate.role, npersistent.log)
   }
 }
