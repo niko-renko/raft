@@ -1,10 +1,12 @@
 package raft
 
+import java.io.{ObjectOutputStream, ByteArrayOutputStream}
+import java.util.Base64
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import guardian.{Refs, AppendResponse}
+import guardian.{Refs, ReadResponse, AppendResponse}
 
 enum Role:
   case Follower
@@ -38,6 +40,8 @@ final case class RefsResponse[T <: Serializable](
 final case class Append[T <: Serializable](
     id: Int,
     entry: T
+) extends Message[T]
+final case class Read[T <: Serializable](
 ) extends Message[T]
 final case class Crash[T <: Serializable](
 ) extends Message[T]
@@ -159,6 +163,15 @@ final class Process[T <: Serializable] {
           val nstate = this.replicate(state, persistent, needHeartbeat)
           state.timers.set(state.timers.Heartbeat)
           this.main(nstate, persistent)
+        }
+
+        case Read() => {
+          val baos = new ByteArrayOutputStream()
+          val oos = new ObjectOutputStream(baos)
+          oos.writeObject(state.machine.state())
+          oos.close()
+          state.parent ! ReadResponse(Base64.getEncoder.encodeToString(baos.toByteArray))
+          this.main(state, persistent)
         }
 
         case Append(id, entry) if state.role != Role.Leader => {

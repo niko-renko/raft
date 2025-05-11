@@ -1,5 +1,6 @@
 package guardian
 
+import java.util.Base64
 import scala.util.Random
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
@@ -7,7 +8,7 @@ import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import raft.{LastValue, Processes, Process, ProcessID}
-import raft.{RefsResponse, Append}
+import raft.{RefsResponse, Read, Append}
 import raft.{Crash, Sleep}
 
 sealed trait Message
@@ -18,6 +19,9 @@ final case class AppendResponse(
     id: Int,
     success: Boolean,
     leaderId: Option[ProcessID]
+) extends Message
+final case class ReadResponse(
+    value: String
 ) extends Message
 
 // Private
@@ -60,10 +64,6 @@ object Guardian {
     Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
       message match {
-        case Refs(process) => {
-          refs.getRef(process) ! RefsResponse(refs)
-          this.main(refs)
-        }
         case Control(command) if command.split(" ").size >= 2 => {
           val parts = command.split(" ")
           val action = parts(0)
@@ -71,12 +71,24 @@ object Guardian {
           val ref = refs.getRef(processId)
 
           action match {
+            case "read"   => ref ! Read()
             case "append" => ref ! Append(Random.nextInt(), parts(2))
             case "crash"  => ref ! Crash()
             case "sleep"  => ref ! Sleep(parts(2).toInt)
             case _        => context.log.info("Invalid command: {}", command)
           }
 
+          this.main(refs)
+        }
+        case Refs(process) => {
+          refs.getRef(process) ! RefsResponse(refs)
+          this.main(refs)
+        }
+        case ReadResponse(value) => {
+          context.log.info(
+            "Decoded: {}",
+            new String(Base64.getDecoder.decode(value), "UTF-8")
+          )
           this.main(refs)
         }
         case AppendResponse(_, _, _) => this.main(refs)

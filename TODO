@@ -1,0 +1,4 @@
+- Read state machine state from followers
+- Duplicate ID appends still apply
+- Uniform logging
+- Remove if statements for state updates for readability
