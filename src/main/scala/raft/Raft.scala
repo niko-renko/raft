@@ -267,15 +267,21 @@ final class Process[T <: Serializable] {
           this.main(this.replicate(nstate, persistent, ref), persistent)
         }
         case AppendEntriesResponse(term, success, lastLogIndex, process) => {
-          assert(state.matchIndex(process) <= lastLogIndex) // Increases monotonically
-
           val nstate = if (state.matchIndex(process) < lastLogIndex) {
             val matchIndex = state.matchIndex + (process -> lastLogIndex)
             val n = matchIndex.values.toList.sorted()(state.refs.size / 2)
             val (nTerm, _) = persistent(n)
             val commitIndex = if (nTerm == persistent.term) n else state.commitIndex
-            state.pending.filter((index, _) => index <= commitIndex).foreach((_, id) => state.parent ! AppendResponse(id, true, Some(state.self)))
-            persistent.log.drop(state.commitIndex + 1).take(commitIndex - state.commitIndex).foreach(println)
+
+            persistent.log
+              .drop(state.commitIndex + 1)
+              .take(commitIndex - state.commitIndex)
+              .map(_._2)
+              .foreach(state.machine.apply)
+
+            state.pending
+              .filter((index, _) => index <= commitIndex)
+              .foreach((_, id) => state.parent ! AppendResponse(id, true, Some(state.self)))
             
             state.copy(
               nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
@@ -287,11 +293,13 @@ final class Process[T <: Serializable] {
             state
           }
 
+          assert(state.matchIndex(process) <= nstate.matchIndex(process)) // Increases monotonically
+          assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
+
           if (state.nextIndex(process) != nstate.nextIndex(process)) {
             context.log.info("NextIndex: {}", (process -> nstate.nextIndex(process)))
           }
 
-          assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
           if (state.commitIndex < nstate.commitIndex) {
             context.log.info("Leader CommitIndex: {}", nstate.commitIndex)
           }
