@@ -62,7 +62,7 @@ final private case class AppendEntries[T <: Serializable](
     leaderId: ProcessID,
     prevLogIndex: Int,
     prevLogTerm: Int,
-    entries: List[(Int, T)],
+    entries: List[(Int, Int, T)],
     leaderCommit: Int
 ) extends Message[T]
 final private case class AppendEntriesResponse[T <: Serializable](
@@ -206,7 +206,7 @@ final class Process[T <: Serializable] {
         case Append(id, entry) => {
           // Update State
           val npersistent = persistent.copy(
-            log = persistent.log :+ (persistent.term, entry)
+            log = persistent.log :+ (persistent.term, id, entry)
           )
           npersistent.save(state.self.id)
           val (lastLogIndex, _) = npersistent.last()
@@ -266,14 +266,14 @@ final class Process[T <: Serializable] {
           )
 
           // Effects
-          assert(state.role != Role.Leader || term > persistent.term)
+          assert(state.role != Role.Leader || npersistent.term > persistent.term)
           assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
 
           if (state.commitIndex < nstate.commitIndex)
             npersistent.log
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
-              .map(_._2)
+              .map(_._3)
               .foreach(state.machine.apply)
 
           state.timers.set(state.timers.Election)
@@ -324,7 +324,7 @@ final class Process[T <: Serializable] {
           // Update State
           val matchIndex = state.matchIndex + (process -> lastLogIndex)
           val n = matchIndex.values.toList.sorted()(state.refs.size / 2)
-          val (nTerm, _) = persistent(n)
+          val (nTerm, _, _) = persistent(n)
           val commitIndex = if (nTerm == persistent.term) n else state.commitIndex
 
           val nstate = state.copy(
@@ -342,7 +342,7 @@ final class Process[T <: Serializable] {
             persistent.log
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
-              .map(_._2)
+              .map(_._3)
               .foreach(state.machine.apply)
 
             state.pending
@@ -447,7 +447,7 @@ final class Process[T <: Serializable] {
     processes.foreach((id, ref) => {
       val nextIndex = state.nextIndex(id)
       val prevLogIndex = nextIndex - 1
-      val (prevLogTerm, _) = persistent(prevLogIndex)
+      val (prevLogTerm, _, _) = persistent(prevLogIndex)
       ref ! AppendEntries(
         persistent.term,
         state.self,
@@ -473,7 +473,7 @@ final class Process[T <: Serializable] {
     npersistent: PersistentState[T]
   ): Unit = {
     if (nstate.role != state.role)
-      context.log.info("({}) Role: {}", npersistent.term, nstate.role)
+      context.log.info("({}) [{}] NewRole", npersistent.term, nstate.role)
 
     if (nstate.commitIndex > state.commitIndex)
       context.log.info("({}) [{}] CommitIndex: {}", npersistent.term, nstate.role, nstate.commitIndex)
