@@ -6,7 +6,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
-import raft.{Processes, Process, ProcessID}
+import raft.{LastValue, Processes, Process, ProcessID}
 import raft.{RefsResponse, Append}
 import raft.{Crash, Sleep}
 
@@ -34,7 +34,13 @@ object Guardian {
             (
               ProcessID(i),
               context.spawn(
-                supervise(Process[String]()(ProcessID(i), context.self))
+                supervise(
+                  Process[String]()(
+                    ProcessID(i),
+                    context.self,
+                    LastValue[String]()
+                  )
+                )
                   .onFailure[Throwable](SupervisorStrategy.restart),
                 s"process-$i"
               )

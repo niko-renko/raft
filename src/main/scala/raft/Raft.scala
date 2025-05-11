@@ -25,7 +25,8 @@ final private case class State[T <: Serializable](
     leaderId: Option[ProcessID],
     asleep: Boolean,
     delayed: List[Message[T]],
-    pending: List[(Int, Int)]
+    pending: List[(Int, Int)],
+    machine: StateMachine[T, T]
 )
 
 sealed trait Message[T <: Serializable]
@@ -77,7 +78,7 @@ final private case class RequestVoteResponse[T <: Serializable](
 ) extends Message[T]
 
 final class Process[T <: Serializable] {
-  def apply(self: ProcessID, parent: ActorRef[guardian.Message]): Behavior[Message[T]] =
+  def apply(self: ProcessID, parent: ActorRef[guardian.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting")
       parent ! Refs(self)
@@ -92,7 +93,7 @@ final class Process[T <: Serializable] {
               timers.register(timers.Sleep, SleepTimeout(), (-1, -1))
 
               val state =
-                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List(), List())
+                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List(), List(), machine)
               val persistent = PersistentState.load[T](self.id)
 
               state.timers.set(timers.Election)
@@ -115,10 +116,10 @@ final class Process[T <: Serializable] {
 
       message match {
         case SleepTimeout() => {
-            state.delayed.foreach(message => context.self ! message)
-            val nstate = state.copy(asleep = false, delayed = List())
-            this.main(nstate, persistent)
-          }
+          state.delayed.foreach(message => context.self ! message)
+          val nstate = state.copy(asleep = false, delayed = List())
+          this.main(nstate, persistent)
+        }
         case message: Message[T] if state.asleep => {
           val nstate = state.copy(delayed = state.delayed :+ message)
           this.main(nstate, persistent)
@@ -204,7 +205,6 @@ final class Process[T <: Serializable] {
               log = persistent.log.take(prevLogIndex + 1) ++ entries
             )
             npersistent.save(state.self.id)
-            context.log.info("Follower Log: {}", npersistent.log)
             npersistent
           } else if (term > persistent.term) {
             val npersistent = persistent.copy(term = term, votedFor = None)
@@ -217,11 +217,6 @@ final class Process[T <: Serializable] {
           val (lastLogIndex, _) = npersistent.last()
           val commitIndex = math.min(leaderCommit, lastLogIndex)
 
-          assert(state.commitIndex <= commitIndex) // Increases monotonically
-          if (state.commitIndex < commitIndex) {
-            context.log.info("Follower CommitIndex: {}", commitIndex)
-          }
-
           val nstate = if (state.role == Role.Leader || state.role == Role.Candidate) {
             assert(state.role == Role.Candidate || state.role == Role.Leader && term > persistent.term)
             state.copy(role = Role.Follower, leaderId = Some(leaderId), commitIndex = commitIndex)
@@ -231,6 +226,15 @@ final class Process[T <: Serializable] {
             state.copy(commitIndex = commitIndex)
           } else {
             state
+          }
+
+          if (persistent.log != npersistent.log) {
+            context.log.info("Follower Log: {}", npersistent.log)
+          }
+
+          assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
+          if (state.commitIndex < nstate.commitIndex) {
+            context.log.info("Follower CommitIndex: {}", nstate.commitIndex)
           }
 
           nstate.timers.set(state.timers.Election)
@@ -253,34 +257,38 @@ final class Process[T <: Serializable] {
         }
         case AppendEntriesResponse(term, success, _, _) if term < persistent.term || state.role != Role.Leader => this.main(state, persistent)
         case AppendEntriesResponse(term, success, _, process) if !success => {
-          val nextIndex = state.nextIndex(process) - 1
-          context.log.info("NextIndex: {}", (process -> nextIndex))
-
           val ref = state.refs.peers(state.self).filter((id, _) => id == process).toList
-          val nstate = this.replicate(state.copy(nextIndex = state.nextIndex + (process -> nextIndex)), persistent, ref)
-          this.main(nstate, persistent)
+          val nstate = state.copy(nextIndex = state.nextIndex + (process -> (state.nextIndex(process) - 1)))
+
+          if (state.nextIndex(process) != nstate.nextIndex(process)) {
+            context.log.info("NextIndex: {}", (process -> nstate.nextIndex(process)))
+          }
+
+          this.main(this.replicate(nstate, persistent, ref), persistent)
         }
         case AppendEntriesResponse(term, success, lastLogIndex, process) => {
           assert(state.matchIndex(process) <= lastLogIndex) // Increases monotonically
 
           val nstate = if (state.matchIndex(process) < lastLogIndex) {
-            val nextIndex = lastLogIndex + 1
-            context.log.info("NextIndex: {}", (process -> nextIndex))
-
             val matchIndex = state.matchIndex + (process -> lastLogIndex)
             val n = matchIndex.values.toList.sorted()(state.refs.size / 2)
             val (nTerm, _) = persistent(n)
             val commitIndex = if (nTerm == persistent.term) n else state.commitIndex
             state.pending.filter((index, _) => index <= commitIndex).foreach((_, id) => state.parent ! AppendResponse(id, true, Some(state.self)))
+            persistent.log.drop(state.commitIndex + 1).take(commitIndex - state.commitIndex).foreach(println)
             
             state.copy(
-              nextIndex = state.nextIndex + (process -> nextIndex),
+              nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
               matchIndex = matchIndex,
               commitIndex = commitIndex,
               pending = state.pending.filter((index, _) => index > commitIndex)
             )
           } else {
             state
+          }
+
+          if (state.nextIndex(process) != nstate.nextIndex(process)) {
+            context.log.info("NextIndex: {}", (process -> nstate.nextIndex(process)))
           }
 
           assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
