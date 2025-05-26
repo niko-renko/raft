@@ -5,7 +5,7 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
-import guardian.{Refs, ReadResponse, AppendResponse}
+import guardian.{Refs, ReadCommittedResponse, ReadUncommittedResponse, AppendResponse}
 
 enum Role:
   case Follower
@@ -156,13 +156,19 @@ final class Process[T <: Serializable] {
         case ReadCommitted() => {
           // Effects
           if (state.commitIndex == 0)
-            state.parent ! ReadResponse("Empty")
+            state.parent ! ReadCommittedResponse("null")
           else
-            state.parent ! ReadResponse(state.committed.state().toString)
+            state.parent ! ReadCommittedResponse(state.committed.state().toString)
 
           this.main(state, persistent)
         }
         case ReadUncommitted() => {
+          // Effects
+          if (persistent.log.size == 1)
+            state.parent ! ReadUncommittedResponse("null")
+          else
+            state.parent ! ReadUncommittedResponse(state.uncommitted.state().toString)
+
           this.main(state, persistent)
         }
         case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
@@ -184,6 +190,9 @@ final class Process[T <: Serializable] {
               pending = state.pending :+ (lastLogIndex, id),
               requests = state.requests + id
             )
+          
+          // Effects
+          state.uncommitted.apply(entry)
 
           this.info(context, state, nstate, persistent, npersistent)
           this.main(nstate, npersistent)
@@ -306,7 +315,8 @@ final class Process[T <: Serializable] {
             role = Role.Follower,
             leaderId = Some(leaderId),
             commitIndex = commitIndex,
-            requests = if (hasPrev) state.requests -- removed ++ added else state.requests
+            requests = if (hasPrev) state.requests -- removed ++ added else state.requests,
+            uncommitted = state.committed.copy()
           )
 
           // Effects
@@ -319,6 +329,11 @@ final class Process[T <: Serializable] {
               .take(nstate.commitIndex - state.commitIndex)
               .map(_._3)
               .foreach(state.committed.apply)
+
+          npersistent.log
+            .drop(state.commitIndex + 1)
+            .map(_._3)
+            .foreach(state.uncommitted.apply)
 
           state.timers.set(state.timers.Election)
           state.refs.getRef(leaderId) ! AppendEntriesResponse(

@@ -19,7 +19,10 @@ final case class AppendResponse(
     success: Boolean,
     leaderId: Option[ProcessID]
 ) extends Message
-final case class ReadResponse(
+final case class ReadCommittedResponse(
+    value: String
+) extends Message
+final case class ReadUncommittedResponse(
     value: String
 ) extends Message
 
@@ -74,7 +77,7 @@ object Guardian {
             case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
             case "awake"  => ref ! Awake()
 
-            case "commited"   => ref ! ReadCommitted()
+            case "committed"   => ref ! ReadCommitted()
             case "uncommitted"   => ref ! ReadUncommitted()
             case "append" => ref ! Append(if (parts.size == 4) parts(3).toInt else Random.nextInt(), parts(2))
             case _        => context.log.info("Invalid command: {}", command)
@@ -86,7 +89,8 @@ object Guardian {
           refs.getRef(process) ! RefsResponse(refs)
           this.main(refs)
         }
-        case ReadResponse(_) => this.main(refs)
+        case ReadCommittedResponse(_) => this.main(refs)
+        case ReadUncommittedResponse(_) => this.main(refs)
         case AppendResponse(_, _, _) => this.main(refs)
         case _                       => Behaviors.stopped
       }
