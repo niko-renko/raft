@@ -17,8 +17,8 @@ final private class Timers[T <: Serializable](
   private var registry: Map[TimerKey, (Message[T], Int, Int)] = Map()
 
   def set(key: TimerKey) = {
-    timers.cancelAll()
     val (message, from, to) = this.registry(key)
+    timers.cancelAll()
     timers.startSingleTimer(
       key,
       message,
@@ -27,8 +27,8 @@ final private class Timers[T <: Serializable](
   }
 
   def set(key: TimerKey, ms: Int) = {
-    timers.cancelAll()
     val (message, _, _) = this.registry(key)
+    timers.cancelAll()
     timers.startSingleTimer(
       key,
       message,

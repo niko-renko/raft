@@ -24,11 +24,13 @@ final private case class State[T <: Serializable](
     votes: Int,
     role: Role,
     leaderId: Option[ProcessID],
-    asleep: Boolean,
     delayed: List[Message[T]],
     pending: List[(Int, Int)],
     machine: StateMachine[T, T],
-    requests: Set[Int]
+    requests: Set[Int],
+
+    asleep: Boolean,
+    disconnected: Boolean
 )
 
 sealed trait Message[T <: Serializable]
@@ -47,6 +49,10 @@ final case class Crash[T <: Serializable](
 ) extends Message[T]
 final case class Sleep[T <: Serializable](
     seconds: Int
+) extends Message[T]
+final case class Disconnect[T <: Serializable](
+) extends Message[T]
+final case class Connect[T <: Serializable](
 ) extends Message[T]
 
 // Private
@@ -99,9 +105,9 @@ final class Process[T <: Serializable] {
               val persistent = PersistentState.load[T](self.id)
               val requests = Set() ++ persistent.log.map(_._2)
               val state =
-                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, false, List(), List(), machine, requests)
+                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, List(), List(), machine, requests, false, false)
 
-              state.timers.set(timers.Election)
+              state.timers.set(state.timers.Election)
               this.main(state, persistent)
             })
           case _ => Behaviors.stopped
@@ -142,6 +148,7 @@ final class Process[T <: Serializable] {
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
         }
+
         case ElectionTimeout() => {
           // Update State
           val npersistent = persistent.copy(
@@ -173,11 +180,15 @@ final class Process[T <: Serializable] {
         }
         case HeartbeatTimeout() => {
           // Update State
+          val now = System.currentTimeMillis()
           val needHeartbeat = state.refs
             .peers(state.self)
-            .filter((id, _) => System.currentTimeMillis() - state.lastEntriesTime(id) >= 50)
+            .filter((id, _) => now - state.lastEntriesTime(id) < 0 || now - state.lastEntriesTime(id) >= 50)
             .toList
-          val nstate = this.replicate(state, persistent, needHeartbeat)
+          val nstate = if (!needHeartbeat.isEmpty) 
+            this.replicate(state, persistent, needHeartbeat)
+          else
+            state
 
           // Effects
           state.timers.set(state.timers.Heartbeat)
@@ -386,7 +397,7 @@ final class Process[T <: Serializable] {
           )
 
           // Effects
-          if (npersistent.votedFor.isDefined)
+          if (npersistent.term > persistent.term && npersistent.votedFor.isDefined)
             state.timers.set(state.timers.Election)
 
           state.refs.getRef(candidateId) ! RequestVoteResponse(
