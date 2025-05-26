@@ -118,13 +118,49 @@ final class Process[T <: Serializable] {
   ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) => 
       message match {
-        case _: Append[T] | _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
+        case _: Read[T] | _: Append[T] | _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
         case _ => context.log.trace("{}", message)
       }
 
       message match {
-        case Crash() => throw new Exception("DEADBEEF")
+        // ----- Public Log -----
+        case Read() if persistent.log.length == 1 => {
+          // Effects
+          state.parent ! ReadResponse("Empty")
 
+          this.main(state, persistent)
+        }
+        case Read() => {
+          // Effects
+          state.parent ! ReadResponse(state.machine.state().toString)
+
+          this.main(state, persistent)
+        }
+        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
+          // Effects
+          state.parent ! AppendResponse(id, false, state.leaderId)
+
+          this.main(state, persistent)
+        }
+        case Append(id, entry) => {
+          // Update State
+          val npersistent = persistent.copy(
+            log = persistent.log :+ (persistent.term, id, entry)
+          )
+          npersistent.save(state.self.id)
+          val (lastLogIndex, _) = npersistent.last()
+          val nstate = this
+            .replicate(state, npersistent, state.refs.peers(state.self).toList)
+            .copy(
+              pending = state.pending :+ (lastLogIndex, id),
+              requests = state.requests + id
+            )
+
+          this.info(context, state, nstate, persistent, npersistent)
+          this.main(nstate, npersistent)
+        }
+        // ----- Public Status -----
+        case Crash() => throw new Exception("DEADBEEF")
         case Sleep(collect) => {
           // Update State
           val nstate = state.copy(
@@ -162,37 +198,7 @@ final class Process[T <: Serializable] {
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
         }
-
-        case Read() => {
-          // Effects
-          state.parent ! ReadResponse(state.machine.state().toString)
-
-          this.main(state, persistent)
-        }
-        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
-          // Effects
-          state.parent ! AppendResponse(id, false, state.leaderId)
-
-          this.main(state, persistent)
-        }
-        case Append(id, entry) => {
-          // Update State
-          val npersistent = persistent.copy(
-            log = persistent.log :+ (persistent.term, id, entry)
-          )
-          npersistent.save(state.self.id)
-          val (lastLogIndex, _) = npersistent.last()
-          val nstate = this
-            .replicate(state, npersistent, state.refs.peers(state.self).toList)
-            .copy(
-              pending = state.pending :+ (lastLogIndex, id),
-              requests = state.requests + id
-            )
-
-          this.info(context, state, nstate, persistent, npersistent)
-          this.main(nstate, npersistent)
-        }
-
+        // ----- Private Raft -----
         case ElectionTimeout() => {
           // Update State
           val npersistent = persistent.copy(
