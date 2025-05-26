@@ -30,7 +30,7 @@ final private case class State[T <: Serializable](
     requests: Set[Int],
 
     asleep: Boolean,
-    disconnected: Boolean
+    collect: Boolean
 )
 
 sealed trait Message[T <: Serializable]
@@ -39,28 +39,26 @@ sealed trait Message[T <: Serializable]
 final case class RefsResponse[T <: Serializable](
     refs: Processes[T]
 ) extends Message[T]
-final case class Append[T <: Serializable](
-    id: Int,
-    entry: T
-) extends Message[T]
-final case class Read[T <: Serializable](
-) extends Message[T]
+
 final case class Crash[T <: Serializable](
 ) extends Message[T]
 final case class Sleep[T <: Serializable](
-    seconds: Int
+  collect: Boolean
 ) extends Message[T]
-final case class Disconnect[T <: Serializable](
+final case class Awake[T <: Serializable](
 ) extends Message[T]
-final case class Connect[T <: Serializable](
+
+final case class Read[T <: Serializable](
+) extends Message[T]
+final case class Append[T <: Serializable](
+    id: Int,
+    entry: T
 ) extends Message[T]
 
 // Private
 final private case class ElectionTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class HeartbeatTimeout[T <: Serializable](
-) extends Message[T]
-final private case class SleepTimeout[T <: Serializable](
 ) extends Message[T]
 final private case class AppendEntries[T <: Serializable](
     term: Int,
@@ -100,7 +98,6 @@ final class Process[T <: Serializable] {
               val timers = new Timers[T](_timers)
               timers.register(timers.Election, ElectionTimeout(), (150, 301))
               timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
-              timers.register(timers.Sleep, SleepTimeout(), (-1, -1))
 
               val persistent = PersistentState.load[T](self.id)
               val requests = Set() ++ persistent.log.map(_._2)
@@ -121,15 +118,29 @@ final class Process[T <: Serializable] {
   ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) => 
       message match {
-        case _: Append[T] | _: Crash[T] | _: Sleep[T] => context.log.info("{}", message)
+        case _: Append[T] | _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
         case _ => context.log.trace("{}", message)
       }
 
       message match {
-        case SleepTimeout() => {
+        case Crash() => throw new Exception("DEADBEEF")
+
+        case Sleep(collect) => {
+          // Update State
+          val nstate = state.copy(
+            asleep = true,
+            collect = collect,
+            delayed = List()
+          )
+
+          this.info(context, state, nstate, persistent, persistent)
+          this.main(nstate, persistent)
+        }
+        case Awake() => {
           // Update State
           val nstate = state.copy(
             asleep = false,
+            collect = false,
             delayed = List()
           )
 
@@ -141,12 +152,45 @@ final class Process[T <: Serializable] {
         }
         case message: Message[T] if state.asleep => {
           // Update State
-          val nstate = state.copy(
-            delayed = state.delayed :+ message
-          )
+          val nstate = if (state.collect)
+            state.copy(
+              delayed = state.delayed :+ message
+            )
+          else
+            state
 
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
+        }
+
+        case Read() => {
+          // Effects
+          state.parent ! ReadResponse(state.machine.state().toString)
+
+          this.main(state, persistent)
+        }
+        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
+          // Effects
+          state.parent ! AppendResponse(id, false, state.leaderId)
+
+          this.main(state, persistent)
+        }
+        case Append(id, entry) => {
+          // Update State
+          val npersistent = persistent.copy(
+            log = persistent.log :+ (persistent.term, id, entry)
+          )
+          npersistent.save(state.self.id)
+          val (lastLogIndex, _) = npersistent.last()
+          val nstate = this
+            .replicate(state, npersistent, state.refs.peers(state.self).toList)
+            .copy(
+              pending = state.pending :+ (lastLogIndex, id),
+              requests = state.requests + id
+            )
+
+          this.info(context, state, nstate, persistent, npersistent)
+          this.main(nstate, npersistent)
         }
 
         case ElectionTimeout() => {
@@ -192,52 +236,6 @@ final class Process[T <: Serializable] {
 
           // Effects
           state.timers.set(state.timers.Heartbeat)
-
-          this.info(context, state, nstate, persistent, persistent)
-          this.main(nstate, persistent)
-        }
-
-        case Read() => {
-          // Effects
-          state.parent ! ReadResponse(state.machine.state().toString)
-
-          this.main(state, persistent)
-        }
-
-        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
-          // Effects
-          state.parent ! AppendResponse(id, false, state.leaderId)
-
-          this.main(state, persistent)
-        }
-        case Append(id, entry) => {
-          // Update State
-          val npersistent = persistent.copy(
-            log = persistent.log :+ (persistent.term, id, entry)
-          )
-          npersistent.save(state.self.id)
-          val (lastLogIndex, _) = npersistent.last()
-          val nstate = this
-            .replicate(state, npersistent, state.refs.peers(state.self).toList)
-            .copy(
-              pending = state.pending :+ (lastLogIndex, id),
-              requests = state.requests + id
-            )
-
-          this.info(context, state, nstate, persistent, npersistent)
-          this.main(nstate, npersistent)
-        }
-
-        case Crash() => throw new Exception("DEADBEEF")
-        case Sleep(seconds) => {
-          // Update State
-          val nstate = state.copy(
-            asleep = true,
-            delayed = List()
-          )
-
-          // Effects
-          state.timers.set(state.timers.Sleep, seconds * 1000)
 
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)

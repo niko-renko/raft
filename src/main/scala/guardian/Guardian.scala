@@ -8,7 +8,7 @@ import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import raft.{LastValue, Processes, Process, ProcessID}
 import raft.{RefsResponse, Read, Append}
-import raft.{Crash, Sleep}
+import raft.{Crash, Sleep, Awake}
 
 sealed trait Message
 
@@ -70,12 +70,12 @@ object Guardian {
           val ref = refs.getRef(processId)
 
           action match {
+            case "crash"  => ref ! Crash()
+            case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
+            case "awake"  => ref ! Awake()
+
             case "read"   => ref ! Read()
             case "append" => ref ! Append(if (parts.size == 4) parts(3).toInt else Random.nextInt(), parts(2))
-            case "crash"  => ref ! Crash()
-            case "sleep"  => ref ! Sleep(parts(2).toInt)
-            // case "disconnect" => ref ! Disconnect()
-            // case "connect" => ref ! Connect()
             case _        => context.log.info("Invalid command: {}", command)
           }
 
