@@ -7,7 +7,7 @@ import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import raft.{LastValue, Processes, Process, ProcessID}
-import raft.{RefsResponse, Read, Append}
+import raft.{RefsResponse, ReadCommitted, ReadUncommitted, Append}
 import raft.{Crash, Sleep, Awake}
 
 sealed trait Message
@@ -74,7 +74,8 @@ object Guardian {
             case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
             case "awake"  => ref ! Awake()
 
-            case "read"   => ref ! Read()
+            case "commited"   => ref ! ReadCommitted()
+            case "uncommitted"   => ref ! ReadUncommitted()
             case "append" => ref ! Append(if (parts.size == 4) parts(3).toInt else Random.nextInt(), parts(2))
             case _        => context.log.info("Invalid command: {}", command)
           }

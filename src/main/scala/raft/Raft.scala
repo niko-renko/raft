@@ -17,20 +17,23 @@ final private case class State[T <: Serializable](
     refs: Processes[T],
     parent: ActorRef[guardian.Message],
     timers: Timers[T],
+    lastEntriesTime: Map[ProcessID, Long],
+    pending: List[(Int, Int)],
+    requests: Set[Int],
+
     commitIndex: Int,
     nextIndex: Map[ProcessID, Int],
     matchIndex: Map[ProcessID, Int],
-    lastEntriesTime: Map[ProcessID, Long],
     votes: Int,
     role: Role,
     leaderId: Option[ProcessID],
-    delayed: List[Message[T]],
-    pending: List[(Int, Int)],
-    machine: StateMachine[T, T],
-    requests: Set[Int],
+
+    committed: StateMachine[T, T],
+    uncommitted: StateMachine[T, T],
 
     asleep: Boolean,
-    collect: Boolean
+    collect: Boolean,
+    delayed: List[Message[T]]
 )
 
 sealed trait Message[T <: Serializable]
@@ -48,7 +51,9 @@ final case class Sleep[T <: Serializable](
 final case class Awake[T <: Serializable](
 ) extends Message[T]
 
-final case class Read[T <: Serializable](
+final case class ReadCommitted[T <: Serializable](
+) extends Message[T]
+final case class ReadUncommitted[T <: Serializable](
 ) extends Message[T]
 final case class Append[T <: Serializable](
     id: Int,
@@ -101,8 +106,31 @@ final class Process[T <: Serializable] {
 
               val persistent = PersistentState.load[T](self.id)
               val requests = Set() ++ persistent.log.map(_._2)
+
               val state =
-                State(self, refs, parent, timers, 0, Map(), Map(), Map(), 0, Role.Follower, None, List(), List(), machine, requests, false, false)
+                State(
+                  self, // Self
+                  refs, // Refs
+                  parent, // Parent
+                  timers, // Timers 
+                  Map(), // Last Entries Time
+                  List(), // Pending
+                  requests, // Requests
+
+                  0, // Commit Index
+                  Map(), // Next Index
+                  Map(), // Match Index
+                  0, // Votes
+                  Role.Follower, // Role
+                  None, // Leader ID
+
+                  machine.copy(), // Committed
+                  machine.copy(), // Uncommitted
+
+                  false, // Asleep
+                  false, // Collect
+                  List() // Delayed
+                )
 
               state.timers.set(state.timers.Election)
               this.main(state, persistent)
@@ -118,22 +146,23 @@ final class Process[T <: Serializable] {
   ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) => 
       message match {
-        case _: Read[T] | _: Append[T] | _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
+        case _: ReadCommitted[T] | _: ReadUncommitted[T] | _: Append[T] => context.log.info("{}", message)
+        case _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
         case _ => context.log.trace("{}", message)
       }
 
       message match {
         // ----- Public Log -----
-        case Read() if persistent.log.length == 1 => {
+        case ReadCommitted() => {
           // Effects
-          state.parent ! ReadResponse("Empty")
+          if (state.commitIndex == 0)
+            state.parent ! ReadResponse("Empty")
+          else
+            state.parent ! ReadResponse(state.committed.state().toString)
 
           this.main(state, persistent)
         }
-        case Read() => {
-          // Effects
-          state.parent ! ReadResponse(state.machine.state().toString)
-
+        case ReadUncommitted() => {
           this.main(state, persistent)
         }
         case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
@@ -289,7 +318,7 @@ final class Process[T <: Serializable] {
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
               .map(_._3)
-              .foreach(state.machine.apply)
+              .foreach(state.committed.apply)
 
           state.timers.set(state.timers.Election)
           state.refs.getRef(leaderId) ! AppendEntriesResponse(
@@ -358,7 +387,7 @@ final class Process[T <: Serializable] {
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
               .map(_._3)
-              .foreach(state.machine.apply)
+              .foreach(state.committed.apply)
 
             state.pending
               .filter((index, _) => index <= nstate.commitIndex)
