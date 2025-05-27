@@ -39,7 +39,7 @@ object Guardian {
               Process[String]()(
                 ProcessID(i),
                 context.self,
-                LastValue[String]()
+                LastValue[String]("null")
               )
             )
               .onFailure[Throwable](SupervisorStrategy.restart),

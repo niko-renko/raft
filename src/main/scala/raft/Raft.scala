@@ -155,21 +155,21 @@ final class Process[T <: Serializable] {
 
       message match {
         // ----- Public Log -----
+        case Read(ref) if state.role != Role.Leader => {
+          // Effects
+          ref ! ReadResponse(false, "")
+
+          this.main(state, persistent)
+        }
         case Read(ref) => {
           // Effects
-          if (state.commitIndex == 0)
-            ref ! ReadResponse(false, "null")
-          else
-            ref ! ReadResponse(true, state.committed.state().toString)
+          ref ! ReadResponse(true, state.committed.state().toString)
 
           this.main(state, persistent)
         }
         case ReadUnstable(ref) => {
           // Effects
-          if (persistent.log.size == 1)
-            ref ! ReadUnstableResponse(false, "null")
-          else
-            ref ! ReadUnstableResponse(true, state.uncommitted.state().toString)
+          ref ! ReadUnstableResponse(state.uncommitted.state().toString)
 
           this.main(state, persistent)
         }

@@ -14,6 +14,5 @@ final case class ReadResponse(
     value: String
 ) extends Message
 final case class ReadUnstableResponse(
-    success: Boolean,
     value: String
 ) extends Message
