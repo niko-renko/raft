@@ -2,66 +2,60 @@ package guardian
 
 import scala.util.Random
 import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
-import raft.{LastValue, Processes, Process, ProcessID}
-import raft.{RefsResponse, ReadCommitted, ReadUncommitted, Append}
+import raft.LastValue
+import raft.{ProcessID, Processes, Process}
 import raft.{Crash, Sleep, Awake}
+import raft.{RefsResponse, ReadCommitted, ReadUncommitted, Append}
 
 sealed trait Message
 
 // Public
 final case class Refs(process: ProcessID) extends Message
-final case class AppendResponse(
-    id: Int,
-    success: Boolean,
-    leaderId: Option[ProcessID]
-) extends Message
-final case class ReadCommittedResponse(
-    value: String
-) extends Message
-final case class ReadUncommittedResponse(
-    value: String
-) extends Message
 
 // Private
-final private case class Start(processes: Int) extends Message
 final private case class Control(command: String) extends Message
 
+object NoopClient {
+  def apply(): Behavior[client.Message] = Behaviors.receive { (context, message) =>
+      context.log.info("{}", message)
+      this.apply()
+  }
+}
+
 object Guardian {
-  def apply(): Behavior[Message] = Behaviors.receive { (context, message) =>
-    message match {
-      case Start(processes) => {
-        context.log.info("Starting {} processes", processes)
-        val refsMap = (0 until processes)
-          .map(i =>
-            (
-              ProcessID(i),
-              context.spawn(
-                supervise(
-                  Process[String]()(
-                    ProcessID(i),
-                    context.self,
-                    LastValue[String]()
-                  )
-                )
-                  .onFailure[Throwable](SupervisorStrategy.restart),
-                s"process-$i"
+  def apply(processes: Int): Behavior[Message] = Behaviors.setup { context =>
+    context.log.info("Starting {} processes", processes)
+    val refsMap = (0 until processes)
+      .map(i =>
+        (
+          ProcessID(i),
+          context.spawn(
+            supervise(
+              Process[String]()(
+                ProcessID(i),
+                context.self,
+                LastValue[String]()
               )
             )
+              .onFailure[Throwable](SupervisorStrategy.restart),
+            s"process-$i"
           )
-          .toMap
-        val refs = Processes(refsMap)
-        this.main(refs)
-      }
-      case _ => Behaviors.stopped
-    }
+        )
+      )
+      .toMap
+    val refs = Processes(refsMap)
+    val client = context.spawn(NoopClient(), "noop-client")
+    this.main(refs, client)
   }
 
   private def main(
-      refs: Processes[String]
+      refs: Processes[String],
+      clientRef: ActorRef[client.Message]
   ): Behavior[Message] =
     Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
@@ -77,22 +71,28 @@ object Guardian {
             case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
             case "awake"  => ref ! Awake()
 
-            case "committed"   => ref ! ReadCommitted()
-            case "uncommitted"   => ref ! ReadUncommitted()
-            case "append" => ref ! Append(if (parts.size == 4) parts(3).toInt else Random.nextInt(), parts(2))
+            case "committed"   => ref ! ReadCommitted(clientRef)
+            case "uncommitted"   => ref ! ReadUncommitted(clientRef)
+
+            case "append" => {
+              val id = if (parts.size == 4)
+                parts(3).toInt
+              else
+                Random.nextInt()
+
+              ref ! Append(clientRef, id, parts(2))
+            }
+
             case _        => context.log.info("Invalid command: {}", command)
           }
 
-          this.main(refs)
+          this.main(refs, clientRef)
         }
         case Refs(process) => {
           refs.getRef(process) ! RefsResponse(refs)
-          this.main(refs)
+          this.main(refs, clientRef)
         }
-        case ReadCommittedResponse(_) => this.main(refs)
-        case ReadUncommittedResponse(_) => this.main(refs)
-        case AppendResponse(_, _, _) => this.main(refs)
-        case _                       => Behaviors.stopped
+        case _ => Behaviors.stopped
       }
     }
 }

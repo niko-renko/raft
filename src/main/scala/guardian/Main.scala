@@ -16,8 +16,7 @@ object Main {
       sys.exit(1)
     }
 
-    val system = ActorSystem(Guardian(), "guardian")
-    system ! Start(processes)
+    val system = ActorSystem(Guardian(processes), "guardian")
     while (true) {
       val command = readLine()
       system ! Control(command)

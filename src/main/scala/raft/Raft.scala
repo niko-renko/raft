@@ -5,7 +5,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
-import guardian.{Refs, ReadCommittedResponse, ReadUncommittedResponse, AppendResponse}
+import guardian.Refs
+import client.{AppendResponse, ReadCommittedResponse, ReadUncommittedResponse}
 
 enum Role:
   case Follower
@@ -15,10 +16,9 @@ enum Role:
 final private case class State[T <: Serializable](
     self: ProcessID,
     refs: Processes[T],
-    parent: ActorRef[guardian.Message],
     timers: Timers[T],
     lastEntriesTime: Map[ProcessID, Long],
-    pending: List[(Int, Int)],
+    pending: List[(Int, Int, ActorRef[client.Message])],
     requests: Set[Int],
 
     commitIndex: Int,
@@ -52,10 +52,13 @@ final case class Awake[T <: Serializable](
 ) extends Message[T]
 
 final case class ReadCommitted[T <: Serializable](
+    ref: ActorRef[client.Message]
 ) extends Message[T]
 final case class ReadUncommitted[T <: Serializable](
+    ref: ActorRef[client.Message]
 ) extends Message[T]
 final case class Append[T <: Serializable](
+    ref: ActorRef[client.Message],
     id: Int,
     entry: T
 ) extends Message[T]
@@ -111,7 +114,6 @@ final class Process[T <: Serializable] {
                 State(
                   self, // Self
                   refs, // Refs
-                  parent, // Parent
                   timers, // Timers 
                   Map(), // Last Entries Time
                   List(), // Pending
@@ -153,31 +155,31 @@ final class Process[T <: Serializable] {
 
       message match {
         // ----- Public Log -----
-        case ReadCommitted() => {
+        case ReadCommitted(ref) => {
           // Effects
           if (state.commitIndex == 0)
-            state.parent ! ReadCommittedResponse("null")
+            ref ! ReadCommittedResponse("null")
           else
-            state.parent ! ReadCommittedResponse(state.committed.state().toString)
+            ref ! ReadCommittedResponse(state.committed.state().toString)
 
           this.main(state, persistent)
         }
-        case ReadUncommitted() => {
+        case ReadUncommitted(ref) => {
           // Effects
           if (persistent.log.size == 1)
-            state.parent ! ReadUncommittedResponse("null")
+            ref ! ReadUncommittedResponse("null")
           else
-            state.parent ! ReadUncommittedResponse(state.uncommitted.state().toString)
+            ref ! ReadUncommittedResponse(state.uncommitted.state().toString)
 
           this.main(state, persistent)
         }
-        case Append(id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
+        case Append(ref, id, entry) if state.role != Role.Leader || state.requests.contains(id) => {
           // Effects
-          state.parent ! AppendResponse(id, false, state.leaderId)
+          ref ! AppendResponse(id, false, state.leaderId)
 
           this.main(state, persistent)
         }
-        case Append(id, entry) => {
+        case Append(ref, id, entry) => {
           // Update State
           val npersistent = persistent.copy(
             log = persistent.log :+ (persistent.term, id, entry)
@@ -187,7 +189,7 @@ final class Process[T <: Serializable] {
           val nstate = this
             .replicate(state, npersistent, state.refs.peers(state.self).toList)
             .copy(
-              pending = state.pending :+ (lastLogIndex, id),
+              pending = state.pending :+ (lastLogIndex, id, ref),
               requests = state.requests + id
             )
           
@@ -390,7 +392,7 @@ final class Process[T <: Serializable] {
             nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
             matchIndex = matchIndex,
             commitIndex = commitIndex,
-            pending = state.pending.filter((index, _) => index > commitIndex)
+            pending = state.pending.filter((index, _, _) => index > commitIndex)
           )
 
           // Effects
@@ -405,8 +407,8 @@ final class Process[T <: Serializable] {
               .foreach(state.committed.apply)
 
             state.pending
-              .filter((index, _) => index <= nstate.commitIndex)
-              .foreach((_, id) => state.parent ! AppendResponse(id, true, Some(state.self)))
+              .filter((index, _, _) => index <= nstate.commitIndex)
+              .foreach((_, id, ref) => ref ! AppendResponse(id, true, Some(state.self)))
           }
 
           this.info(context, state, nstate, persistent, persistent)
