@@ -9,9 +9,11 @@ final case class AppendResponse(
     success: Boolean,
     leaderId: Option[ProcessID]
 ) extends Message
-final case class ReadCommittedResponse(
+final case class ReadResponse(
+    success: Boolean,
     value: String
 ) extends Message
-final case class ReadUncommittedResponse(
+final case class ReadUnstableResponse(
+    success: Boolean,
     value: String
 ) extends Message

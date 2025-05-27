@@ -6,7 +6,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
 import guardian.Refs
-import client.{AppendResponse, ReadCommittedResponse, ReadUncommittedResponse}
+import client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 enum Role:
   case Follower
@@ -51,10 +51,10 @@ final case class Sleep[T <: Serializable](
 final case class Awake[T <: Serializable](
 ) extends Message[T]
 
-final case class ReadCommitted[T <: Serializable](
+final case class Read[T <: Serializable](
     ref: ActorRef[client.Message]
 ) extends Message[T]
-final case class ReadUncommitted[T <: Serializable](
+final case class ReadUnstable[T <: Serializable](
     ref: ActorRef[client.Message]
 ) extends Message[T]
 final case class Append[T <: Serializable](
@@ -148,28 +148,28 @@ final class Process[T <: Serializable] {
   ): Behavior[Message[T]] =
     Behaviors.receive { (context, message) => 
       message match {
-        case _: ReadCommitted[T] | _: ReadUncommitted[T] | _: Append[T] => context.log.info("{}", message)
+        case _: Read[T] | _: ReadUnstable[T] | _: Append[T] => context.log.info("{}", message)
         case _: Crash[T] | _: Sleep[T] | _: Awake[T] => context.log.info("{}", message)
         case _ => context.log.trace("{}", message)
       }
 
       message match {
         // ----- Public Log -----
-        case ReadCommitted(ref) => {
+        case Read(ref) => {
           // Effects
           if (state.commitIndex == 0)
-            ref ! ReadCommittedResponse("null")
+            ref ! ReadResponse(false, "null")
           else
-            ref ! ReadCommittedResponse(state.committed.state().toString)
+            ref ! ReadResponse(true, state.committed.state().toString)
 
           this.main(state, persistent)
         }
-        case ReadUncommitted(ref) => {
+        case ReadUnstable(ref) => {
           // Effects
           if (persistent.log.size == 1)
-            ref ! ReadUncommittedResponse("null")
+            ref ! ReadUnstableResponse(false, "null")
           else
-            ref ! ReadUncommittedResponse(state.uncommitted.state().toString)
+            ref ! ReadUnstableResponse(true, state.uncommitted.state().toString)
 
           this.main(state, persistent)
         }
