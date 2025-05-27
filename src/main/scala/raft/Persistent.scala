@@ -13,7 +13,8 @@ object PersistentState {
     val filename = s"persistent-state/${id}.state"
     if (!Files.exists(Paths.get(filename))) {
       // Will never dereference null!
-      return PersistentState(0, None, List((0, 0, null.asInstanceOf[T])))
+      val entry = Entry.Value(0, 0, null.asInstanceOf[T])
+      return PersistentState(0, None, List(entry))
     }
     val stream = new ObjectInputStream(new FileInputStream(filename))
     val persistentState = stream.readObject().asInstanceOf[PersistentState[T]]
@@ -22,10 +23,27 @@ object PersistentState {
   }
 }
 
+enum Entry[T <: Serializable]:
+  case Read(term: Int) extends Entry[Nothing]
+  case Value(term: Int, id: Int, value: T)
+
+extension [T <: Serializable](entries: List[Entry[T]]) {
+  def terms(): List[Int] = 
+    entries.map {
+      case Entry.Value(term, _, _) => term
+      case Entry.Read(term) => term
+    }
+
+  def values(): List[(Int, Int, T)] = 
+    entries.map {
+      case Entry.Value(term, id, value) => (term, id, value)
+    }
+}
+
 final case class PersistentState[T <: Serializable](
     term: Int,
     votedFor: Option[ProcessID],
-    log: List[(Int, Int, T)]
+    log: List[Entry[T]]
 ) extends Serializable {
   def save(id: Int): Unit = {
     val filename = s"persistent-state/${id}.state"
@@ -37,22 +55,18 @@ final case class PersistentState[T <: Serializable](
   }
 
   def has(logIndex: Int, logTerm: Int): Boolean = {
-    if (logIndex < 0 || logIndex >= this.log.length) {
+    if (logIndex < 0 || logIndex >= this.log.length)
       false
-    } else {
-      val (thisLogTerm, _, _) = this.log(logIndex)
-      thisLogTerm == logTerm
-    }
+    else
+      this.log.terms()(logIndex) == logTerm
   }
 
   def last(): (Int, Int) = {
     val lastLogIndex = this.log.length - 1
-    val (lastLogTerm, _, _) = this.log(lastLogIndex)
+    val lastLogTerm = this.log.terms()(lastLogIndex)
     (lastLogIndex, lastLogTerm)
   }
 
-  def apply(index: Int): (Int, Int, T) = this.log(index)
-
-  def from(index: Int): List[(Int, Int, T)] =
+  def from(index: Int): List[Entry[T]] =
     this.log.slice(index, this.log.length)
 }

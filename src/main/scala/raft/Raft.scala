@@ -73,7 +73,7 @@ final private case class AppendEntries[T <: Serializable](
     leaderId: ProcessID,
     prevLogIndex: Int,
     prevLogTerm: Int,
-    entries: List[(Int, Int, T)],
+    entries: List[Entry[T]],
     leaderCommit: Int
 ) extends Message[T]
 final private case class AppendEntriesResponse[T <: Serializable](
@@ -108,7 +108,7 @@ final class Process[T <: Serializable] {
               timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
 
               val persistent = PersistentState.load[T](self.id)
-              val requests = Set() ++ persistent.log.map(_._2)
+              val requests = Set() ++ persistent.log.values().map(_._2)
 
               val state =
                 State(
@@ -182,7 +182,7 @@ final class Process[T <: Serializable] {
         case Append(ref, id, entry) => {
           // Update State
           val npersistent = persistent.copy(
-            log = persistent.log :+ (persistent.term, id, entry)
+            log = persistent.log :+ Entry.Value(persistent.term, id, entry)
           )
           npersistent.save(state.self.id)
           val (lastLogIndex, _) = npersistent.last()
@@ -311,8 +311,8 @@ final class Process[T <: Serializable] {
 
           val (lastLogIndex, _) = npersistent.last()
           val commitIndex = math.min(leaderCommit, lastLogIndex)
-          val removed = persistent.log.drop(lastLogIndex + 1).map(_._2)
-          val added = entries.map(_._2)
+          val removed = persistent.log.drop(lastLogIndex + 1).values().map(_._2)
+          val added = entries.values().map(_._2)
           val nstate = state.copy(
             role = Role.Follower,
             leaderId = Some(leaderId),
@@ -329,11 +329,13 @@ final class Process[T <: Serializable] {
             npersistent.log
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
+              .values()
               .map(_._3)
               .foreach(state.committed.apply)
 
           npersistent.log
             .drop(state.commitIndex + 1)
+            .values()
             .map(_._3)
             .foreach(state.uncommitted.apply)
 
@@ -385,7 +387,7 @@ final class Process[T <: Serializable] {
           // Update State
           val matchIndex = state.matchIndex + (process -> lastLogIndex)
           val n = matchIndex.values.toList.sorted()(state.refs.size / 2)
-          val (nTerm, _, _) = persistent(n)
+          val nTerm = persistent.log.terms()(n)
           val commitIndex = if (nTerm == persistent.term) n else state.commitIndex
 
           val nstate = state.copy(
@@ -403,6 +405,7 @@ final class Process[T <: Serializable] {
             persistent.log
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
+              .values()
               .map(_._3)
               .foreach(state.committed.apply)
 
@@ -508,7 +511,7 @@ final class Process[T <: Serializable] {
     processes.foreach((id, ref) => {
       val nextIndex = state.nextIndex(id)
       val prevLogIndex = nextIndex - 1
-      val (prevLogTerm, _, _) = persistent(prevLogIndex)
+      val prevLogTerm = persistent.log.terms()(prevLogIndex)
       ref ! AppendEntries(
         persistent.term,
         state.self,
