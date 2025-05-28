@@ -1,8 +1,18 @@
 import scala.io.StdIn.readLine
 import akka.actor.typed.ActorSystem
+import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.Behaviors
 
 import machine.LastValue
 import raft.cluster.LocalCluster
+import client.text.TextClient
+
+object Guardian {
+  def apply(actors: List[(String, Behavior[?])]): Behavior[Unit] = Behaviors.setup { context =>
+    actors.map{ case (name, actor) => context.spawn(actor, name) }
+    Behaviors.receive { (context, message) => Behaviors.same }
+  }
+}
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -18,10 +28,8 @@ object Main {
     }
 
     val cluster = LocalCluster()(processes, LastValue("init"))
-    val system = ActorSystem(cluster, "cluster")
-    // while (true) {
-    //   val command = readLine()
-    //   system ! Control(command)
-    // }
+    val client = TextClient[String]()(cluster, s => s)
+    val guardian = Guardian(List(("cluster", cluster), ("text-client", client)))
+    val system = ActorSystem(guardian, "guardian")
   }
 }

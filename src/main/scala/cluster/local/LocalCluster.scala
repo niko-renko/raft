@@ -2,6 +2,7 @@ package raft.cluster
 
 import scala.util.Random
 import akka.actor.typed.Behavior
+import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
