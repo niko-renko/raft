@@ -2,7 +2,6 @@ package raft.cluster
 
 import scala.util.Random
 import akka.actor.typed.Behavior
-import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
@@ -68,8 +67,8 @@ final class LocalCluster[T <: Serializable] {
 
           this.main(refs)
         }
-        case Refs(process) => {
-          refs.getRef(process) ! RefsResponse(refs)
+        case Refs(ref) => {
+          ref ! RefsResponse(refs)
           this.main(refs)
         }
         case message: raft.client.Message => this.main(refs)
