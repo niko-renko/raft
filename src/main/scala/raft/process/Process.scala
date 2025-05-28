@@ -6,22 +6,22 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
 import machine.StateMachine
-import raft.cluster.Refs
+import raft.cluster.{GetCluster, ClusterResponse, ProcessID, Cluster}
 import raft.client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 final class Process[T <: Serializable] {
   def apply(
     self: ProcessID,
-    parent: ActorRef[raft.cluster.Message[T]],
+    cluster: ActorRef[GetCluster[T]],
     machine: StateMachine[T, T]
-  ): Behavior[Message[T]] =
+  ): Behavior[ClusterResponse[T] | Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting")
-      parent ! Refs(context.self)
+      cluster ! GetCluster(context.self)
       Behaviors.receive { (context, message) => message match {
-          case RefsResponse(refs) if refs.size % 2 == 0 =>
+          case ClusterResponse(refs) if refs.size % 2 == 0 =>
             Behaviors.stopped
-          case RefsResponse(refs) =>
+          case ClusterResponse(refs) =>
             Behaviors.withTimers(_timers => {
               val timers = new Timer[T](_timers)
               timers.register(timers.Election, ElectionTimeout(), (150, 301))
@@ -67,7 +67,7 @@ final class Process[T <: Serializable] {
   private def main(
       state: State[T],
       persistent: PersistentState[T]
-  ): Behavior[Message[T]] =
+  ): Behavior[ClusterResponse[T] | Message[T]] =
     Behaviors.receive { (context, message) => 
       message match {
         case _: Read[T] | _: ReadUnstable[T] | _: Append[T] => context.log.info("{}", message)
@@ -233,7 +233,7 @@ final class Process[T <: Serializable] {
         case AppendEntries(term, leaderId, _, _, _, _) if term < persistent.term => {
           // Effects
           val (lastLogIndex, _) = persistent.last()
-          state.refs.getRef(leaderId) ! AppendEntriesResponse(
+          state.refs(leaderId) ! AppendEntriesResponse(
             persistent.term,
             false,
             lastLogIndex,
@@ -283,7 +283,7 @@ final class Process[T <: Serializable] {
             .foreach(state.uncommitted.apply)
 
           state.timers.set(state.timers.Election)
-          state.refs.getRef(leaderId) ! AppendEntriesResponse(
+          state.refs(leaderId) ! AppendEntriesResponse(
             npersistent.term,
             hasPrev,
             lastLogIndex,
@@ -368,7 +368,7 @@ final class Process[T <: Serializable] {
 
         case RequestVote(term, candidateId, _, _) if term < persistent.term => {
           // Effects
-          state.refs.getRef(candidateId) ! RequestVoteResponse(
+          state.refs(candidateId) ! RequestVoteResponse(
             persistent.term,
             false
           )
@@ -401,7 +401,7 @@ final class Process[T <: Serializable] {
           if (npersistent.term > persistent.term && npersistent.votedFor.isDefined)
             state.timers.set(state.timers.Election)
 
-          state.refs.getRef(candidateId) ! RequestVoteResponse(
+          state.refs(candidateId) ! RequestVoteResponse(
             npersistent.term,
             decision
           )
@@ -478,7 +478,7 @@ final class Process[T <: Serializable] {
   }
 
   private def info(
-    context: ActorContext[Message[T]],
+    context: ActorContext[ClusterResponse[T] | Message[T]],
     state: State[T],
     nstate: State[T],
     persistent: PersistentState[T],

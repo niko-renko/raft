@@ -8,6 +8,8 @@ import java.io.{
 }
 import java.nio.file.{Files, Paths}
 
+import raft.cluster.{ProcessID}
+
 object PersistentState {
   def load[T <: Serializable](id: Int): PersistentState[T] = {
     val filename = s"persistent-state/${id}.state"

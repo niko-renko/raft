@@ -5,10 +5,12 @@ import scala.util.Random
 import java.util.concurrent.TimeUnit
 import akka.actor.typed.scaladsl.TimerScheduler
 
+import raft.cluster.ClusterResponse
+
 private sealed trait TimerKey
 
 final private class Timer[T <: Serializable](
-    timers: TimerScheduler[Message[T]]
+    timers: TimerScheduler[ClusterResponse[T] | Message[T]]
 ) {
   object Election extends TimerKey
   object Heartbeat extends TimerKey

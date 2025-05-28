@@ -2,8 +2,10 @@ package raft.cluster
 
 import akka.actor.typed.ActorRef
 
-sealed trait Message[T <: Serializable]
+final case class GetCluster[T <: Serializable](
+    ref: ActorRef[ClusterResponse[T]]
+)
 
-// Public
-final case class Refs[T <: Serializable](ref: ActorRef[raft.process.Message[T]]) extends Message[T]
-final case class Control[T <: Serializable](command: String) extends Message[T]
+final case class ClusterResponse[T <: Serializable](
+    refs: Cluster[T]
+)

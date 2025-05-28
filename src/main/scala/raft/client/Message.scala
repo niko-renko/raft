@@ -1,6 +1,6 @@
 package raft.client
 
-import raft.process.ProcessID
+import raft.cluster.ProcessID
 
 sealed trait Message
 

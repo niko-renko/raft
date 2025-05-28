@@ -3,6 +3,7 @@ package raft.process
 import akka.actor.typed.ActorRef
 
 import machine.StateMachine
+import raft.cluster.{ProcessID, Cluster, ClusterResponse}
 
 enum Role:
   case Follower
@@ -25,7 +26,7 @@ final private case class PendingRead(
 
 final private case class State[T <: Serializable](
     self: ProcessID,
-    refs: ProcessRegistry[T],
+    refs: Cluster[T],
     timers: Timer[T],
     lastEntriesTime: Map[ProcessID, Long],
 
@@ -45,5 +46,5 @@ final private case class State[T <: Serializable](
 
     asleep: Boolean,
     collect: Boolean,
-    delayed: List[Message[T]]
+    delayed: List[ClusterResponse[T] | Message[T]]
 )

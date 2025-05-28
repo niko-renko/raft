@@ -2,13 +2,11 @@ package raft.process
 
 import akka.actor.typed.ActorRef
 
+import raft.cluster.ProcessID
+
 sealed trait Message[T <: Serializable]
 
 // Public
-final case class RefsResponse[T <: Serializable](
-    refs: ProcessRegistry[T]
-) extends Message[T]
-
 final case class Crash[T <: Serializable](
 ) extends Message[T]
 final case class Sleep[T <: Serializable](
