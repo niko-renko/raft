@@ -11,15 +11,8 @@ import machine.StateMachine
 import raft.process.{ProcessID, ProcessRegistry, Process}
 import raft.process.{RefsResponse, Crash, Sleep, Awake, Read, ReadUnstable, Append}
 
-private object NoopClient {
-  def apply(): Behavior[raft.client.Message] = Behaviors.receive { (context, message) =>
-      context.log.info("{}", message)
-      this.apply()
-  }
-}
-
 final class LocalCluster[T <: Serializable] {
-  def apply(processes: Int, machine: StateMachine[T, T]): Behavior[Message] = Behaviors.setup { context =>
+  def apply(processes: Int, machine: StateMachine[T, T]): Behavior[Message | raft.client.Message] = Behaviors.setup { context =>
     context.log.info("Starting {} processes", processes)
     val refsMap = (0 until processes)
       .map(i =>
@@ -39,16 +32,11 @@ final class LocalCluster[T <: Serializable] {
         )
       )
       .toMap
-    // TODO: rename
     val refs = ProcessRegistry(refsMap)
-    val client = context.spawn(NoopClient(), "noop-client")
-    this.main(refs, client)
+    this.main(refs)
   }
 
-  private def main(
-      refs: ProcessRegistry[T],
-      clientRef: ActorRef[raft.client.Message]
-  ): Behavior[Message] =
+  private def main(refs: ProcessRegistry[T]): Behavior[Message | raft.client.Message] =
     Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
       message match {
@@ -63,8 +51,8 @@ final class LocalCluster[T <: Serializable] {
             case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
             case "awake"  => ref ! Awake()
 
-            case "stable"   => ref ! Read(clientRef)
-            case "unstable"   => ref ! ReadUnstable(clientRef)
+            case "stable"   => ref ! Read(context.self)
+            case "unstable"   => ref ! ReadUnstable(context.self)
 
             case "append" => {
               val id = if (parts.size == 4)
@@ -78,12 +66,13 @@ final class LocalCluster[T <: Serializable] {
             case _        => context.log.info("Invalid command: {}", command)
           }
 
-          this.main(refs, clientRef)
+          this.main(refs)
         }
         case Refs(process) => {
           refs.getRef(process) ! RefsResponse(refs)
-          this.main(refs, clientRef)
+          this.main(refs)
         }
+        case message: raft.client.Message => this.main(refs)
         case _ => Behaviors.stopped
       }
     }

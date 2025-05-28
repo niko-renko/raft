@@ -19,7 +19,6 @@ final class Process[T <: Serializable] {
             Behaviors.stopped
           case RefsResponse(refs) =>
             Behaviors.withTimers(_timers => {
-              // TODO: rename
               val timers = new Timer[T](_timers)
               timers.register(timers.Election, ElectionTimeout(), (150, 301))
               timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
