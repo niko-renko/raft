@@ -17,7 +17,8 @@ object Main {
       sys.exit(1)
     }
 
-    val system = ActorSystem(LocalCluster()(processes, LastValue("init")), "cluster")
+    val cluster = LocalCluster()(processes, LastValue("init"), (s: String) => s)
+    val system = ActorSystem(cluster, "cluster")
     while (true) {
       val command = readLine()
       system ! Control(command)

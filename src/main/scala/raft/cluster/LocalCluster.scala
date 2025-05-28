@@ -11,7 +11,11 @@ import raft.process.{ProcessID, ProcessRegistry, Process}
 import raft.process.{RefsResponse, Crash, Sleep, Awake, Read, ReadUnstable, Append}
 
 final class LocalCluster[T <: Serializable] {
-  def apply(processes: Int, machine: StateMachine[T, T]): Behavior[Message | raft.client.Message] = Behaviors.setup { context =>
+  def apply(
+    processes: Int,
+    machine: StateMachine[T, T],
+    translate: String => T
+  ): Behavior[Message[T] | raft.client.Message] = Behaviors.setup { context =>
     context.log.info("Starting {} processes", processes)
     val refsMap = (0 until processes)
       .map(i =>
@@ -32,10 +36,13 @@ final class LocalCluster[T <: Serializable] {
       )
       .toMap
     val refs = ProcessRegistry(refsMap)
-    this.main(refs)
+    this.main(refs, translate)
   }
 
-  private def main(refs: ProcessRegistry[T]): Behavior[Message | raft.client.Message] =
+  private def main(
+    refs: ProcessRegistry[T],
+    translate: String => T
+  ): Behavior[Message[T] | raft.client.Message] =
     Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
       message match {
@@ -59,19 +66,19 @@ final class LocalCluster[T <: Serializable] {
               else
                 Random.nextInt()
 
-              // ref ! Append(clientRef, id, parts(2))
+              ref ! Append(context.self, id, translate(parts(2)))
             }
 
             case _        => context.log.info("Invalid command: {}", command)
           }
 
-          this.main(refs)
+          this.main(refs, translate)
         }
         case Refs(ref) => {
           ref ! RefsResponse(refs)
-          this.main(refs)
+          this.main(refs, translate)
         }
-        case message: raft.client.Message => this.main(refs)
+        case message: raft.client.Message => this.main(refs, translate)
         case _ => Behaviors.stopped
       }
     }

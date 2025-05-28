@@ -10,10 +10,14 @@ import raft.cluster.Refs
 import raft.client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 final class Process[T <: Serializable] {
-  def apply(self: ProcessID, parent: ActorRef[raft.cluster.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
+  def apply(
+    self: ProcessID,
+    parent: ActorRef[raft.cluster.Message[T]],
+    machine: StateMachine[T, T]
+  ): Behavior[Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting")
-      parent ! Refs(self)
+      parent ! Refs(context.self)
       Behaviors.receive { (context, message) => message match {
           case RefsResponse(refs) if refs.size % 2 == 0 =>
             Behaviors.stopped
