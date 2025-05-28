@@ -13,13 +13,25 @@ enum Role:
   case Candidate
   case Leader
 
+final private case class PendingAppend(
+  index: Int,
+  term: Int,
+  id: Int,
+  ref: ActorRef[client.Message]
+)
+
+final private case class PendingRead(
+  index: Int,
+  term: Int,
+  value: String,
+  ref: ActorRef[client.Message]
+)
+
 final private case class State[T <: Serializable](
     self: ProcessID,
     refs: Processes[T],
     timers: Timers[T],
     lastEntriesTime: Map[ProcessID, Long],
-    pending: List[(Int, Int, ActorRef[client.Message])],
-    requests: Set[Int],
 
     commitIndex: Int,
     nextIndex: Map[ProcessID, Int],
@@ -27,6 +39,10 @@ final private case class State[T <: Serializable](
     votes: Int,
     role: Role,
     leaderId: Option[ProcessID],
+
+    appends: List[PendingAppend],
+    reads: List[PendingRead],
+    requests: Set[Int],
 
     committed: StateMachine[T, T],
     uncommitted: StateMachine[T, T],
@@ -116,8 +132,6 @@ final class Process[T <: Serializable] {
                   refs, // Refs
                   timers, // Timers 
                   Map(), // Last Entries Time
-                  List(), // Pending
-                  requests, // Requests
 
                   0, // Commit Index
                   Map(), // Next Index
@@ -125,6 +139,10 @@ final class Process[T <: Serializable] {
                   0, // Votes
                   Role.Follower, // Role
                   None, // Leader ID
+
+                  List(), // Pending Appends
+                  List(), // Pending Reads
+                  requests, // Requests
 
                   machine.copy(), // Committed
                   machine.copy(), // Uncommitted
@@ -157,15 +175,30 @@ final class Process[T <: Serializable] {
         // ----- Public Log -----
         case Read(ref) if state.role != Role.Leader => {
           // Effects
-          ref ! ReadResponse(false, "")
+          ref ! ReadResponse(false, None)
 
           this.main(state, persistent)
         }
         case Read(ref) => {
-          // Effects
-          ref ! ReadResponse(true, state.committed.state().toString)
+          // Update State
+          val npersistent = persistent.copy(
+            log = persistent.log :+ Entry.Read(persistent.term, None)
+          )
+          npersistent.save(state.self.id)
+          val (lastLogIndex, lastLogTerm) = npersistent.last()
+          val read = PendingRead(
+            lastLogIndex,
+            lastLogTerm,
+            state.uncommitted.state().toString,
+            ref
+          )
+          val nstate = this
+            .replicate(state, npersistent, state.refs.peers(state.self).toList)
+            .copy(
+              reads = state.reads :+ read
+            )
 
-          this.main(state, persistent)
+          this.main(nstate, npersistent)
         }
         case ReadUnstable(ref) => {
           // Effects
@@ -185,11 +218,17 @@ final class Process[T <: Serializable] {
             log = persistent.log :+ Entry.Value(persistent.term, id, entry)
           )
           npersistent.save(state.self.id)
-          val (lastLogIndex, _) = npersistent.last()
+          val (lastLogIndex, lastLogTerm) = npersistent.last()
+          val append = PendingAppend(
+            lastLogIndex,
+            lastLogTerm,
+            id,
+            ref
+          )
           val nstate = this
             .replicate(state, npersistent, state.refs.peers(state.self).toList)
             .copy(
-              pending = state.pending :+ (lastLogIndex, id, ref),
+              appends = state.appends :+ append,
               requests = state.requests + id
             )
           
@@ -394,7 +433,8 @@ final class Process[T <: Serializable] {
             nextIndex = state.nextIndex + (process -> (lastLogIndex + 1)),
             matchIndex = matchIndex,
             commitIndex = commitIndex,
-            pending = state.pending.filter((index, _, _) => index > commitIndex)
+            appends = state.appends.filter(append => append.index > commitIndex),
+            reads = state.reads.filter(read => read.index > commitIndex)
           )
 
           // Effects
@@ -409,9 +449,13 @@ final class Process[T <: Serializable] {
               .map(_._3)
               .foreach(state.committed.apply)
 
-            state.pending
-              .filter((index, _, _) => index <= nstate.commitIndex)
-              .foreach((_, id, ref) => ref ! AppendResponse(id, true, Some(state.self)))
+            state.appends
+              .filter(append => append.index <= nstate.commitIndex && append.term == persistent.term)
+              .foreach(append => append.ref ! AppendResponse(append.id, true, Some(state.self)))
+
+            state.reads
+              .filter(read => read.index <= nstate.commitIndex && read.term == persistent.term)
+              .foreach(read => read.ref ! ReadResponse(true, Some(read.value)))
           }
 
           this.info(context, state, nstate, persistent, persistent)

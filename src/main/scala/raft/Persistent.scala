@@ -24,20 +24,26 @@ object PersistentState {
 }
 
 enum Entry[T <: Serializable]:
-  case Read(term: Int) extends Entry[Nothing]
+  case Read(term: Int, n: Option[T])
   case Value(term: Int, id: Int, value: T)
 
 extension [T <: Serializable](entries: List[Entry[T]]) {
   def terms(): List[Int] = 
     entries.map {
       case Entry.Value(term, _, _) => term
-      case Entry.Read(term) => term
+      case Entry.Read(term, _) => term
     }
 
   def values(): List[(Int, Int, T)] = 
-    entries.map {
-      case Entry.Value(term, id, value) => (term, id, value)
-    }
+    entries
+      .filter {
+        case Entry.Value(_, _, _) => true;
+        case _ => false
+      }
+      .map {
+        case Entry.Value(term, id, value) => (term, id, value)
+        case _ => throw new Exception("Unreachable")
+      }
 }
 
 final case class PersistentState[T <: Serializable](

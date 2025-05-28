@@ -11,7 +11,7 @@ final case class AppendResponse(
 ) extends Message
 final case class ReadResponse(
     success: Boolean,
-    value: String
+    value: Option[String]
 ) extends Message
 final case class ReadUnstableResponse(
     value: String

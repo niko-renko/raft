@@ -11,7 +11,7 @@ final class LastValue[T <: Serializable](init: T) extends StateMachine[T, T] {
 
   override def apply(value: T): Unit = this.value = value
   override def state(): T = this.value
-  override def copy(): StateMachine[T, T] = new LastValue[T](this.value)
+  override def copy(): StateMachine[T, T] = new LastValue(this.value)
 }
 
 final class DecrementCounter[T <: Serializable](init: Int = 0) extends StateMachine[T, Int] {
