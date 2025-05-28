@@ -1,4 +1,4 @@
-package guardian
+package raft.cluster 
 
 import scala.util.Random
 import akka.actor.typed.Behavior
@@ -7,28 +7,25 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
-import raft.LastValue
+import machine.StateMachine
 import raft.{ProcessID, Processes, Process}
-import raft.{Crash, Sleep, Awake}
-import raft.{RefsResponse, Read, ReadUnstable, Append}
+import raft.{RefsResponse, Crash, Sleep, Awake, Read, ReadUnstable, Append}
 
 sealed trait Message
 
 // Public
 final case class Refs(process: ProcessID) extends Message
+final case class Control(command: String) extends Message
 
-// Private
-final private case class Control(command: String) extends Message
-
-object NoopClient {
-  def apply(): Behavior[client.Message] = Behaviors.receive { (context, message) =>
+private object NoopClient {
+  def apply(): Behavior[raft.client.Message] = Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
       this.apply()
   }
 }
 
-object Guardian {
-  def apply(processes: Int): Behavior[Message] = Behaviors.setup { context =>
+final class Cluster[T <: Serializable] {
+  def apply(processes: Int, machine: StateMachine[T, T]): Behavior[Message] = Behaviors.setup { context =>
     context.log.info("Starting {} processes", processes)
     val refsMap = (0 until processes)
       .map(i =>
@@ -36,10 +33,10 @@ object Guardian {
           ProcessID(i),
           context.spawn(
             supervise(
-              Process[String]()(
+              Process[T]()(
                 ProcessID(i),
                 context.self,
-                LastValue[String]("init")
+                machine
               )
             )
               .onFailure[Throwable](SupervisorStrategy.restart),
@@ -54,8 +51,8 @@ object Guardian {
   }
 
   private def main(
-      refs: Processes[String],
-      clientRef: ActorRef[client.Message]
+      refs: Processes[T],
+      clientRef: ActorRef[raft.client.Message]
   ): Behavior[Message] =
     Behaviors.receive { (context, message) =>
       context.log.info("{}", message)
@@ -80,7 +77,7 @@ object Guardian {
               else
                 Random.nextInt()
 
-              ref ! Append(clientRef, id, parts(2))
+              // ref ! Append(clientRef, id, parts(2))
             }
 
             case _        => context.log.info("Invalid command: {}", command)

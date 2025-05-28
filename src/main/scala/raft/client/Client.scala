@@ -1,4 +1,4 @@
-package client
+package raft.client
 
 import raft.ProcessID
 

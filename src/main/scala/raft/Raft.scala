@@ -5,7 +5,8 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
-import guardian.Refs
+import machine.StateMachine
+import cluster.Refs
 import client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 enum Role:
@@ -110,7 +111,7 @@ final private case class RequestVoteResponse[T <: Serializable](
 ) extends Message[T]
 
 final class Process[T <: Serializable] {
-  def apply(self: ProcessID, parent: ActorRef[guardian.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
+  def apply(self: ProcessID, parent: ActorRef[cluster.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting")
       parent ! Refs(self)

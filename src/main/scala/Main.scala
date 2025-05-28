@@ -1,7 +1,8 @@
-package guardian
-
 import scala.io.StdIn.readLine
 import akka.actor.typed.ActorSystem
+
+import machine.LastValue
+import raft.cluster.{Cluster, Control}
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -16,7 +17,7 @@ object Main {
       sys.exit(1)
     }
 
-    val system = ActorSystem(Guardian(processes), "guardian")
+    val system = ActorSystem(Cluster()(processes, LastValue("init")), "cluster")
     while (true) {
       val command = readLine()
       system ! Control(command)
