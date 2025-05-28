@@ -1,4 +1,4 @@
-package raft
+package raft.process
 
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
@@ -7,7 +7,7 @@ import akka.actor.typed.scaladsl.TimerScheduler
 
 private sealed trait TimerKey
 
-final private class Timers[T <: Serializable](
+final private class Timer[T <: Serializable](
     timers: TimerScheduler[Message[T]]
 ) {
   object Election extends TimerKey

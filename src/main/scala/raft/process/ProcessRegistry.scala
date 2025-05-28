@@ -1,4 +1,4 @@
-package raft
+package raft.process
 
 import akka.actor.typed.ActorRef
 
@@ -10,7 +10,7 @@ final class ProcessID(val id: Int) extends Serializable {
   }
 }
 
-final class Processes[T <: Serializable](
+final class ProcessRegistry[T <: Serializable](
     val refs: Map[ProcessID, ActorRef[Message[T]]]
 ) extends Iterable[(ProcessID, ActorRef[Message[T]])] {
   def getRef(id: ProcessID): ActorRef[Message[T]] = this.refs(id)

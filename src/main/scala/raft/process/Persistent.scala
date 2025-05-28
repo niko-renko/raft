@@ -1,4 +1,4 @@
-package raft
+package raft.process
 
 import java.io.{
   ObjectOutputStream,

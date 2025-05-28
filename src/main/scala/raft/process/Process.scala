@@ -1,4 +1,4 @@
-package raft
+package raft.process
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
@@ -6,112 +6,11 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
 import machine.StateMachine
-import cluster.Refs
-import client.{AppendResponse, ReadResponse, ReadUnstableResponse}
-
-enum Role:
-  case Follower
-  case Candidate
-  case Leader
-
-final private case class PendingAppend(
-  index: Int,
-  term: Int,
-  id: Int,
-  ref: ActorRef[client.Message]
-)
-
-final private case class PendingRead(
-  index: Int,
-  term: Int,
-  value: String,
-  ref: ActorRef[client.Message]
-)
-
-final private case class State[T <: Serializable](
-    self: ProcessID,
-    refs: Processes[T],
-    timers: Timers[T],
-    lastEntriesTime: Map[ProcessID, Long],
-
-    commitIndex: Int,
-    nextIndex: Map[ProcessID, Int],
-    matchIndex: Map[ProcessID, Int],
-    votes: Int,
-    role: Role,
-    leaderId: Option[ProcessID],
-
-    appends: List[PendingAppend],
-    reads: List[PendingRead],
-    requests: Set[Int],
-
-    committed: StateMachine[T, T],
-    uncommitted: StateMachine[T, T],
-
-    asleep: Boolean,
-    collect: Boolean,
-    delayed: List[Message[T]]
-)
-
-sealed trait Message[T <: Serializable]
-
-// Public
-final case class RefsResponse[T <: Serializable](
-    refs: Processes[T]
-) extends Message[T]
-
-final case class Crash[T <: Serializable](
-) extends Message[T]
-final case class Sleep[T <: Serializable](
-  collect: Boolean
-) extends Message[T]
-final case class Awake[T <: Serializable](
-) extends Message[T]
-
-final case class Read[T <: Serializable](
-    ref: ActorRef[client.Message]
-) extends Message[T]
-final case class ReadUnstable[T <: Serializable](
-    ref: ActorRef[client.Message]
-) extends Message[T]
-final case class Append[T <: Serializable](
-    ref: ActorRef[client.Message],
-    id: Int,
-    entry: T
-) extends Message[T]
-
-// Private
-final private case class ElectionTimeout[T <: Serializable](
-) extends Message[T]
-final private case class HeartbeatTimeout[T <: Serializable](
-) extends Message[T]
-final private case class AppendEntries[T <: Serializable](
-    term: Int,
-    leaderId: ProcessID,
-    prevLogIndex: Int,
-    prevLogTerm: Int,
-    entries: List[Entry[T]],
-    leaderCommit: Int
-) extends Message[T]
-final private case class AppendEntriesResponse[T <: Serializable](
-    term: Int,
-    success: Boolean,
-    lastLogIndex: Int,
-    process: ProcessID
-) extends Message[T]
-final private case class RequestVote[T <: Serializable](
-    term: Int,
-    candidateId: ProcessID,
-    lastLogIndex: Int,
-    lastLogTerm: Int
-) extends Message[T]
-final private case class RequestVoteResponse[T <: Serializable](
-    term: Int,
-    voteGranted: Boolean
-) extends Message[T]
+import raft.cluster.Refs
+import raft.client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 final class Process[T <: Serializable] {
-  def apply(self: ProcessID, parent: ActorRef[cluster.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
+  def apply(self: ProcessID, parent: ActorRef[raft.cluster.Message], machine: StateMachine[T, T]): Behavior[Message[T]] =
     Behaviors.setup { context => 
       context.log.info("Starting")
       parent ! Refs(self)
@@ -120,7 +19,8 @@ final class Process[T <: Serializable] {
             Behaviors.stopped
           case RefsResponse(refs) =>
             Behaviors.withTimers(_timers => {
-              val timers = new Timers[T](_timers)
+              // TODO: rename
+              val timers = new Timer[T](_timers)
               timers.register(timers.Election, ElectionTimeout(), (150, 301))
               timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
 

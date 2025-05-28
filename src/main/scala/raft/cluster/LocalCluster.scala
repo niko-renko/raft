@@ -8,14 +8,8 @@ import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import machine.StateMachine
-import raft.{ProcessID, Processes, Process}
-import raft.{RefsResponse, Crash, Sleep, Awake, Read, ReadUnstable, Append}
-
-sealed trait Message
-
-// Public
-final case class Refs(process: ProcessID) extends Message
-final case class Control(command: String) extends Message
+import raft.process.{ProcessID, ProcessRegistry, Process}
+import raft.process.{RefsResponse, Crash, Sleep, Awake, Read, ReadUnstable, Append}
 
 private object NoopClient {
   def apply(): Behavior[raft.client.Message] = Behaviors.receive { (context, message) =>
@@ -24,7 +18,7 @@ private object NoopClient {
   }
 }
 
-final class Cluster[T <: Serializable] {
+final class LocalCluster[T <: Serializable] {
   def apply(processes: Int, machine: StateMachine[T, T]): Behavior[Message] = Behaviors.setup { context =>
     context.log.info("Starting {} processes", processes)
     val refsMap = (0 until processes)
@@ -45,13 +39,14 @@ final class Cluster[T <: Serializable] {
         )
       )
       .toMap
-    val refs = Processes(refsMap)
+    // TODO: rename
+    val refs = ProcessRegistry(refsMap)
     val client = context.spawn(NoopClient(), "noop-client")
     this.main(refs, client)
   }
 
   private def main(
-      refs: Processes[T],
+      refs: ProcessRegistry[T],
       clientRef: ActorRef[raft.client.Message]
   ): Behavior[Message] =
     Behaviors.receive { (context, message) =>

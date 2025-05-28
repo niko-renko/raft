@@ -2,7 +2,7 @@ import scala.io.StdIn.readLine
 import akka.actor.typed.ActorSystem
 
 import machine.LastValue
-import raft.cluster.{Cluster, Control}
+import raft.cluster.{LocalCluster, Control}
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -17,7 +17,7 @@ object Main {
       sys.exit(1)
     }
 
-    val system = ActorSystem(Cluster()(processes, LastValue("init")), "cluster")
+    val system = ActorSystem(LocalCluster()(processes, LastValue("init")), "cluster")
     while (true) {
       val command = readLine()
       system ! Control(command)
