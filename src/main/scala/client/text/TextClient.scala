@@ -1,5 +1,6 @@
 package client.text
 
+import scala.util.Random
 import scala.io.StdIn.readLine
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
@@ -8,7 +9,8 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import raft.cluster.{Cluster, GetCluster, ClusterResponse}
+import raft.process.{Crash, Sleep, Awake, Read, ReadUnstable, Append}
+import raft.cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
 
 class TextClient[T <: Serializable] {
     def apply(
@@ -26,7 +28,7 @@ class TextClient[T <: Serializable] {
                           context.self ! Control(command)
                         }
                     }(ec)
-                    this.main(refs)
+                    this.main(refs, translate)
                 }
                 case _ => Behaviors.stopped
             } 
@@ -34,14 +36,40 @@ class TextClient[T <: Serializable] {
     }
 
     private def main(
-        refs: Cluster[T]
+        refs: Cluster[T],
+        translate: String => T
     ): Behavior[ClusterResponse[T] | raft.client.Message | Message] = Behaviors.receive { (context, message) =>
+        context.log.info("{}", message)
         message match {
-            case Control(command) => {
-                println(command)
-                this.main(refs)
+            case Control(command) if command.split(" ").size >= 2 => {
+              val parts = command.split(" ")
+              val action = parts(0)
+              val processId = ProcessID(parts(1).toInt)
+              val ref = refs(processId)
+
+              action match {
+                case "crash"  => ref ! Crash()
+                case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
+                case "awake"  => ref ! Awake()
+
+                case "stable"   => ref ! Read(context.self)
+                case "unstable"   => ref ! ReadUnstable(context.self)
+
+                case "append" => {
+                  val id = if (parts.size == 4)
+                    parts(3).toInt
+                  else
+                    Random.nextInt()
+
+                  ref ! Append(context.self, id, translate(parts(2)))
+                }
+
+                case _        => context.log.info("Invalid command: {}", command)
+              }
+
+              this.main(refs, translate)
             }
-            case message: raft.client.Message => this.main(refs)
+            case message: raft.client.Message => this.main(refs, translate)
             case _ => Behaviors.stopped
         }
     }
