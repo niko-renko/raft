@@ -1,6 +1,6 @@
 package machine
 
-final class LastValue[T <: Serializable](init: T) extends StateMachine[T, T] {
+final class LastValue[T](init: T) extends StateMachine[T, T] {
   private var value: T = init
 
   override def apply(value: T): Unit = this.value = value
