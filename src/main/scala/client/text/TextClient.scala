@@ -12,7 +12,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import raft.process.{Crash, Sleep, Awake, Read, ReadUnstable, Append}
 import raft.cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
 
-class TextClient[T <: Serializable] {
+final class TextClient[T <: Serializable] {
     def apply(
         cluster: ActorRef[GetCluster[T]],
         translate: String => T
