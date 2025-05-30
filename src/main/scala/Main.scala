@@ -8,8 +8,9 @@ import raft.cluster.LocalCluster
 import client.text.TextClient
 
 object Guardian {
-  def apply(actors: List[(String, Behavior[?])]): Behavior[Unit] = Behaviors.setup { context =>
-    actors.map{ case (name, actor) => context.spawn(actor, name) }
+  def apply(processes: Int): Behavior[Unit] = Behaviors.setup { context =>
+    val cluster = context.spawn(LocalCluster()(processes, LastValue("init")), "cluster")
+    val client = context.spawn(TextClient[String]()(cluster, s => s), "text-client")
     Behaviors.receive { (context, message) => Behaviors.same }
   }
 }
@@ -27,9 +28,6 @@ object Main {
       sys.exit(1)
     }
 
-    val cluster = LocalCluster()(processes, LastValue("init"))
-    val client = TextClient[String]()(cluster, s => s)
-    val guardian = Guardian(List(("cluster", cluster), ("text-client", client)))
-    val system = ActorSystem(guardian, "guardian")
+    val system = ActorSystem(Guardian(processes), "guardian")
   }
 }
