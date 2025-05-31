@@ -4,7 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 
-import machine.{LastValue, DecrementCounter}
+import machine.{LastValue, PositiveCounter}
 import raft.cluster.LocalCluster
 import client.text.TextClient
 import client.ticket.TicketClientCluster
@@ -19,7 +19,7 @@ object LastValueSystem {
 
 object TicketSystem {
   def apply(processes: Int): Behavior[Unit] = Behaviors.setup { context =>
-    val cluster = context.spawn(LocalCluster[Integer]()(processes, DecrementCounter(10)), "cluster")
+    val cluster = context.spawn(LocalCluster[Integer]()(processes, PositiveCounter(10)), "cluster")
     context.spawn(TextClient[Integer]()(cluster, s => s.toInt), "text-client")
     context.spawn(TicketClientCluster[Integer]()(cluster), "ticket-client-cluster")
     Behaviors.receive { (context, message) => Behaviors.same }
