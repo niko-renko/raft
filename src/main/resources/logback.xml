@@ -18,6 +18,17 @@
         </encoder>
     </appender>
 
+    <appender name="TICKET" class="ch.qos.logback.core.FileAppender">
+        <file>ticket.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%X{akkaSource}] %-5level- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="client.ticket.TicketClient" level="TRACE">
+        <appender-ref ref="TICKET" />
+    </logger>
+
     <root level="TRACE">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />

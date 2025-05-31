@@ -1,5 +1,6 @@
 package client.ticket
 
+import java.io.FileWriter
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
@@ -10,11 +11,19 @@ private final class TicketClient[T <: Serializable] {
     def apply(
         preferred: ProcessID,
         refs: Cluster[T]
-    ): Behavior[ClusterResponse[T] | raft.client.Message] = Behaviors.setup { context => 
+    ): Behavior[raft.client.Message | Message] = Behaviors.setup { context => 
         context.log.info("TicketClient initialized {}", preferred)
-        Behaviors.receive { (context, message) => Behaviors.same }
+        this.main(0)
     }
 
     private def main(
-    ): Behavior[ClusterResponse[T] | raft.client.Message] = Behaviors.receive { (context, message) => Behaviors.same }
+        requestId: Int
+    ): Behavior[raft.client.Message | Message] = Behaviors.receive { (context, message) =>
+        context.log.trace("{}: {}", requestId, message)
+        message match {
+            case Count() => main(requestId + 1)
+            case Book(count) => main(requestId + 1)
+            case _ => Behaviors.same
+        }
+    }
 }
