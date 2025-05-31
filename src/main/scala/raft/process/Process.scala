@@ -346,16 +346,16 @@ final class Process[T <: Serializable] {
           assert(state.commitIndex <= nstate.commitIndex) // Increases monotonically
 
           if (state.commitIndex < nstate.commitIndex) {
-            persistent.log
+            val success = persistent.log
               .drop(state.commitIndex + 1)
               .take(nstate.commitIndex - state.commitIndex)
               .values()
-              .map(_._3)
-              .foreach(state.committed.apply)
+              .map((_, id, value) => (id, state.committed.apply(value).isDefined))
+              .toMap
 
             state.appends
               .filter(append => append.index <= nstate.commitIndex && append.term == persistent.term)
-              .foreach(append => append.ref ! AppendResponse(append.id, true, Some(state.self)))
+              .foreach(append => append.ref ! AppendResponse(append.id, success(append.id), Some(state.self)))
 
             state.reads
               .filter(read => read.index <= nstate.commitIndex && read.term == persistent.term)

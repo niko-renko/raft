@@ -9,9 +9,8 @@ final class PositiveCounter(init: Int = 0) extends StateMachine[Integer, Integer
     if (this.value + value >= 0) {
       this.value += value
       Some(())
-    } else {
+    } else
       None
-    }
   }
 
   override def state(): Integer = this.value
