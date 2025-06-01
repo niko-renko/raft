@@ -16,5 +16,9 @@ lazy val root = project
       "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
       "ch.qos.logback" % "logback-classic" % "1.4.14"
+    ),
+    scalacOptions ++= Seq(
+      "-Ywarn-unused-import",
+      "-Xlint:unused"
     )
   )
