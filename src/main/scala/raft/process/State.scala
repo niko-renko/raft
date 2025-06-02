@@ -46,5 +46,6 @@ final private case class State[T <: Serializable](
 
     asleep: Boolean,
     collect: Boolean,
+    replyToClient: Boolean,
     delayed: List[ClusterResponse[T] | Message[T]]
 )

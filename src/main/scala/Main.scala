@@ -38,6 +38,7 @@ object Main {
       sys.exit(1)
     }
 
+    // ActorSystem(LastValueSystem(processes), "system")
     ActorSystem(TicketSystem(processes), "system")
   }
 }

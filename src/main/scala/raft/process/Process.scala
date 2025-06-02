@@ -53,6 +53,7 @@ final class Process[T <: Serializable] {
 
                   false, // Asleep
                   false, // Collect
+                  false, // Reply To Client
                   List() // Delayed
                 )
 
@@ -75,7 +76,51 @@ final class Process[T <: Serializable] {
         case _ => context.log.trace("{}", message)
       }
 
+
       message match {
+        // ----- Public Status -----
+        case Crash() => throw new Exception("DEADBEEF")
+        case Sleep(replyToClient, collect) => {
+          // Update State
+          val nstate = state.copy(
+            asleep = true,
+            collect = collect,
+            replyToClient = replyToClient,
+            delayed = List()
+          )
+
+          this.info(context, state, nstate, persistent, persistent)
+          this.main(nstate, persistent)
+        }
+        case Awake() => {
+          // Update State
+          val nstate = state.copy(
+            asleep = false,
+            collect = false,
+            replyToClient = false,
+            delayed = List()
+          )
+
+          // Effects
+          state.delayed.foreach(message => context.self ! message)
+          
+          this.info(context, state, nstate, persistent, persistent)
+          this.main(nstate, persistent)
+        }
+        // ----- Catch -----
+        case message: Message[T] if state.asleep && !state.replyToClient => {
+          // Update State
+          val nstate = if (state.collect)
+            state.copy(
+              delayed = state.delayed :+ message
+            )
+          else
+            state
+
+          this.info(context, state, nstate, persistent, persistent)
+          this.main(nstate, persistent)
+        }
+        // ----- Catch -----
         // ----- Public Log -----
         case Read(ref) if state.role != Role.Leader => {
           // Effects
@@ -142,33 +187,7 @@ final class Process[T <: Serializable] {
           this.info(context, state, nstate, persistent, npersistent)
           this.main(nstate, npersistent)
         }
-        // ----- Public Status -----
-        case Crash() => throw new Exception("DEADBEEF")
-        case Sleep(collect) => {
-          // Update State
-          val nstate = state.copy(
-            asleep = true,
-            collect = collect,
-            delayed = List()
-          )
-
-          this.info(context, state, nstate, persistent, persistent)
-          this.main(nstate, persistent)
-        }
-        case Awake() => {
-          // Update State
-          val nstate = state.copy(
-            asleep = false,
-            collect = false,
-            delayed = List()
-          )
-
-          // Effects
-          state.delayed.foreach(message => context.self ! message)
-          
-          this.info(context, state, nstate, persistent, persistent)
-          this.main(nstate, persistent)
-        }
+        // ----- Catch -----
         case message: Message[T] if state.asleep => {
           // Update State
           val nstate = if (state.collect)
@@ -181,6 +200,7 @@ final class Process[T <: Serializable] {
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
         }
+        // ----- Catch -----
         // ----- Private Raft -----
         case ElectionTimeout() => {
           // Update State

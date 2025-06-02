@@ -57,6 +57,10 @@ private final class TicketClient {
         Behaviors.receive { (context, message) =>
             message match {
                 case Timeout() => {
+                    context.log.trace("Timeout")
+                    val peers = state.refs.peers(state.preferred).toList
+                    val next = peers(Random.nextInt(peers.size))
+                    println(s"Timeout, next: $next")
                     this.wait(state, this.read(context, state))
                 }
                 case ReadUnstableResponse(value) => {
