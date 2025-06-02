@@ -43,7 +43,7 @@ private final class TicketClient {
         Behaviors.receive { (context, message) =>
             message match {
                 case Wait() => behavior
-                case _ => Behaviors.stopped
+                case _ => Behaviors.same
             }
         }
     }
@@ -103,7 +103,7 @@ private final class TicketClient {
                     val nstate = state.copy(
                         writeTo = peers(Random.nextInt(peers.size))._2
                     )
-                    this.wait(state, this.write(nstate))
+                    this.wait(nstate, this.write(nstate))
                 }
                 case ReadUnstableResponse(_) => Behaviors.same
                 case AppendResponse(incomingId, _, _) if incomingId != id => Behaviors.same
