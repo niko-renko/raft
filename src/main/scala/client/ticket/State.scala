@@ -8,6 +8,7 @@ import raft.cluster.{ProcessID, Cluster}
 final private case class State(
     preferred: ProcessID,
     refs: Cluster[Integer],
-    leader: ActorRef[raft.process.Message[Integer]],
+    writeTo: ActorRef[raft.process.Message[Integer]],
+    readFrom: ActorRef[raft.process.Message[Integer]],
     timers: TimerScheduler[Message | raft.client.Message],
 )

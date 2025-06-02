@@ -10,7 +10,7 @@ import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 
 import raft.cluster.{ProcessID, Cluster}
-import raft.process.{Append, ReadUnstable}
+import raft.process.{Sleep, Awake, Append, ReadUnstable}
 import raft.client.{AppendResponse, ReadUnstableResponse}
 
 private object WaitKey
@@ -26,6 +26,7 @@ private final class TicketClient {
             val state = State(
                 preferred,
                 refs,
+                refs(preferred),
                 refs(preferred),
                 timers,
             )
@@ -51,22 +52,31 @@ private final class TicketClient {
         context: ActorContext[Message | raft.client.Message],
         state: State
     ): Behavior[Message | raft.client.Message] = Behaviors.setup { context =>
+        if (Random.nextInt(10) == 0)
+            state.refs(state.preferred) ! Sleep(false, false)
+        if (Random.nextInt(10) == 0)
+            state.refs(state.preferred) ! Awake()
+
         state.timers.startSingleTimer(TimeoutKey, Timeout(), FiniteDuration(1000, TimeUnit.MILLISECONDS))
-        state.refs(state.preferred) ! ReadUnstable(context.self)
+        state.readFrom ! ReadUnstable(context.self)
 
         Behaviors.receive { (context, message) =>
             message match {
                 case Timeout() => {
-                    context.log.trace("Timeout")
+                    context.log.trace("Timeout from {}", state.readFrom)
                     val peers = state.refs.peers(state.preferred).toList
-                    val next = peers(Random.nextInt(peers.size))
-                    println(s"Timeout, next: $next")
-                    this.wait(state, this.read(context, state))
+                    val nstate = state.copy(
+                        readFrom = peers(Random.nextInt(peers.size))._2
+                    )
+                    this.wait(nstate, this.read(context, nstate))
                 }
                 case ReadUnstableResponse(value) => {
-                    context.log.trace("Read {}", value)
+                    context.log.trace("Read {} from {}", value, state.readFrom)
                     state.timers.cancel(TimeoutKey)
-                    this.wait(state, this.read(context, state))
+                    val nstate = state.copy(
+                        readFrom = state.refs(state.preferred)
+                    )
+                    this.wait(nstate, this.read(context, nstate))
                 }
                 case _ => Behaviors.stopped
             }
