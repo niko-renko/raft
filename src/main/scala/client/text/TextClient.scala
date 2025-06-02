@@ -49,10 +49,7 @@ final class TextClient[T <: Serializable] {
 
               action match {
                 case "crash"  => ref ! Crash()
-                case "sleep"  => ref ! Sleep(
-                    java.lang.Boolean.parseBoolean(parts(2)),
-                    java.lang.Boolean.parseBoolean(parts(3))
-                )
+                case "sleep"  => ref ! Sleep(java.lang.Boolean.parseBoolean(parts(2)))
                 case "awake"  => ref ! Awake()
 
                 case "stable"   => ref ! Read(context.self)

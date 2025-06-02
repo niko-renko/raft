@@ -15,7 +15,7 @@ final class TicketClientCluster {
         Behaviors.receive { (context, message) => 
             val ClusterResponse(refs) = message
             refs.foreach { (id, _) => 
-                context.spawn(TicketClient()(id, refs), s"ticket-client-${id.id}")
+                context.spawn(TicketClient()(refs, id), s"ticket-client-${id.id}")
             }
             Behaviors.receive { (context, message) => Behaviors.stopped }
         }

@@ -52,7 +52,6 @@ final class Process[T <: Serializable] {
                   machine.copy(), // Uncommitted
 
                   false, // Asleep
-                  false, // Collect
                   false, // Reply To Client
                   List() // Delayed
                 )
@@ -80,11 +79,10 @@ final class Process[T <: Serializable] {
       message match {
         // ----- Public Status -----
         case Crash() => throw new Exception("DEADBEEF")
-        case Sleep(replyToClient, collect) => {
+        case Sleep(replyToClient) => {
           // Update State
           val nstate = state.copy(
             asleep = true,
-            collect = collect,
             replyToClient = replyToClient,
             delayed = List()
           )
@@ -96,7 +94,6 @@ final class Process[T <: Serializable] {
           // Update State
           val nstate = state.copy(
             asleep = false,
-            collect = false,
             replyToClient = false,
             delayed = List()
           )
@@ -110,12 +107,9 @@ final class Process[T <: Serializable] {
         // ----- Catch -----
         case message: Message[T] if state.asleep && !state.replyToClient => {
           // Update State
-          val nstate = if (state.collect)
-            state.copy(
-              delayed = state.delayed :+ message
-            )
-          else
-            state
+          val nstate = state.copy(
+            delayed = state.delayed :+ message
+          )
 
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
@@ -190,12 +184,9 @@ final class Process[T <: Serializable] {
         // ----- Catch -----
         case message: Message[T] if state.asleep => {
           // Update State
-          val nstate = if (state.collect)
-            state.copy(
-              delayed = state.delayed :+ message
-            )
-          else
-            state
+          val nstate = state.copy(
+            delayed = state.delayed :+ message
+          )
 
           this.info(context, state, nstate, persistent, persistent)
           this.main(nstate, persistent)
@@ -273,7 +264,7 @@ final class Process[T <: Serializable] {
           npersistent.save(state.self.id)
 
           val (lastLogIndex, _) = npersistent.last()
-          val commitIndex = math.min(leaderCommit, lastLogIndex)
+          val commitIndex = math.max(math.min(leaderCommit, lastLogIndex), state.commitIndex)
           val removed = persistent.log.drop(lastLogIndex + 1).values().map(_._2)
           val added = entries.values().map(_._2)
           val nstate = state.copy(
