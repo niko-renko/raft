@@ -198,7 +198,7 @@ final class Process[T <: Serializable] {
           val (lastLogIndex, lastLogTerm) = persistent.last()
           state.refs
             .peers(nstate.self)
-            .foreach((id, ref) =>
+            .foreach((_, ref) =>
               ref ! RequestVote(
                 npersistent.term,
                 state.self,
@@ -439,9 +439,9 @@ final class Process[T <: Serializable] {
           // Update State
           val nstate = state.copy(
             role = Role.Leader,
-            nextIndex = state.refs.peers(state.self).map((id, ref) => (id, persistent.log.length)).toMap,
-            matchIndex = state.refs.peers(state.self).map((id, ref) => (id, 0)).toMap,
-            lastEntriesTime = state.refs.peers(state.self).map((id, ref) => (id, 0L)).toMap
+            nextIndex = state.refs.peers(state.self).map((id, _) => (id, persistent.log.length)).toMap,
+            matchIndex = state.refs.peers(state.self).map((id, _) => (id, 0)).toMap,
+            lastEntriesTime = state.refs.peers(state.self).map((id, _) => (id, 0L)).toMap
           )
 
           // Effects

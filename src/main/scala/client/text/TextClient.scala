@@ -22,7 +22,7 @@ final class TextClient[T <: Serializable] {
             message match {
                 case ClusterResponse(refs) => Behaviors.setup { context => 
                     val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(1))
-                    val future = Future {
+                    Future {
                         while (true) {
                           val command = readLine()
                           context.self ! Control(command)

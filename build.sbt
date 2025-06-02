@@ -18,7 +18,8 @@ lazy val root = project
       "ch.qos.logback" % "logback-classic" % "1.4.14"
     ),
     scalacOptions ++= Seq(
-      "-Ywarn-unused-import",
-      "-Xlint:unused"
+      "-Wunused:imports",
+      "-Wunused:privates",
+      "-Wunused:locals"
     )
   )
