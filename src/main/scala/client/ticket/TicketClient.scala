@@ -63,7 +63,7 @@ private final class TicketClient {
         else
             nstate.workload(nstate.step) match {
                 case Action.Sleep => {
-                    state.refs(state.preferred) ! Sleep(false)
+                    state.refs(state.preferred) ! Sleep(true)
                     this.exec(nstate, 1)
                 }
                 case Action.Awake => {
