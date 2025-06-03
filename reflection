@@ -1,0 +1,20 @@
+1.
+In Bayou, reads of the number of tickets would be pretty similar: you will get a weakly consistent result that is as accurate as the last time the processes
+were synced up. If a process is paritioned away, that last time could be arbitrary long ago. In Bayou, it is the anti-entropy that would bring in new records 
+for when tickets are booked, making the count of tickets slightly more accurate. In the case of Raft, the sync up is the AppendEntries sent by the leader, and 
+it carries the same records of booked tickets. The only difference is the number of round trips needed to have the right number of tickets given that all
+booking requests stop since the Bayou any process may accept writes.
+
+On the other hand, writes are very different. In Bayou, any process can handle writes without syncing up with any other process. As long as the number of tickets
+on a partitioned node remains positive, a client could keep subtracting from it all the way down to 0 tickets. For this specific application, this would
+that you could sell more tickets than there are. When the nodes finally sync up, conflict resolver would need to bring it up to the user since most likely
+the confirmation and tickets were already issued to the buyer.
+
+In Raft, more than half of the processes agree on the number of tickets available right before the sale. Before the response is seen to the client, the agreeing
+nodes decide on whether or not there's enough tickets. The result is consistent, and there will be no situation where more tickets is sold than there is, while the
+whole system still enjoys fault tolerance. The tradeoff is availability: if more than half of the nodes crash or partition, there will be no decision made at all.
+From the users' perspective, they will not be able to buy any tickets even when there are tickets available.
+
+2.
+
+3.

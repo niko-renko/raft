@@ -18,19 +18,22 @@ private object TimeoutKey
 private final class TicketClient {
     def apply(
         refs: Cluster[Integer],
-        preferred: ProcessID
+        preferred: ProcessID,
+        workload: List[Action]
     ): Behavior[Message | raft.client.Message] = Behaviors.setup { context => 
         Behaviors.withTimers { timers =>
             context.log.info("TicketClient initialized {}", preferred)
             val state = State(
                 refs,
+                workload,
+                0,
                 preferred,
                 preferred,
                 refs(preferred),
                 refs(preferred),
                 timers,
             )
-            this.read(state)
+            this.exec(state, 0)
         }
     }
 
@@ -48,14 +51,33 @@ private final class TicketClient {
         }
     }
 
+    private def exec(
+        state: State,
+        advance: Int
+    ): Behavior[Message | raft.client.Message] = {
+        val nstate = state.copy(
+            step = state.step + advance
+        )
+        if (nstate.step >= nstate.workload.size)
+            Behaviors.stopped
+        else
+            nstate.workload(nstate.step) match {
+                case Action.Sleep => {
+                    state.refs(state.preferred) ! Sleep(false)
+                    this.exec(nstate, 1)
+                }
+                case Action.Awake => {
+                    state.refs(state.preferred) ! Awake()
+                    this.exec(nstate, 1)
+                }
+                case Action.Read => this.wait(nstate, this.read(nstate))
+                case Action.Write => this.wait(nstate, this.write(nstate))
+            }
+    }
+
     private def read(
         state: State
     ): Behavior[Message | raft.client.Message] = Behaviors.setup { context =>
-        if (Random.nextInt(10) == 0)
-            state.refs(state.preferred) ! Sleep(false)
-        if (Random.nextInt(10) == 0)
-            state.refs(state.preferred) ! Awake()
-
         state.timers.startSingleTimer(TimeoutKey, Timeout(), FiniteDuration(100, TimeUnit.MILLISECONDS))
         state.readFrom ! ReadUnstable(context.self)
 
@@ -67,7 +89,7 @@ private final class TicketClient {
                     val nstate = state.copy(
                         readFrom = peers(Random.nextInt(peers.size))._2
                     )
-                    this.wait(nstate, this.read(nstate))
+                    this.exec(nstate, 0)
                 }
                 case ReadUnstableResponse(value) => {
                     context.log.trace("Read {} from {}", value, state.readFrom)
@@ -75,7 +97,7 @@ private final class TicketClient {
                     val nstate = state.copy(
                         readFrom = state.refs(state.preferred)
                     )
-                    this.wait(nstate, this.write(nstate))
+                    this.exec(nstate, 1)
                 }
                 case AppendResponse(_, _, _) => Behaviors.same
                 case _ => Behaviors.stopped
@@ -86,11 +108,6 @@ private final class TicketClient {
     private def write(
         state: State
     ): Behavior[Message | raft.client.Message] = Behaviors.setup { context =>
-        if (Random.nextInt(10) == 0)
-            state.refs(state.preferred) ! Sleep(false)
-        if (Random.nextInt(10) == 0)
-            state.refs(state.preferred) ! Awake()
-
         val id = Random.nextInt()
         state.timers.startSingleTimer(TimeoutKey, Timeout(), FiniteDuration(100, TimeUnit.MILLISECONDS))
         state.writeTo ! Append(context.self, id, -1)
@@ -103,14 +120,14 @@ private final class TicketClient {
                     val nstate = state.copy(
                         writeTo = peers(Random.nextInt(peers.size))._2
                     )
-                    this.wait(nstate, this.write(nstate))
+                    this.exec(nstate, 0)
                 }
                 case ReadUnstableResponse(_) => Behaviors.same
                 case AppendResponse(incomingId, _, _) if incomingId != id => Behaviors.same
                 case AppendResponse(_, _, leaderId) if !leaderId.isDefined => {
                     state.timers.cancel(TimeoutKey)
                     context.log.trace("No leader")
-                    this.wait(state, this.write(state))
+                    this.exec(state, 0)
                 }
                 case AppendResponse(_, success, leaderId) => {
                     state.timers.cancel(TimeoutKey)
@@ -120,10 +137,10 @@ private final class TicketClient {
                     )
                     if (state.writeTo != nstate.writeTo) {
                         context.log.trace("Leader set to {}", leaderId)
-                        this.wait(nstate, this.write(nstate))
+                        this.exec(nstate, 0)
                     } else {
                         context.log.trace("Appended {} to {}", success, state.writeTo)
-                        this.wait(nstate, this.read(nstate))
+                        this.exec(nstate, 1)
                     }
                 }
                 case _ => Behaviors.stopped
