@@ -1,11 +1,12 @@
-The Guardian is acting as a proxy for the sake of simplicity. That is, all Raft processes assume they only ever talk to one Guardian process.
-I recognize this is a loss of generality but it's an easy extension that I did not need so far, and chose to keep the code simpler instead.
+GitHub: https://github.com/niko-renko/raft
 
 You can use these commands through stdin:
 - crash <process_id> -- crashes the process, resetting all transient state
-- sleep <process_id> <seconds> -- process does not react to any messages for <seconds> seconds, but does not drop them either
-- append <process_id> <value> -- attempt to append value to the log
-- read <process_id> -- read the current state machine state (default machine returns the last written value)
+- sleep <process_id> <reply_to_clients> -- process does not react raft-only/all messages, but does not drop them either
+- awake <process_id> -- react to messages and replay the missed messages
+- append <process_id> <value> ?<id>? -- attempt to append value to the log, optionally specifying the id
+- unstable <process_id> -- weak read of the current state
+- stable <process_id> -- consistent read of the current state
 
 You can run it with `sbt "run <process_number>"`
 You can reset the persistent storage with `rm -rf persistent-state`

@@ -1,6 +1,6 @@
 1.
 In Bayou, reads of the number of tickets would be pretty similar: you will get a weakly consistent result that is as accurate as the last time the processes
-were synced up. If a process is paritioned away, that last time could be arbitrary long ago. In Bayou, it is the anti-entropy that would bring in new records 
+were synced up. If a process is partitioned away, that last time could be arbitrary long ago. In Bayou, it is the anti-entropy that would bring in new records 
 for when tickets are booked, making the count of tickets slightly more accurate. In the case of Raft, the sync up is the AppendEntries sent by the leader, and 
 it carries the same records of booked tickets. The only difference is the number of round trips needed to have the right number of tickets given that all
 booking requests stop since the Bayou any process may accept writes.
@@ -16,5 +16,30 @@ whole system still enjoys fault tolerance. The tradeoff is availability: if more
 From the users' perspective, they will not be able to buy any tickets even when there are tickets available.
 
 2.
+The following workload was used:
+val workload = Map(
+    ProcessID(0) -> (List.fill(5)(Action.Write) :+ Action.Read),
+    ProcessID(1) -> (List.fill(5)(Action.Write) :+ Action.Read),
+    ProcessID(2) -> (List(Action.Sleep) ++ List.fill(10)(Action.Read) ++ List(Action.Awake) ++ List.fill(10)(Action.Read))
+)
+
+The idea is for process 2 to disconnect from the other two immediately at the initial state machine with 10 tickets. The following 10 weak reads on that process 
+will all indicate that there are still 10 tickets left. Meanwhile, on the other two connected processes we slowly drain the tickets. By the time 2 reconnects,
+there should be no tickets left. Therefore, the last read before the reconnection should give the largest error of 10 tickets (the whole supply).
+
+The logs confirm this:
+09:47:24.486 [akka://system/user/ticket-client-cluster/ticket-client-2] TRACE- Read 10 from Actor[akka://system/user/cluster/process-2#1187098715]
+09:47:24.486 [akka://system/user/cluster/process-2] INFO - Awake()
+...
+09:47:25.505 [akka://system/user/ticket-client-cluster/ticket-client-2] TRACE- Read 0 from Actor[akka://system/user/cluster/process-2#1187098715]
+
+It takes about a second for a new election, and AppendEntries exchange to bring 2 up to date.
 
 3.
+Under a partition, there is no limit for how far an inconsistent read can be from a consistent one. There is also a pattern of interruptions that can push
+inconsistent reads to be even more inconsistent. Consider when a leader extends its log and replicates it, but crashes right before it sends the commit signal to
+the followers. The new leader will not be able to commit that entry, so it will remain uncommitted until a new client request comes in. Besides the time entries 
+remain uncommitted, the actual number of uncommitted entries may also grow indefinitely if the leaders stop right before signaling new commit index.
+
+Crashing at these specific points many times in a row is unlikely, and the time entries remain uncommitted depends on the rate of client requests. Both of the issues
+can be fixed by appending a dummy entry to the log every time a new leader is elected.
