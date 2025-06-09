@@ -10,7 +10,7 @@ sealed trait Message[T <: Serializable]
 final case class Crash[T <: Serializable](
 ) extends Message[T]
 final case class Sleep[T <: Serializable](
-  replyToClient: Boolean
+    replyToClient: Boolean
 ) extends Message[T]
 final case class Awake[T <: Serializable](
 ) extends Message[T]
@@ -56,4 +56,3 @@ final private case class RequestVoteResponse[T <: Serializable](
     term: Int,
     voteGranted: Boolean
 ) extends Message[T]
-

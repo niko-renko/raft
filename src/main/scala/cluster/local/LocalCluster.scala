@@ -11,8 +11,8 @@ import raft.cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
 
 final class LocalCluster[T <: Serializable] {
   def apply(
-    processes: Int,
-    machine: StateMachine[T, T]
+      processes: Int,
+      machine: StateMachine[T, T]
   ): Behavior[GetCluster[T]] = Behaviors.setup { context =>
     context.log.info("Starting {} processes", processes)
     val refsMap = (0 until processes)
@@ -38,11 +38,11 @@ final class LocalCluster[T <: Serializable] {
   }
 
   private def main(
-    refs: Cluster[T],
+      refs: Cluster[T]
   ): Behavior[GetCluster[T]] = Behaviors.receive { (context, message) =>
-      context.log.info("{}", message)
-      val GetCluster(ref) = message
-      ref ! ClusterResponse(refs)
-      this.main(refs)
-    }
+    context.log.info("{}", message)
+    val GetCluster(ref) = message
+    ref ! ClusterResponse(refs)
+    this.main(refs)
+  }
 }

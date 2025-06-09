@@ -2,6 +2,7 @@ import java.lang.Integer
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
+import akka.cluster.typed.Cluster
 
 import machine.{LastValue, PositiveCounter}
 import cluster.local.LocalCluster
@@ -9,19 +10,34 @@ import client.text.TextClient
 import client.ticket.TicketClientCluster
 
 object LastValueSystem {
-  def apply(processes: Int): Behavior[Unit] = Behaviors.setup { context =>
-    val cluster = context.spawn(LocalCluster[String]()(processes, LastValue("init")), "cluster")
+  def apply(processes: Int): Behavior[Cluster] = Behaviors.setup { context =>
+    val cluster = context.spawn(
+      LocalCluster[String]()(processes, LastValue("init")),
+      "cluster"
+    )
     context.spawn(TextClient[String]()(cluster, s => s), "text-client")
     Behaviors.receive { (context, message) => Behaviors.same }
   }
 }
 
-object TicketSystem {
-  def apply(processes: Int): Behavior[Unit] = Behaviors.setup { context =>
-    val cluster = context.spawn(LocalCluster[Integer]()(processes, PositiveCounter(10)), "cluster")
+object LocalTicketSystem {
+  def apply(processes: Int): Behavior[Cluster] = Behaviors.setup { context =>
+    val cluster = context.spawn(
+      LocalCluster[Integer]()(processes, PositiveCounter(10)),
+      "cluster"
+    )
     context.spawn(TextClient[Integer]()(cluster, s => s.toInt), "text-client")
     context.spawn(TicketClientCluster()(cluster), "ticket-client-cluster")
     Behaviors.receive { (context, message) => Behaviors.same }
+  }
+}
+
+object RemoteTicketSystem {
+  def apply(processes: Int): Behavior[Cluster] = Behaviors.setup { context =>
+    Behaviors.receive { (context, message) =>
+      println(message.state)
+      Behaviors.same
+    }
   }
 }
 
@@ -39,6 +55,8 @@ object Main {
     }
 
     // ActorSystem(LastValueSystem(processes), "system")
-    ActorSystem(TicketSystem(processes), "system")
+    val system = ActorSystem(RemoteTicketSystem(processes), "system")
+    val cluster = Cluster(system)
+    system ! cluster
   }
 }

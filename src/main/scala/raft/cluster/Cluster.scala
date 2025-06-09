@@ -15,9 +15,12 @@ final class Cluster[T <: Serializable](
 ) extends Iterable[(ProcessID, ActorRef[raft.process.Message[T]])] {
   def apply(id: ProcessID): ActorRef[raft.process.Message[T]] = this.refs(id)
 
-  def peers(of: ProcessID): Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
+  def peers(
+      of: ProcessID
+  ): Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
     this.refs.filter(_._1 != of).iterator
 
-  override def iterator: Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
+  override def iterator
+      : Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
     this.refs.iterator
 }
