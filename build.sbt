@@ -16,7 +16,7 @@ dockerCommands ++= Seq(
 lazy val root = project
   .in(file("."))
   .settings(
-    name := "hw1",
+    name := "raft",
     version := "0.1.0-SNAPSHOT",
     fork := true,
     run / connectInput := true,

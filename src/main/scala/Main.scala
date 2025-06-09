@@ -1,5 +1,3 @@
-package main
-
 import java.lang.Integer
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
