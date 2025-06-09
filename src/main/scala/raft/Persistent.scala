@@ -1,4 +1,4 @@
-package raft.process
+package raft
 
 import java.io.{
   ObjectOutputStream,
@@ -8,7 +8,7 @@ import java.io.{
 }
 import java.nio.file.{Files, Paths}
 
-import raft.cluster.{ProcessID}
+import cluster.ProcessID
 
 object PersistentState {
   def load[T <: Serializable](id: Int): PersistentState[T] = {

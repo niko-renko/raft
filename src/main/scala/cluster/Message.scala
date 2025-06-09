@@ -1,4 +1,4 @@
-package raft.cluster
+package cluster
 
 import akka.actor.typed.ActorRef
 

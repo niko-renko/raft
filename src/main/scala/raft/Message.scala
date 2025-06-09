@@ -1,8 +1,8 @@
-package raft.process
+package raft
 
 import akka.actor.typed.ActorRef
 
-import raft.cluster.ProcessID
+import cluster.ProcessID
 
 sealed trait Message[T <: Serializable]
 

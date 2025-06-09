@@ -11,4 +11,3 @@ final class LastValue[T](init: T) extends StateMachine[T, T] {
   override def state(): T = this.value
   override def copy(): StateMachine[T, T] = new LastValue(this.value)
 }
-

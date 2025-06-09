@@ -1,9 +1,9 @@
-package raft.process
+package raft
 
 import akka.actor.typed.ActorRef
 
 import machine.StateMachine
-import raft.cluster.{ProcessID, Cluster, ClusterResponse}
+import cluster.{ProcessID, Cluster, ClusterResponse}
 
 enum Role:
   case Follower

@@ -6,8 +6,8 @@ import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors.supervise
 
 import machine.StateMachine
-import raft.process.Process
-import raft.cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
+import raft.Process
+import cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
 
 final class LocalCluster[T <: Serializable] {
   def apply(

@@ -9,8 +9,8 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import raft.process.{Crash, Sleep, Awake, Read, ReadUnstable, Append}
-import raft.cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
+import raft.{Crash, Sleep, Awake, Read, ReadUnstable, Append}
+import cluster.{ProcessID, Cluster, GetCluster, ClusterResponse}
 
 final class TextClient[T <: Serializable] {
   def apply(

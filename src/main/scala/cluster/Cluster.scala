@@ -1,4 +1,4 @@
-package raft.cluster
+package cluster
 
 import akka.actor.typed.ActorRef
 
@@ -11,16 +11,15 @@ final class ProcessID(val id: Int) extends Serializable {
 }
 
 final class Cluster[T <: Serializable](
-    val refs: Map[ProcessID, ActorRef[raft.process.Message[T]]]
-) extends Iterable[(ProcessID, ActorRef[raft.process.Message[T]])] {
-  def apply(id: ProcessID): ActorRef[raft.process.Message[T]] = this.refs(id)
+    val refs: Map[ProcessID, ActorRef[raft.Message[T]]]
+) extends Iterable[(ProcessID, ActorRef[raft.Message[T]])] {
+  def apply(id: ProcessID): ActorRef[raft.Message[T]] = this.refs(id)
 
   def peers(
       of: ProcessID
-  ): Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
+  ): Iterator[(ProcessID, ActorRef[raft.Message[T]])] =
     this.refs.filter(_._1 != of).iterator
 
-  override def iterator
-      : Iterator[(ProcessID, ActorRef[raft.process.Message[T]])] =
+  override def iterator: Iterator[(ProcessID, ActorRef[raft.Message[T]])] =
     this.refs.iterator
 }

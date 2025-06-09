@@ -1,4 +1,4 @@
-package raft.process
+package raft
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
@@ -6,7 +6,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.ActorContext
 
 import machine.StateMachine
-import raft.cluster.{GetCluster, ClusterResponse, ProcessID, Cluster}
+import cluster.{GetCluster, ClusterResponse, ProcessID}
 import raft.client.{AppendResponse, ReadResponse, ReadUnstableResponse}
 
 final class Process[T <: Serializable] {

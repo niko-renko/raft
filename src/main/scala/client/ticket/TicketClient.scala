@@ -8,8 +8,8 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import raft.cluster.{ProcessID, Cluster}
-import raft.process.{Sleep, Awake, Append, ReadUnstable}
+import cluster.{ProcessID, Cluster}
+import raft.{Sleep, Awake, Append, ReadUnstable}
 import raft.client.{AppendResponse, ReadUnstableResponse}
 
 private object WaitKey

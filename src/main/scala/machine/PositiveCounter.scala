@@ -2,7 +2,8 @@ package machine
 
 import java.lang.Integer
 
-final class PositiveCounter(init: Int = 0) extends StateMachine[Integer, Integer] {
+final class PositiveCounter(init: Int = 0)
+    extends StateMachine[Integer, Integer] {
   private var value: Int = init
 
   override def apply(value: Integer): Option[Unit] = {
@@ -14,5 +15,7 @@ final class PositiveCounter(init: Int = 0) extends StateMachine[Integer, Integer
   }
 
   override def state(): Integer = this.value
-  override def copy(): StateMachine[Integer, Integer] = new PositiveCounter(this.value)
+  override def copy(): StateMachine[Integer, Integer] = new PositiveCounter(
+    this.value
+  )
 }

@@ -1,11 +1,11 @@
-package raft.process
+package raft
 
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
 import java.util.concurrent.TimeUnit
 import akka.actor.typed.scaladsl.TimerScheduler
 
-import raft.cluster.ClusterResponse
+import cluster.ClusterResponse
 
 private sealed trait TimerKey
 

@@ -5,9 +5,9 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
 import akka.actor.typed.scaladsl.Behaviors
 
-import raft.cluster.{ProcessID, GetCluster, ClusterResponse}
+import cluster.{ProcessID, GetCluster, ClusterResponse}
 
-final class TicketClientCluster {
+final class TicketClientGroup {
   def apply(
       cluster: ActorRef[GetCluster[Integer]]
   ): Behavior[ClusterResponse[Integer]] = Behaviors.setup { context =>
