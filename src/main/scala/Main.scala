@@ -36,6 +36,8 @@ object RemoteTicketSystem {
 
 object Main {
   def main(args: Array[String]): Unit = {
+    System.setProperty("timestamp", System.currentTimeMillis().toString)
+
     val processes = sys.env.getOrElse("COUNT", "3").toInt
     if (processes <= 1) {
       println("Process number must be greater than 1")

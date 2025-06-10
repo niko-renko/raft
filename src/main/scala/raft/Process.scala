@@ -18,50 +18,60 @@ final class Process[T <: Serializable] {
     Behaviors.setup { context =>
       context.log.info("Starting")
       cluster ! GetCluster(context.self)
-      Behaviors.receive { (context, message) =>
-        message match {
-          case ClusterResponse(refs) if refs.size % 2 == 0 =>
-            Behaviors.stopped
-          case ClusterResponse(refs) =>
-            Behaviors.withTimers(_timers => {
-              val timers = new Timer[T](_timers)
-              timers.register(timers.Election, ElectionTimeout(), (150, 301))
-              timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
+      this.waitForCluster(self, machine, List())
+    }
 
-              val persistent = PersistentState.load[T](self.id)
-              val requests = Set() ++ persistent.log.values().map(_._2)
+  private def waitForCluster(
+      self: ProcessID,
+      machine: StateMachine[T, T],
+      pending: List[Message[T]]
+  ): Behavior[ClusterResponse[T] | Message[T]] =
+    Behaviors.receive { (context, message) =>
+      message match {
+        case ClusterResponse(refs) if refs.size % 2 == 0 =>
+          Behaviors.stopped
+        case ClusterResponse(refs) =>
+          Behaviors.withTimers(_timers => {
+            val timers = new Timer[T](_timers)
+            timers.register(timers.Election, ElectionTimeout(), (150, 301))
+            timers.register(timers.Heartbeat, HeartbeatTimeout(), (25, 51))
 
-              val state =
-                State(
-                  self, // Self
-                  refs, // Refs
-                  timers, // Timers
-                  Map(), // Last Entries Time
+            val persistent = PersistentState.load[T](self.id)
+            val requests = Set() ++ persistent.log.values().map(_._2)
 
-                  0, // Commit Index
-                  Map(), // Next Index
-                  Map(), // Match Index
-                  0, // Votes
-                  Role.Follower, // Role
-                  None, // Leader ID
+            val state =
+              State(
+                self, // Self
+                refs, // Refs
+                timers, // Timers
+                Map(), // Last Entries Time
 
-                  List(), // Pending Appends
-                  List(), // Pending Reads
-                  requests, // Requests
+                0, // Commit Index
+                Map(), // Next Index
+                Map(), // Match Index
+                0, // Votes
+                Role.Follower, // Role
+                None, // Leader ID
 
-                  machine.copy(), // Committed
-                  machine.copy(), // Uncommitted
+                List(), // Pending Appends
+                List(), // Pending Reads
+                requests, // Requests
 
-                  false, // Asleep
-                  false, // Reply To Client
-                  List() // Delayed
-                )
+                machine.copy(), // Committed
+                machine.copy(), // Uncommitted
 
-              state.timers.set(state.timers.Election)
-              this.main(state, persistent)
-            })
-          case _ => Behaviors.stopped
-        }
+                false, // Asleep
+                false, // Reply To Client
+                List() // Delayed
+              )
+
+            state.timers.set(state.timers.Election)
+            pending.foreach(context.self ! _)
+
+            this.main(state, persistent)
+          })
+        case message: Message[T] =>
+          this.waitForCluster(self, machine, pending :+ message)
       }
     }
 

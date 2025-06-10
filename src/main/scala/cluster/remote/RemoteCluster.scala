@@ -25,7 +25,6 @@ private object Hello {
       id: ProcessID,
       process: ActorRef[raft.Message[T]]
   ): Behavior[Hello[T]] = Behaviors.receive { (context, message) =>
-    println("Hello")
     val Hello(ref) = message
     ref ! HelloResponse(id, process)
     Behaviors.same
@@ -41,7 +40,7 @@ final class RemoteCluster[T <: Serializable] {
     Behaviors.setup { context =>
       val id = ProcessID(Random.nextInt())
       val process =
-        context.spawn(Process[T]()(id, context.self, machine), "raft")
+        context.spawn(Process[T]()(id, context.self, machine), s"raft-${id.id}")
       val map = Map(id -> process)
 
       val hello = context.spawn(Hello[T](id, process), "hello")
