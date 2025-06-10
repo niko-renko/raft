@@ -1,0 +1,46 @@
+18:42:24.935 [] INFO - Slf4jLogger started
+18:42:25.237 [ArteryTransport(akka://system)] INFO - Remoting started with transport [Artery tcp]; listening on address [akka://system@0.0.0.0:9001] with UID [9206777461603291289]
+18:42:25.253 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Starting up, Akka version [2.10.3] ...
+18:42:25.353 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Registered cluster JMX MBean [akka:type=Cluster]
+18:42:25.354 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Started up successfully
+18:42:25.360 [akka.actor.ActorSystemImpl(system)] WARN - Dev use only. Free keys at https://akka.io/key
+18:42:25.384 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - No downing-provider-class configured, manual cluster downing required, see https://doc.akka.io/libraries/akka-core/current/typed/cluster.html#downing
+18:42:25.503 [akka://system/user/cluster/raft--340484985] INFO - Starting
+18:42:25.526 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@0.0.0.0:9001] - Actor was registered: [ServiceKey[cluster.remote.Hello](hello)] [akka://system/user/cluster/hello#-1507107707 @ 9206777461603291289]
+18:42:26.042 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@0.0.0.0:9001] - Change from replicator: [Map(ServiceKey[cluster.remote.Hello](hello) -> Set(akka://system/user/cluster/hello#-1507107707 @ 9206777461603291289))], changes: [(hello,[akka://system/user/cluster/hello#-1507107707 @ 9206777461603291289])], tombstones []
+18:42:36.415 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [2] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:42:41.432 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [3] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:42:46.418 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:42:46.418 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], control stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:42:46.420 [Association(akka://system)] WARN - Outbound message stream to [akka://system@localhost:9000] failed. Restarting it. akka.stream.StreamTcpException: The connection has been aborted
+18:42:46.421 [Association(akka://system)] WARN - Quarantine of [akka://system@localhost:9000] ignored because unknown UID. Reason: Outbound control stream restarted. akka.stream.StreamTcpException: The connection has been aborted
+18:42:46.421 [Association(akka://system)] WARN - Outbound control stream to [akka://system@localhost:9000] failed. Restarting it. akka.stream.StreamTcpException: The connection has been aborted
+18:42:46.451 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [4] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:42:51.471 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [5] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:42:56.492 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [6] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:01.512 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [7] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:06.473 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:43:06.473 [Association(akka://system)] WARN - Outbound message stream to [akka://system@localhost:9000] failed. Restarting it. akka.stream.StreamTcpException: The connection has been aborted
+18:43:06.532 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [8] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:12.482 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [9] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:17.502 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [10] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:22.522 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [11] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:27.484 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:43:27.485 [Association(akka://system)] WARN - Outbound message stream to [akka://system@localhost:9000] failed. Restarting it. akka.stream.StreamTcpException: The connection has been aborted
+18:43:27.543 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [12] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:32.563 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [13] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:37.582 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [14] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:43.553 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [15] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:48.516 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:43:48.516 [Association(akka://system)] WARN - Outbound message stream to [akka://system@localhost:9000] failed. Restarting it. akka.stream.StreamTcpException: The connection has been aborted
+18:43:48.573 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [16] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:53.593 [Cluster(akka://system)] WARN - Cluster Node [akka://system@0.0.0.0:9001] - Couldn't join seed nodes after [17] attempts, will try again. seed-nodes=[akka://system@localhost:9000]
+18:43:53.941 [CoordinatedShutdown(akka://system)] INFO - Running CoordinatedShutdown with reason [JvmExitReason]
+18:43:53.947 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Exiting completed
+18:43:53.948 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Shutting down...
+18:43:53.949 [Cluster(akka://system)] INFO - Cluster Node [akka://system@0.0.0.0:9001] - Successfully shut down
+18:43:53.951 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@0.0.0.0:9001] - terminated/removed
+18:43:53.955 [akka://system@0.0.0.0:9001/system/remoting-terminator] INFO - Shutting down remote daemon.
+18:43:53.956 [akka://system@0.0.0.0:9001/system/remoting-terminator] INFO - Remote daemon shut down; proceeding with flushing remote transports.
+18:43:53.963 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@localhost:9000], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:43:53.970 [akka://system@0.0.0.0:9001/system/remoting-terminator] INFO - Remoting shut down.

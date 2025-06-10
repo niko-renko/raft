@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: raft-stateful-set
+  namespace: raft
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: raft
+  serviceName: raft-service
+  template:
+    metadata:
+      labels:
+        app: raft
+    spec:
+      containers:
+      - name: raft-container
+        image: northamerica-northeast1-docker.pkg.dev/main-461820/main/raft:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+        env:
+        - name: KUBERNETES
+          value: 'true'
+        - name: SYSTEM
+          value: remote
+        - name: SEED
+          value: raft-stateful-set-0.raft-service.raft.svc.cluster.local:9000

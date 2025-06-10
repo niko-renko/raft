@@ -6,18 +6,24 @@ val AkkaVersion = "2.10.3"
 enablePlugins(JavaAppPackaging, DockerPlugin)
 resolvers += "Akka library repository".at("https://repo.akka.io/maven")
 
-dockerBaseImage := "docker.io/library/eclipse-temurin:21-jre"
-dockerCmd := Seq("3")
+ThisBuild / dynverSeparator := "-"
+
+dockerUpdateLatest := true
+dockerBaseImage := "eclipse-temurin:17.0.15_6-jdk-jammy"
 dockerCommands ++= Seq(
   Cmd("RUN", "chmod 777 /opt/docker/bin"),
-  Cmd("WORKDIR", "/opt/docker/bin")
+  Cmd("WORKDIR", "/opt/docker/bin"),
+  Cmd("USER", "root")
 )
+dockerRepository := Some(
+  "northamerica-northeast1-docker.pkg.dev/main-461820/main"
+)
+// Docker / daemonUser := "root"
 
 lazy val root = project
   .in(file("."))
   .settings(
     name := "raft",
-    version := "0.1.0-SNAPSHOT",
     fork := true,
     run / connectInput := true,
     scalaVersion := scala3Version,

@@ -1,0 +1,31 @@
+18:45:42.609 [] INFO - Slf4jLogger started
+18:45:42.914 [ArteryTransport(akka://system)] INFO - Remoting started with transport [Artery tcp]; listening on address [akka://system@localhost:9000] with UID [-3678705678413429008]
+18:45:42.930 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Starting up, Akka version [2.10.3] ...
+18:45:43.030 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Registered cluster JMX MBean [akka:type=Cluster]
+18:45:43.031 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Started up successfully
+18:45:43.037 [akka.actor.ActorSystemImpl(system)] WARN - Dev use only. Free keys at https://akka.io/key
+18:45:43.059 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - No downing-provider-class configured, manual cluster downing required, see https://doc.akka.io/libraries/akka-core/current/typed/cluster.html#downing
+18:45:43.070 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Node [akka://system@localhost:9000] is JOINING itself (with roles [dc-default], version [0.0.0]) and forming new cluster
+18:45:43.072 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - is the new leader among reachable nodes (more leaders may exist)
+18:45:43.080 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Leader is moving node [akka://system@localhost:9000] to [Up]
+18:45:43.173 [akka://system/user/cluster/raft-1671880539] INFO - Starting
+18:45:43.190 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@localhost:9000] - Actor was registered: [ServiceKey[cluster.remote.Hello](hello)] [akka://system/user/cluster/hello#616758524 @ -3678705678413429008]
+18:45:43.705 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@localhost:9000] - Change from replicator: [Map(ServiceKey[cluster.remote.Hello](hello) -> Set(akka://system/user/cluster/hello#616758524 @ -3678705678413429008))], changes: [(hello,[akka://system/user/cluster/hello#616758524 @ -3678705678413429008])], tombstones []
+18:45:51.187 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Received InitJoin message from [Actor[akka://system@0.0.0.0:9001/system/cluster/core/daemon/joinSeedNodeProcess-1#96043251]] to [akka://system@localhost:9000]
+18:45:51.188 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Sending InitJoinAck message from node [akka://system@localhost:9000] to [Actor[akka://system@0.0.0.0:9001/system/cluster/core/daemon/joinSeedNodeProcess-1#96043251]] (version [2.10.3])
+18:45:51.252 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Node [akka://system@0.0.0.0:9001] is JOINING, roles [dc-default], version [0.0.0]
+18:45:51.254 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@localhost:9000] - Node added [UniqueAddress(akka://system@0.0.0.0:9001,7756975782660007129)]
+18:45:51.501 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@localhost:9000] - Change from replicator: [Map(ServiceKey[cluster.remote.Hello](hello) -> Set(akka://system/user/cluster/hello#616758524 @ -3678705678413429008, akka://system@0.0.0.0:9001/user/cluster/hello#1242919066 @ 7756975782660007129))], changes: [(hello,[akka://system/user/cluster/hello#616758524 @ -3678705678413429008, akka://system@0.0.0.0:9001/user/cluster/hello#1242919066 @ 7756975782660007129])], tombstones []
+18:45:52.232 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Leader is moving node [akka://system@0.0.0.0:9001] to [Up]
+18:45:53.252 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - is no longer leader
+18:46:19.798 [CoordinatedShutdown(akka://system)] INFO - Running CoordinatedShutdown with reason [JvmExitReason]
+18:46:19.804 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Marked address [akka://system@localhost:9000] as [Leaving]
+18:46:20.345 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Exiting completed
+18:46:20.346 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Shutting down...
+18:46:20.348 [Cluster(akka://system)] INFO - Cluster Node [akka://system@localhost:9000] - Successfully shut down
+18:46:20.351 [akka://system/system/clusterReceptionist] DEBUG- ClusterReceptionist [akka://system@localhost:9000] - terminated/removed
+18:46:20.355 [akka://system@localhost:9000/system/remoting-terminator] INFO - Shutting down remote daemon.
+18:46:20.357 [akka://system@localhost:9000/system/remoting-terminator] INFO - Remote daemon shut down; proceeding with flushing remote transports.
+18:46:20.379 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@0.0.0.0:9001], message stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:46:20.379 [akka.stream.Log(akka://system/system/Materializers/StreamSupervisor-1)] WARN - [outbound connection to [akka://system@0.0.0.0:9001], control stream] Upstream failed, cause: StreamTcpException: The connection has been aborted
+18:46:20.385 [akka://system@localhost:9000/system/remoting-terminator] INFO - Remoting shut down.

@@ -53,10 +53,16 @@ object Main {
       case "remote" => RemoteTicketSystem(processes)
       case _        => throw new Exception("Unreachable")
     }
-    val hostname = sys.env.getOrElse("HOSTNAME", "localhost")
-    val port = sys.env.getOrElse("PORT", "2551").toInt
-    val seedHostname = sys.env.getOrElse("SEED_HOSTNAME", hostname)
-    val seedPort = sys.env.getOrElse("SEED_PORT", port.toString).toInt
+    val kubernetes = sys.env.getOrElse("KUBERNETES", "false").toBoolean
+
+    val hostname =
+      if (!kubernetes)
+        sys.env.getOrElse("HOSTNAME", "localhost")
+      else
+        s"${sys.env.get("HOSTNAME").get}.raft-service.raft.svc.cluster.local"
+
+    val port = sys.env.getOrElse("PORT", "9000").toInt
+    val seed = sys.env.getOrElse("SEED", s"$hostname:$port")
 
     val config = ConfigFactory.parseString(s"""
       akka {
@@ -80,7 +86,7 @@ object Main {
         }
         cluster {
           seed-nodes = [
-            "akka://system@$seedHostname:$seedPort"
+            "akka://system@$seed"
           ]
         }
         log-dead-letters = 0
