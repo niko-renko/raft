@@ -52,6 +52,8 @@ object Main {
     }
     val hostname = sys.env.getOrElse("HOSTNAME", "localhost")
     val port = sys.env.getOrElse("PORT", "2551").toInt
+    val seedHostname = sys.env.getOrElse("SEED_HOSTNAME", hostname)
+    val seedPort = sys.env.getOrElse("SEED_PORT", port.toString).toInt
 
     val config = ConfigFactory.parseString(s"""
       akka {
@@ -67,6 +69,7 @@ object Main {
             }
             throughput = 1
           }
+          allow-java-serialization = on
         }
         remote.artery {
           canonical.hostname = "$hostname"
@@ -74,9 +77,11 @@ object Main {
         }
         cluster {
           seed-nodes = [
-            "akka://system@$hostname:$port"
+            "akka://system@$seedHostname:$seedPort"
           ]
         }
+        log-dead-letters = 0
+        log-dead-letters-during-shutdown = off
       }
     """)
 
