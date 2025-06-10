@@ -26,10 +26,11 @@ object LocalTicketSystem {
 object RemoteTicketSystem {
   def apply(processes: Int): Behavior[Cluster] = Behaviors.receive {
     (context, message) =>
-      context.spawn(
+      val cluster = context.spawn(
         RemoteCluster[Integer]()(processes, message, PositiveCounter(10)),
         "cluster"
       )
+      context.spawn(TextClient[Integer]()(cluster, s => s.toInt), "text-client")
       Behaviors.ignore
   }
 }
