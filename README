@@ -11,3 +11,12 @@ You can use these commands through stdin:
 You can run it with `sbt "run <process_number>"`
 You can reset the persistent storage with `rm -rf persistent-state`
 In addition to stdout, more logs appear in `raft.log`
+
+Kubernetes
+----
+To deploy to k8s, I added extra code into main to parse the correct hostname for the actor system to bind to (to discover other systems). I also had to add parsing of the process id based on the
+populated HOSTNAME env variable. Initially, I was using random IDs, but since persistence on the disk relies on the ID, I needed to make sure the same IDs are reused. Other than that, I added
+build instructions necessary to build the docker image and publish it to the GCP image repository. Once that was done, I was able to come up with Kubernetes resources necessary for the deployment.
+I used StatefulSet to make x replicas of the program, and I used a service resource so the domain names would be assigned. I couldn't get the PersistentVolumeClaim to work since it just wouldn't 
+be provisioned on the GCP with the billing account being the educational credits. I've tried reconfiguring cluster properties like the disk and CPUs to be under the quotas, but it still would not
+provision all the resources. The YAML for the resource is written up, but its usage is commented out.
