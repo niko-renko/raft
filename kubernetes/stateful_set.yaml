@@ -14,12 +14,19 @@ spec:
       labels:
         app: raft
     spec:
+      # volumes:
+      # - name: raft-volume
+      #   persistentVolumeClaim:
+      #     claimName: raft-pvc
       containers:
       - name: raft-container
         image: northamerica-northeast1-docker.pkg.dev/main-461820/main/raft:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
+        # volumeMounts:
+        # - name: raft-volume
+        #   mountPath: /opt/docker/bin/data
         env:
         - name: KUBERNETES
           value: 'true'

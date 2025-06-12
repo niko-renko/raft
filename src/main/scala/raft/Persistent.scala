@@ -12,7 +12,7 @@ import cluster.ProcessID
 
 object PersistentState {
   def load[T <: Serializable](id: Int): PersistentState[T] = {
-    val filename = s"persistent-state/${id}.state"
+    val filename = s"data/persistent-state/${id}.state"
     if (!Files.exists(Paths.get(filename))) {
       // Will never dereference null!
       val entry = Entry.Value(0, 0, null.asInstanceOf[T])
@@ -54,7 +54,7 @@ final case class PersistentState[T <: Serializable](
     log: List[Entry[T]]
 ) extends Serializable {
   def save(id: Int): Unit = {
-    val filename = s"persistent-state/${id}.state"
+    val filename = s"data/persistent-state/${id}.state"
     Files.createDirectories(Paths.get(filename).getParent)
     val stream = new ObjectOutputStream(new FileOutputStream(filename))
     stream.writeObject(this)

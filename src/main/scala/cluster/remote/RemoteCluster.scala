@@ -1,6 +1,5 @@
 package cluster.remote
 
-import scala.util.Random
 import akka.cluster.typed.Cluster
 import akka.actor.typed.Behavior
 import akka.actor.typed.ActorRef
@@ -34,11 +33,11 @@ private object Hello {
 final class RemoteCluster[T <: Serializable] {
   def apply(
       processes: Int,
+      id: ProcessID,
       cluster: Cluster,
       machine: StateMachine[T, T]
   ): Behavior[GetCluster[T] | Receptionist.Listing | HelloResponse[T]] =
     Behaviors.setup { context =>
-      val id = ProcessID(Random.nextInt())
       val process =
         context.spawn(Process[T]()(id, context.self, machine), s"raft-${id.id}")
       val map = Map(id -> process)

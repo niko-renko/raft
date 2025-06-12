@@ -12,7 +12,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/raft-${timestamp}.log</file>
+        <file>data/logs/raft-${timestamp}.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%X{akkaSource}] %-5level- %msg%n</pattern>
         </encoder>

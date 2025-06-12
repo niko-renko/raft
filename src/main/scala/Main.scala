@@ -6,13 +6,16 @@ import akka.cluster.typed.Cluster
 import com.typesafe.config.ConfigFactory
 
 import machine.PositiveCounter
+import cluster.ProcessID
 import cluster.local.LocalCluster
 import cluster.remote.RemoteCluster
 import client.text.TextClient
 import client.ticket.TicketClientGroup
 
 object LocalTicketSystem {
-  def apply(processes: Int): Behavior[Cluster] = Behaviors.setup { context =>
+  def apply(
+      processes: Int
+  ): Behavior[Cluster] = Behaviors.setup { context =>
     val cluster = context.spawn(
       LocalCluster[Integer]()(processes, PositiveCounter(10)),
       "cluster"
@@ -24,15 +27,26 @@ object LocalTicketSystem {
 }
 
 object RemoteTicketSystem {
-  def apply(processes: Int): Behavior[Cluster] = Behaviors.receive {
-    (context, message) =>
+  def apply(
+      processes: Int,
+      processID: Option[Int]
+  ): Behavior[Cluster] =
+    Behaviors.receive { (context, message) =>
+      if (!processID.isDefined)
+        throw new Exception("Process ID is missing")
+
       val cluster = context.spawn(
-        RemoteCluster[Integer]()(processes, message, PositiveCounter(10)),
+        RemoteCluster[Integer]()(
+          processes,
+          ProcessID(processID.get),
+          message,
+          PositiveCounter(10)
+        ),
         "cluster"
       )
       context.spawn(TextClient[Integer]()(cluster, s => s.toInt), "text-client")
       Behaviors.ignore
-  }
+    }
 }
 
 object Main {
@@ -48,18 +62,29 @@ object Main {
       println("Process number must be odd")
       sys.exit(1)
     }
-    val behavior = sys.env.getOrElse("SYSTEM", "local") match {
-      case "local"  => LocalTicketSystem(processes)
-      case "remote" => RemoteTicketSystem(processes)
-      case _        => throw new Exception("Unreachable")
-    }
-    val kubernetes = sys.env.getOrElse("KUBERNETES", "false").toBoolean
 
+    val kubernetes = sys.env.getOrElse("KUBERNETES", "false").toBoolean
     val hostname =
       if (!kubernetes)
         sys.env.getOrElse("HOSTNAME", "localhost")
       else
         s"${sys.env.get("HOSTNAME").get}.raft-service.raft.svc.cluster.local"
+
+    val pattern = """raft-stateful-set-(\d+)""".r
+    val processID =
+      if (!kubernetes)
+        None
+      else
+        sys.env.get("HOSTNAME").get match {
+          case pattern(id) => Some(id.toInt)
+          case _           => None
+        }
+
+    val behavior = sys.env.getOrElse("SYSTEM", "local") match {
+      case "local"  => LocalTicketSystem(processes)
+      case "remote" => RemoteTicketSystem(processes, processID)
+      case _        => throw new Exception("Unreachable")
+    }
 
     val port = sys.env.getOrElse("PORT", "9000").toInt
     val seed = sys.env.getOrElse("SEED", s"$hostname:$port")
